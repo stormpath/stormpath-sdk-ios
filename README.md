@@ -1,10 +1,10 @@
 # Stormpath iOS SDK
 
 [![CI Status](http://img.shields.io/travis/Adis/Stormpath.svg?style=flat)](https://travis-ci.org/Adis/Stormpath)
-[![Version](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
+[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Platform](https://img.shields.io/cocoapods/p/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
 
 **WIP. Dragons be here, unusable at this point.**
 
@@ -14,7 +14,7 @@ https://stormpath.com/
 
 # Requirements
 
-iOS 8.0+ / XCode 7.1+ / Swift 2.0+
+iOS 8.0+ / XCode 7.1+
 
 # Installation
 
@@ -45,6 +45,8 @@ github "stormpath/stormpath-sdk-swift"
 If you wish to use the framework manually, just download it and drag'n'drop it in your XCode project or workspace.
 
 # Usage
+
+TBA.
 
 # License
 
