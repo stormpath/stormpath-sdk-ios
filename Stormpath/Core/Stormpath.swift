@@ -34,10 +34,16 @@ class Stormpath: NSObject {
     
     // MARK: Basic user management
     
-    func register(username: String, password: String) {
+    func register(username: String, password: String, completion: (error: NSError) -> Void) {
         
     }
     
+    func login(username: String, password: String, completion: (error: NSError) -> Void) {
+        
+    }
     
+    func logout(completion: (error: NSError) -> Void) {
+        
+    }
 
 }

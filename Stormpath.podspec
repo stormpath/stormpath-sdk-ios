@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary = 'iOS SDK for Stormpath identity API.'
   s.homepage = 'https://github.com/stormpath/stormpath-sdk-swift'
   s.social_media_url = 'https://twitter.com/goStormpath'
-  s.authors = { 'Stormpath, LLC' => 'support@stormpath.com' }
+  s.authors = { 'Stormpath' => 'support@stormpath.com' }
   s.source = { :git => 'https://github.com/stormpath/stormpath-sdk-swift.git', :tag => s.version }
 
   s.ios.deployment_target = '8.0'
