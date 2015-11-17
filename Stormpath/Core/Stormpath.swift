@@ -45,5 +45,19 @@ class Stormpath: NSObject {
     func logout(completion: (error: NSError) -> Void) {
         
     }
+    
+    func resetPassword() {
+        
+    }
+    
+    // MARK: Token handling
+    
+    func accessToken() -> String {
+        return ""
+    }
+    
+    func refreshAccesToken() {
+        
+    }
 
 }
