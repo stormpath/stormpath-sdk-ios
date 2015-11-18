@@ -70,6 +70,8 @@ public class Stormpath: NSObject {
     
     public class func logout(completion: CompletionBlock) {
         
+        APIService.logout(completion)
+        
     }
     
     public class func resetPassword() {

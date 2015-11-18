@@ -37,9 +37,6 @@ class APIService: NSObject {
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
-        print(params)
-        print(request.description, request.allHTTPHeaderFields)
-        
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             print(String.init(data: data!, encoding: NSUTF8StringEncoding))
             print(response)
@@ -64,8 +61,24 @@ class APIService: NSObject {
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
-        print(params)
-        print(request.description, request.allHTTPHeaderFields)
+        let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            print(String.init(data: data!, encoding: NSUTF8StringEncoding))
+            print(response)
+            print(error?.localizedDescription)
+            
+            completion(true, error)
+        }
+        
+        task.resume()
+        
+    }
+    
+    class func logout(completion: CompletionBlock) {
+        
+        let request: NSMutableURLRequest = APIService.requestWithURL("/logout")
+        request.HTTPMethod = "GET"
+        
+        let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             print(String.init(data: data!, encoding: NSUTF8StringEncoding))
