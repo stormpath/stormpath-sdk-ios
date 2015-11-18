@@ -8,56 +8,67 @@
 
 import UIKit
 
-class Stormpath: NSObject {
+public typealias CompletionBlock = ((Bool, NSError!) -> Void)!
+
+let APIKeyKeychainKey: String    = "APIKeyKeychainKey"
+let APISecretKeychainKey: String = "APISecretKeychainKey"
+
+public class Stormpath: NSObject {
+    
+    // MARK: Init
+    
+    public override init() {
+        super.init()
+    }
     
     // MARK: Initial setup
     
-    class var APIKey: String {
+    public class var APIKey: String {
         get {
-            return ""
+        return KeychainService.loadData(APIKeyKeychainKey)
         }
         
         set {
-            
+            KeychainService.save(newValue, key: APIKeyKeychainKey)
         }
     }
     
-    class var secret: String {
+    public class var secret: String {
         get {
-            return ""
+        return KeychainService.loadData(APISecretKeychainKey)
         }
         
         set {
-            
+            KeychainService.save(newValue, key: APISecretKeychainKey)
         }
     }
     
     // MARK: Basic user management
     
-    func register(username: String, password: String, completion: (error: NSError) -> Void) {
+    public class func register(username: String, password: String, completion: CompletionBlock) {
         
     }
     
-    func login(username: String, password: String, completion: (error: NSError) -> Void) {
+    public class func login(username: String, password: String, completion: CompletionBlock) {
         
     }
     
-    func logout(completion: (error: NSError) -> Void) {
+    public class func logout(completion: CompletionBlock) {
         
     }
     
-    func resetPassword() {
+    public class func resetPassword() {
         
     }
     
     // MARK: Token handling
     
-    func accessToken() -> String {
+    public class func accessToken() -> String {
         return ""
     }
     
-    func refreshAccesToken() {
+    public class func refreshAccesToken() {
         
     }
-
+    
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996C0B81BFBBDE600FA6CD4 /* KeychainService.swift */; };
+		4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */; };
 		49A0C4451BFA360A00016534 /* Stormpath.h in Headers */ = {isa = PBXBuildFile; fileRef = 49A0C4441BFA360A00016534 /* Stormpath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49A0C44C1BFA360A00016534 /* Stormpath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A0C4411BFA360A00016534 /* Stormpath.framework */; };
 		49A0C4511BFA360A00016534 /* StormpathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C4501BFA360A00016534 /* StormpathTests.swift */; };
@@ -24,6 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4996C0B81BFBBDE600FA6CD4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		49A0C4411BFA360A00016534 /* Stormpath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stormpath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A0C4441BFA360A00016534 /* Stormpath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stormpath.h; sourceTree = "<group>"; };
 		49A0C4461BFA360A00016534 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +56,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4996C0B71BFBBDE600FA6CD4 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				4996C0B81BFBBDE600FA6CD4 /* KeychainService.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		4996C0BA1BFC962600FA6CD4 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		49A0C4371BFA360A00016534 = {
 			isa = PBXGroup;
 			children = (
@@ -73,6 +93,8 @@
 		49A0C4431BFA360A00016534 /* Stormpath */ = {
 			isa = PBXGroup;
 			children = (
+				4996C0BA1BFC962600FA6CD4 /* Networking */,
+				4996C0B71BFBBDE600FA6CD4 /* Keychain */,
 				49A0C45B1BFA40BE00016534 /* Core */,
 				49A0C4441BFA360A00016534 /* Stormpath.h */,
 				49A0C4461BFA360A00016534 /* Info.plist */,
@@ -206,6 +228,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
+				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
+				4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
