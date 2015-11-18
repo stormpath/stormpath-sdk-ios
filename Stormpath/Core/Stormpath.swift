@@ -64,6 +64,8 @@ public class Stormpath: NSObject {
     
     public class func login(username: String, password: String, completion: CompletionBlock) {
         
+        APIService.login(username, password: password, completion: completion)
+        
     }
     
     public class func logout(completion: CompletionBlock) {

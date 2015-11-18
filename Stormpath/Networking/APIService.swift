@@ -10,11 +10,11 @@ import UIKit
 
 class APIService: NSObject {
     
-    class func requestWithURL(URL: String) -> NSMutableURLRequest {
+    class func requestWithURL(URLString: String) -> NSMutableURLRequest {
         
         assert(Stormpath.APIURL.isEmpty == false, "Stormpath.APIURL needs to be set before calling API methods")
         
-        let URLString: String = Stormpath.APIURL.stringByAppendingString("/register")
+        let URLString: String = Stormpath.APIURL.stringByAppendingString(URLString)
         let URL: NSURL = NSURL.init(string: URLString)!
         let request: NSMutableURLRequest = NSMutableURLRequest.init(URL: URL)
         
@@ -57,7 +57,7 @@ class APIService: NSObject {
     class func login(username: String, password: String, completion: CompletionBlock) {
         
         let request: NSMutableURLRequest = APIService.requestWithURL("/login")
-        let params: NSDictionary = ["email": username, "password": password]
+        let params: NSDictionary = ["username": username, "password": password]
         
         request.HTTPMethod = "POST"
         request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(params, options: [])
