@@ -12,6 +12,7 @@ public typealias CompletionBlock = ((Bool, NSError!) -> Void)!
 
 let APIKeyKeychainKey: String    = "APIKeyKeychainKey"
 let APISecretKeychainKey: String = "APISecretKeychainKey"
+let APIURLKeychainKey: String    = "APIURLKeychainKey"
 
 public class Stormpath: NSObject {
     
@@ -25,7 +26,7 @@ public class Stormpath: NSObject {
     
     public class var APIKey: String {
         get {
-        return KeychainService.loadData(APIKeyKeychainKey)
+            return KeychainService.loadData(APIKeyKeychainKey)
         }
         
         set {
@@ -35,7 +36,7 @@ public class Stormpath: NSObject {
     
     public class var secret: String {
         get {
-        return KeychainService.loadData(APISecretKeychainKey)
+            return KeychainService.loadData(APISecretKeychainKey)
         }
         
         set {
@@ -43,17 +44,33 @@ public class Stormpath: NSObject {
         }
     }
     
+    public class var APIURL: String {
+        get {
+            return KeychainService.loadData(APIURLKeychainKey)
+        }
+        
+        set {
+            KeychainService.save(newValue, key: APIURLKeychainKey)
+        }
+    }
+    
     // MARK: Basic user management
     
     public class func register(username: String, password: String, completion: CompletionBlock) {
+        
+        APIService.register(username, password: password, completion: completion)
         
     }
     
     public class func login(username: String, password: String, completion: CompletionBlock) {
         
+        APIService.login(username, password: password, completion: completion)
+        
     }
     
     public class func logout(completion: CompletionBlock) {
+        
+        APIService.logout(completion)
         
     }
     
