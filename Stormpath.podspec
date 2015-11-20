@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/stormpath/stormpath-sdk-swift.git', :tag => s.version }
 
   s.ios.deployment_target = '8.0'
-  s.source_files = 'Stormpath/*'
+  s.source_files = 'Stormpath/**/*.swift'
 
   s.requires_arc = true
 end
