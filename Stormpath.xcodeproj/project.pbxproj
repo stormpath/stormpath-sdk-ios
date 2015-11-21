@@ -13,6 +13,8 @@
 		49A0C44C1BFA360A00016534 /* Stormpath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A0C4411BFA360A00016534 /* Stormpath.framework */; };
 		49A0C4511BFA360A00016534 /* StormpathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C4501BFA360A00016534 /* StormpathTests.swift */; };
 		49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C45C1BFA41BD00016534 /* Stormpath.swift */; };
+		49A34D091BFF9BCB00054799 /* APIServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D081BFF9BCB00054799 /* APIServiceTest.swift */; };
+		49A34D0C1C00DF9700054799 /* StormpathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0B1C00DF9700054799 /* StormpathTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,8 @@
 		49A0C4501BFA360A00016534 /* StormpathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormpathTests.swift; sourceTree = "<group>"; };
 		49A0C4521BFA360A00016534 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49A0C45C1BFA41BD00016534 /* Stormpath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stormpath.swift; sourceTree = "<group>"; };
+		49A34D081BFF9BCB00054799 /* APIServiceTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIServiceTest.swift; sourceTree = "<group>"; };
+		49A34D0B1C00DF9700054799 /* StormpathTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 		49A0C44F1BFA360A00016534 /* StormpathTests */ = {
 			isa = PBXGroup;
 			children = (
+				49A34D0A1C00DF8000054799 /* Core */,
+				49A34D071BFF9B9D00054799 /* Networking */,
 				49A0C4501BFA360A00016534 /* StormpathTests.swift */,
 				49A0C4521BFA360A00016534 /* Info.plist */,
 			);
@@ -115,6 +121,22 @@
 			isa = PBXGroup;
 			children = (
 				49A0C45C1BFA41BD00016534 /* Stormpath.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		49A34D071BFF9B9D00054799 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				49A34D081BFF9BCB00054799 /* APIServiceTest.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		49A34D0A1C00DF8000054799 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				49A34D0B1C00DF9700054799 /* StormpathTest.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -237,7 +259,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49A34D091BFF9BCB00054799 /* APIServiceTest.swift in Sources */,
 				49A0C4511BFA360A00016534 /* StormpathTests.swift in Sources */,
+				49A34D0C1C00DF9700054799 /* StormpathTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

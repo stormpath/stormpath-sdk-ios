@@ -8,7 +8,8 @@
 
 import UIKit
 
-public typealias CompletionBlock = ((Bool, NSError!) -> Void)!
+public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
+public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 let APIKeyKeychainKey: String    = "APIKeyKeychainKey"
 let APISecretKeychainKey: String = "APISecretKeychainKey"
@@ -16,15 +17,17 @@ let APIURLKeychainKey: String    = "APIURLKeychainKey"
 
 public class Stormpath: NSObject {
     
-    // MARK: Init
-    
-    public override init() {
-        super.init()
-    }
-    
     // MARK: Initial setup
     
-    public class var APIKey: String {
+    public class func setUpWithURL(APIURL: String, APIKey: String, APISecret: String) {
+        Stormpath.APIURL    = APIURL
+        Stormpath.APIKey    = APIKey
+        Stormpath.APISecret = APISecret
+    }
+    
+    // API vars
+    
+    class var APIKey: String {
         get {
             return KeychainService.loadData(APIKeyKeychainKey)
         }
@@ -34,7 +37,7 @@ public class Stormpath: NSObject {
         }
     }
     
-    public class var secret: String {
+    class var APISecret: String {
         get {
             return KeychainService.loadData(APISecretKeychainKey)
         }
@@ -44,7 +47,7 @@ public class Stormpath: NSObject {
         }
     }
     
-    public class var APIURL: String {
+    class var APIURL: String {
         get {
             return KeychainService.loadData(APIURLKeychainKey)
         }
@@ -54,31 +57,44 @@ public class Stormpath: NSObject {
         }
     }
     
-    // MARK: Basic user management
+    // MARK: User registration
     
-    public class func register(username: String, password: String, completion: CompletionBlock) {
+    public class func register(username: String, password: String, completion: CompletionBlockWithDictionary) {
         
-        APIService.register(username, password: password, completion: completion)
+        let userDictionary: NSDictionary = ["email": username, "password": password]
+        APIService.register(userDictionary, completion: completion)
         
     }
     
-    public class func login(username: String, password: String, completion: CompletionBlock) {
+    public class func register(userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
+        
+        APIService.register(userDictionary, completion: completion)
+        
+    }
+    
+    // MARK: User login
+    
+    public class func login(username: String, password: String, completion: CompletionBlockWithDictionary) {
         
         APIService.login(username, password: password, completion: completion)
         
     }
     
-    public class func logout(completion: CompletionBlock) {
+    // MARK: User logout
+    
+    public class func logout(completion: CompletionBlockWithError) {
         
         APIService.logout(completion)
         
     }
     
+    // MARK: User password reset
+    
     public class func resetPassword() {
         
     }
     
-    // MARK: Token handling
+    // MARK: Token management
     
     public class func accessToken() -> String {
         return ""
