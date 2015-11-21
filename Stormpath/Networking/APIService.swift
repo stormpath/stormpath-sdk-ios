@@ -48,6 +48,7 @@ class APIService: NSObject {
     
     class func login(username: String, password: String, completion: CompletionBlockWithDictionary) {
         
+        // TODO: Logout before login, otherwise no new tokens are fetched
         let request: NSMutableURLRequest = APIService.requestWithURL("/login")
         let params: NSDictionary = ["username": username, "password": password]
         
@@ -57,9 +58,17 @@ class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            print(String.init(data: data!, encoding: NSUTF8StringEncoding))
-            print(response)
-            APIService.parseResponseData(data, error: error, completion: completion)
+            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            
+            if let cookieString = HTTPResponse.allHeaderFields["Set-Cookie"] {
+                // TODO: Parse the tokens, save them, then call completion
+                // There may be a better way to get the tokens though
+                print(cookieString)
+            } else {
+                // TODO: Add handling of missing tokens
+                completion(nil, nil)
+            }
+            
         }
         
         task.resume()
@@ -74,11 +83,9 @@ class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            print(String.init(data: data!, encoding: NSUTF8StringEncoding))
-            print(response)
-            print(error?.localizedDescription)
-            
-            completion(error)
+            dispatch_async(dispatch_get_main_queue(), {
+                completion(error)
+            })
         }
         
         task.resume()
@@ -91,16 +98,22 @@ class APIService: NSObject {
         
         // First make sure there are no network errors
         guard error == nil && data != nil else {
-            completion(nil, error)
+            dispatch_async(dispatch_get_main_queue(), {
+                completion(nil, error)
+            })
             return
         }
         
         do {
             if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-                completion(userResponseDictionary, nil)
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(userResponseDictionary, nil)
+                })
             }
         } catch let error as NSError {
-            completion(nil, error)
+            dispatch_async(dispatch_get_main_queue(), {
+                completion(nil, error)
+            })
         }
         
     }

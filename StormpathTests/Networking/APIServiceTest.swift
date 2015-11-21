@@ -54,6 +54,7 @@ class APIServiceTest: XCTestCase {
             if let error = error {
                 print("Error: \(error.localizedDescription)")
             }
+            
             task.cancel()
         }
     }

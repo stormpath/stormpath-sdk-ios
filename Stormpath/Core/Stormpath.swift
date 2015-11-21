@@ -20,7 +20,13 @@ public class Stormpath: NSObject {
     // MARK: Initial setup
     
     public class func setUpWithURL(APIURL: String, APIKey: String, APISecret: String) {
-        Stormpath.APIURL    = APIURL
+        // Trim the trailing slash if needed
+        if APIURL.hasSuffix("/") {
+            Stormpath.APIURL = String(APIURL.characters.dropLast())
+        } else {
+            Stormpath.APIURL = APIURL
+        }
+        
         Stormpath.APIKey    = APIKey
         Stormpath.APISecret = APISecret
     }
