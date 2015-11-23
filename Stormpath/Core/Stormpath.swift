@@ -15,7 +15,7 @@ let APIKeyKeychainKey: String    = "APIKeyKeychainKey"
 let APISecretKeychainKey: String = "APISecretKeychainKey"
 let APIURLKeychainKey: String    = "APIURLKeychainKey"
 
-public class Stormpath: NSObject {
+public final class Stormpath: NSObject {
     
     // MARK: Initial setup
     
