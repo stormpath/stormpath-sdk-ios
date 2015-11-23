@@ -1,5 +1,5 @@
 //
-//  APIServiceTest.swift
+//  APIServiceTests.swift
 //  Stormpath
 //
 //  Created by Adis on 20/11/15.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import Stormpath
 
-class APIServiceTest: XCTestCase {
+class APIServiceTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

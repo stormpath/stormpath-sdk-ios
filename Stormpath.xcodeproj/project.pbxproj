@@ -11,11 +11,12 @@
 		4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */; };
 		49A0C4451BFA360A00016534 /* Stormpath.h in Headers */ = {isa = PBXBuildFile; fileRef = 49A0C4441BFA360A00016534 /* Stormpath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49A0C44C1BFA360A00016534 /* Stormpath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A0C4411BFA360A00016534 /* Stormpath.framework */; };
-		49A0C4511BFA360A00016534 /* StormpathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C4501BFA360A00016534 /* StormpathTests.swift */; };
 		49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C45C1BFA41BD00016534 /* Stormpath.swift */; };
-		49A34D091BFF9BCB00054799 /* APIServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D081BFF9BCB00054799 /* APIServiceTest.swift */; };
-		49A34D0C1C00DF9700054799 /* StormpathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0B1C00DF9700054799 /* StormpathTest.swift */; };
-		49A34D0F1C0336AC00054799 /* KeychainServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0E1C0336AC00054799 /* KeychainServiceTest.swift */; };
+		49A34D091BFF9BCB00054799 /* APIServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D081BFF9BCB00054799 /* APIServiceTests.swift */; };
+		49A34D0C1C00DF9700054799 /* StormpathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0B1C00DF9700054799 /* StormpathTests.swift */; };
+		49A34D0F1C0336AC00054799 /* KeychainServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */; };
+		49A34D131C03614500054799 /* URLPathService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D121C03614500054799 /* URLPathService.swift */; };
+		49A34D171C03696D00054799 /* URLPathServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D161C03696D00054799 /* URLPathServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,12 +36,13 @@
 		49A0C4441BFA360A00016534 /* Stormpath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stormpath.h; sourceTree = "<group>"; };
 		49A0C4461BFA360A00016534 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49A0C44B1BFA360A00016534 /* StormpathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StormpathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49A0C4501BFA360A00016534 /* StormpathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormpathTests.swift; sourceTree = "<group>"; };
 		49A0C4521BFA360A00016534 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49A0C45C1BFA41BD00016534 /* Stormpath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stormpath.swift; sourceTree = "<group>"; };
-		49A34D081BFF9BCB00054799 /* APIServiceTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIServiceTest.swift; sourceTree = "<group>"; };
-		49A34D0B1C00DF9700054799 /* StormpathTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTest.swift; sourceTree = "<group>"; };
-		49A34D0E1C0336AC00054799 /* KeychainServiceTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServiceTest.swift; sourceTree = "<group>"; };
+		49A34D081BFF9BCB00054799 /* APIServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIServiceTests.swift; sourceTree = "<group>"; };
+		49A34D0B1C00DF9700054799 /* StormpathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTests.swift; sourceTree = "<group>"; };
+		49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServiceTests.swift; sourceTree = "<group>"; };
+		49A34D121C03614500054799 /* URLPathService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLPathService.swift; sourceTree = "<group>"; };
+		49A34D161C03696D00054799 /* URLPathServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLPathServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 		4996C0BA1BFC962600FA6CD4 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				49A34D121C03614500054799 /* URLPathService.swift */,
 				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
 			);
 			path = Networking;
@@ -99,9 +102,9 @@
 		49A0C4431BFA360A00016534 /* Stormpath */ = {
 			isa = PBXGroup;
 			children = (
+				49A0C45B1BFA40BE00016534 /* Core */,
 				4996C0BA1BFC962600FA6CD4 /* Networking */,
 				4996C0B71BFBBDE600FA6CD4 /* Keychain */,
-				49A0C45B1BFA40BE00016534 /* Core */,
 				49A0C4441BFA360A00016534 /* Stormpath.h */,
 				49A0C4461BFA360A00016534 /* Info.plist */,
 			);
@@ -112,9 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				49A34D0A1C00DF8000054799 /* Core */,
-				49A34D0D1C03369000054799 /* Keychain */,
 				49A34D071BFF9B9D00054799 /* Networking */,
-				49A0C4501BFA360A00016534 /* StormpathTests.swift */,
+				49A34D0D1C03369000054799 /* Keychain */,
 				49A0C4521BFA360A00016534 /* Info.plist */,
 			);
 			path = StormpathTests;
@@ -131,7 +133,8 @@
 		49A34D071BFF9B9D00054799 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				49A34D081BFF9BCB00054799 /* APIServiceTest.swift */,
+				49A34D081BFF9BCB00054799 /* APIServiceTests.swift */,
+				49A34D161C03696D00054799 /* URLPathServiceTests.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -139,7 +142,7 @@
 		49A34D0A1C00DF8000054799 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				49A34D0B1C00DF9700054799 /* StormpathTest.swift */,
+				49A34D0B1C00DF9700054799 /* StormpathTests.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -147,7 +150,7 @@
 		49A34D0D1C03369000054799 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
-				49A34D0E1C0336AC00054799 /* KeychainServiceTest.swift */,
+				49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */,
 			);
 			path = Keychain;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 			files = (
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
 				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
+				49A34D131C03614500054799 /* URLPathService.swift in Sources */,
 				4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,10 +274,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49A34D091BFF9BCB00054799 /* APIServiceTest.swift in Sources */,
-				49A34D0F1C0336AC00054799 /* KeychainServiceTest.swift in Sources */,
-				49A0C4511BFA360A00016534 /* StormpathTests.swift in Sources */,
-				49A34D0C1C00DF9700054799 /* StormpathTest.swift in Sources */,
+				49A34D171C03696D00054799 /* URLPathServiceTests.swift in Sources */,
+				49A34D091BFF9BCB00054799 /* APIServiceTests.swift in Sources */,
+				49A34D0F1C0336AC00054799 /* KeychainServiceTests.swift in Sources */,
+				49A34D0C1C00DF9700054799 /* StormpathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,5 @@
 //
-//  KeychainServiceTest.swift
+//  KeychainServiceTests.swift
 //  Stormpath
 //
 //  Created by Adis on 23/11/15.
@@ -12,7 +12,7 @@ import XCTest
 let testData: String = "testData"
 let testDataKey: String = "testDataKey"
 
-class KeychainServiceTest: XCTestCase {
+class KeychainServiceTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

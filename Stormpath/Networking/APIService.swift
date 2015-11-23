@@ -10,11 +10,8 @@ import UIKit
 
 class APIService: NSObject {
     
-    class func requestWithURL(URLString: String) -> NSMutableURLRequest {
+    class func requestWithURLString(URLString: String) -> NSMutableURLRequest {
         
-        assert(Stormpath.APIURL.isEmpty == false, "Stormpath.APIURL needs to be set before calling API methods")
-        
-        let URLString: String = Stormpath.APIURL.stringByAppendingString(URLString)
         let URL: NSURL = NSURL.init(string: URLString)!
         let request: NSMutableURLRequest = NSMutableURLRequest.init(URL: URL)
         
@@ -27,9 +24,10 @@ class APIService: NSObject {
     
     // MARK: Registration
     
-    class func register(userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
+    class func register(customPath: String?, userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
         
-        let request: NSMutableURLRequest = APIService.requestWithURL("/register")
+        let URLString = URLPathService.registerPath(customPath)
+        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
         
         request.HTTPMethod = "POST"
         request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(userDictionary, options: [])
@@ -46,10 +44,13 @@ class APIService: NSObject {
     
     // MARK: Login
     
-    class func login(username: String, password: String, completion: CompletionBlockWithDictionary) {
+    class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithDictionary) {
         
-        // TODO: Logout before login, otherwise no new tokens are fetched
-        let request: NSMutableURLRequest = APIService.requestWithURL("/login")
+        // FIXME: Logout before login, otherwise no new tokens are fetched?
+        
+        let URLString = URLPathService.loginPath(customPath)
+        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        
         let params: NSDictionary = ["username": username, "password": password]
         
         request.HTTPMethod = "POST"
@@ -75,9 +76,10 @@ class APIService: NSObject {
         
     }
     
-    class func logout(completion: CompletionBlockWithError) {
+    class func logout(customPath: String?, completion: CompletionBlockWithError) {
         
-        let request: NSMutableURLRequest = APIService.requestWithURL("/logout")
+        let URLString = URLPathService.logoutPath(customPath)
+        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
         request.HTTPMethod = "GET"
         
         let session: NSURLSession = NSURLSession.sharedSession()

@@ -1,5 +1,5 @@
 //
-//  StormpathTest.swift
+//  StormpathTests.swift
 //  Stormpath
 //
 //  Created by Adis on 21/11/15.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import Stormpath
 
-class StormpathTest: XCTestCase {
+class StormpathTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
