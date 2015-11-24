@@ -14,6 +14,18 @@ public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {
     
+    // API vars
+    
+    internal class var APIURL: String {
+        get {
+        return KeychainService.APIURL
+        }
+        
+        set {
+            KeychainService.APIURL = newValue
+        }
+    }
+    
     // MARK: Initial setup
     
     /**
@@ -29,18 +41,6 @@ public final class Stormpath: NSObject {
             Stormpath.APIURL = String(APIURL.characters.dropLast())
         } else {
             Stormpath.APIURL = APIURL
-        }
-    }
-    
-    // API vars
-    
-    internal class var APIURL: String {
-        get {
-            return KeychainService.APIURL
-        }
-        
-        set {
-            KeychainService.APIURL = newValue
         }
     }
     
@@ -114,11 +114,25 @@ public final class Stormpath: NSObject {
     
     // MARK: Token management
     
+    /**
+    Provides the last access token fetched by either login or refreshAccessToken functions.
+    
+    - returns: Access token for your API calls.
+    */
+    
     public class func accessToken() -> String {
         return KeychainService.accessToken
     }
     
-    public class func refreshAccesToken() {
+    /**
+     Refreshes the access token and stores it to be available via accessToken var. Call this function if your token expires.
+     
+     - parameter completion: Block invoked on function completion. It will have either a new access token passed as a string, or an error if one occured.
+     */
+    
+    public class func refreshAccesToken(completion: CompletionBlockWithString) {
+        
+        APIService.refreshAccessToken(completion)
         
     }
     

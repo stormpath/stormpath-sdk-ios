@@ -46,12 +46,10 @@ internal class APIService: NSObject {
     
     internal class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
         
-        // FIXME: Logout before login, otherwise no new tokens are fetched?
-        
         let URLString = URLPathService.loginPath(customPath)
         let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
         
-        // Generate the form data
+        // Generate the form data, the data posted MUST be a form
         let body: String = String(format: "username=%@&password=%@&grant_type=password", username, password)
         
         request.HTTPMethod = "POST"
@@ -98,6 +96,8 @@ internal class APIService: NSObject {
         
     }
     
+    // MARK: Logout
+    
     internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
         
         let URLString = URLPathService.logoutPath(customPath)
@@ -113,6 +113,15 @@ internal class APIService: NSObject {
         }
         
         task.resume()
+        
+    }
+    
+    // MARK: Access token refresh
+    
+    internal class func refreshAccessToken(completion: CompletionBlockWithString) {
+        
+        // TODO: Implement me
+        completion("new_token", nil)
         
     }
     
