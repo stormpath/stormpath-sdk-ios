@@ -24,9 +24,7 @@ class APIServiceTests: XCTestCase {
     // MARK: Tests
     
     func testAPIExistsAtGivenURL() {
-        Stormpath.setUpWithURL("http://localhost:3000",
-            APIKey: "30F1WZ68GIFAUPH79CSAKMD4X",
-            APISecret: "KJvsOfmNJp3SKXrqbFwc5c/wdmBJF6o74hrzRuLV1ZI")
+        Stormpath.setUpWithURL("http://localhost:3000")
         
         let URL = NSURL(string: Stormpath.APIURL)!
         let expectation = expectationWithDescription("GET \(URL)")
@@ -57,9 +55,7 @@ class APIServiceTests: XCTestCase {
     }
     
     func testAPIExistsAtGivenURLWithTrailingSlash() {
-        Stormpath.setUpWithURL("http://localhost:3000/",
-            APIKey: "30F1WZ68GIFAUPH79CSAKMD4X",
-            APISecret: "KJvsOfmNJp3SKXrqbFwc5c/wdmBJF6o74hrzRuLV1ZI")
+        Stormpath.setUpWithURL("http://localhost:3000/")
         
         let URL = NSURL(string: Stormpath.APIURL)!
         let expectation = expectationWithDescription("GET \(URL)")

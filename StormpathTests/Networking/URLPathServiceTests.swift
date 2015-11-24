@@ -23,9 +23,7 @@ class URLPathServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        Stormpath.setUpWithURL("http://localhost:3000",
-            APIKey: "30F1WZ68GIFAUPH79CSAKMD4X",
-            APISecret: "KJvsOfmNJp3SKXrqbFwc5c/wdmBJF6o74hrzRuLV1ZI")
+        Stormpath.setUpWithURL("http://localhost:3000")
     }
     
     override func tearDown() {

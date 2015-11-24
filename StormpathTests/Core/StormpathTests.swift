@@ -14,9 +14,7 @@ class StormpathTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        Stormpath.setUpWithURL("http://localhost:3000",
-            APIKey: "30F1WZ68GIFAUPH79CSAKMD4X",
-            APISecret: "KJvsOfmNJp3SKXrqbFwc5c/wdmBJF6o74hrzRuLV1ZI")
+        Stormpath.setUpWithURL("http://localhost:3000")
     }
     
     override func tearDown() {
@@ -29,8 +27,6 @@ class StormpathTests: XCTestCase {
     func testInitialSetup() {
         // Test that the initial setup stores the data properly
         XCTAssertNotNil(Stormpath.APIURL)
-        XCTAssertNotNil(Stormpath.APIKey)
-        XCTAssertNotNil(Stormpath.APISecret)
     }
     
 }

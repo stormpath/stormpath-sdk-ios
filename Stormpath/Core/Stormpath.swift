@@ -22,11 +22,9 @@ public final class Stormpath: NSObject {
     /**
     Use this method for the initial setup for your Stormpath backend.
     
-    - parameter APIURL: The base URL of your API, eg. https://api.stormpath.com. The trailing slash is unnecessary.
-    - parameter APIKey: Your API Key. This is provided upon creating a new application on stormpath.com.
-    - parameter APISecret: Your API secret. This is provided upon creating a new application on stormpath.com.
+    - parameter APIURL: The base URL of your API, eg. "https://api.stormpath.com". The trailing slash is unnecessary.
     */
-    public class func setUpWithURL(APIURL: String, APIKey: String, APISecret: String) {
+    public class func setUpWithURL(APIURL: String) {
         // TODO: Add guards
         
         // Trim the trailing slash if needed
@@ -35,32 +33,9 @@ public final class Stormpath: NSObject {
         } else {
             Stormpath.APIURL = APIURL
         }
-        
-        Stormpath.APIKey    = APIKey
-        Stormpath.APISecret = APISecret
     }
     
     // API vars
-    
-    class var APIKey: String {
-        get {
-            return KeychainService.loadData(APIKeyKeychainKey)
-        }
-        
-        set {
-            KeychainService.save(newValue, key: APIKeyKeychainKey)
-        }
-    }
-    
-    class var APISecret: String {
-        get {
-            return KeychainService.loadData(APISecretKeychainKey)
-        }
-        
-        set {
-            KeychainService.save(newValue, key: APISecretKeychainKey)
-        }
-    }
     
     class var APIURL: String {
         get {
