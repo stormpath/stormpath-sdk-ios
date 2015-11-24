@@ -31,7 +31,7 @@ internal final class URLPathService: NSObject {
             }
         }
         
-        return URLPathService.urlStringForPath("/login")
+        return URLPathService.urlStringForPath("/oauth/token")
         
     }
     

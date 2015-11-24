@@ -14,7 +14,7 @@ class URLPathServiceTests: XCTestCase {
     let standardRegisterPath: String = "http://localhost:3000/register"
     let customRegisterPath: String = "http://localhost:3000/my/custom/path/to/register"
     
-    let standardLoginPath: String = "http://localhost:3000/login"
+    let standardLoginPath: String = "http://localhost:3000/oauth/token"
     let customLoginPath: String = "http://localhost:3000/my/custom/path/to/login"
     
     let standardLogoutPath: String = "http://localhost:3000/logout"

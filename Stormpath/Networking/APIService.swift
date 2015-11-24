@@ -51,23 +51,43 @@ class APIService: NSObject {
         let URLString = URLPathService.loginPath(customPath)
         let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
         
-        let params: NSDictionary = ["username": username, "password": password]
+        // Generate the form data
+        let body: String = String(format: "username=%@&password=%@&grant_type=password", username, password)
         
         request.HTTPMethod = "POST"
-        request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(params, options: [])
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
             
-            if let cookieString = HTTPResponse.allHeaderFields["Set-Cookie"] {
-                // TODO: Parse the tokens, save them, then call completion
-                // There may be a better way to get the tokens though
-                print(cookieString)
+            if error == nil {
+                if let responseData = data {
+                    do {
+                        let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(responseData, options: []) as! NSDictionary
+                        completion(tokensDictionary, nil)
+                        
+                        if let accessToken: String = tokensDictionary["access_token"] as? String {
+                            KeychainService.setValue(accessToken, forKey: accesTokenKey)
+                        } else {
+                            // LOG
+                        }
+                        
+                        if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
+                            KeychainService.setValue(refreshToken, forKey: refreshTokenKey)
+                        } else {
+                            // LOG
+                        }
+                        
+                    } catch let error as NSError {
+                        completion(nil, error)
+                    }
+                } else {
+                    // LOG
+                }
             } else {
-                // TODO: Add handling of missing tokens
-                completion(nil, nil)
+                completion(nil, error)
             }
             
         }

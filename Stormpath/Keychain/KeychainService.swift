@@ -8,6 +8,9 @@
 
 import UIKit
 
+let accesTokenKey: String   = "StormpathAccessTokenKey"
+let refreshTokenKey: String = "StormpathRefreshTokenKey"
+
 class KeychainService: NSObject {
     
     // This class does not yet use the keychain, will do in the future
