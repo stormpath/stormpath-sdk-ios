@@ -29,7 +29,7 @@ class KeychainServiceTests: XCTestCase {
     func testDataSave() {
         KeychainService.save(testData, key: testDataKey)
         
-        let loadedData = KeychainService.loadData(testDataKey)
+        let loadedData = KeychainService.dataForKey(testDataKey)
         
         XCTAssertNotNil(loadedData)
         XCTAssertEqual(loadedData, testData)
@@ -45,7 +45,7 @@ class KeychainServiceTests: XCTestCase {
     
     func testDataFetchPerformance() {
         self.measureBlock {
-            KeychainService.loadData(testDataKey)
+            KeychainService.dataForKey(testDataKey)
         }
     }
     

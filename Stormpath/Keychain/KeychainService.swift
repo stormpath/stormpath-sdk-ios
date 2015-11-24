@@ -8,18 +8,51 @@
 
 import UIKit
 
-let accesTokenKey: String   = "StormpathAccessTokenKey"
-let refreshTokenKey: String = "StormpathRefreshTokenKey"
+let accessTokenKey: String      = "StormpathAccessTokenKey"
+let refreshTokenKey: String     = "StormpathRefreshTokenKey"
+let APIURLKey: String           = "StormpathAPIURLKey"
 
-class KeychainService: NSObject {
+internal class KeychainService: NSObject {
+    
+    // Convenience vars
+    
+    internal class var accessToken: String {
+        get {
+            return KeychainService.dataForKey(accessTokenKey)
+        }
+        
+        set {
+            KeychainService.save(newValue, key: accessTokenKey)
+        }
+    }
+    
+    internal class var refreshToken: String {
+        get {
+            return KeychainService.dataForKey(refreshTokenKey)
+        }
+        
+        set {
+            KeychainService.save(newValue, key: refreshTokenKey)
+        }
+    }
+    
+    internal class var APIURL: String {
+        get {
+            return KeychainService.dataForKey(APIURLKey)
+        }
+        
+        set {
+            KeychainService.save(newValue, key: APIURLKey)
+        }
+    }
     
     // This class does not yet use the keychain, will do in the future
     
-    class func save(data: String, key: String) {
+    internal class func save(data: String, key: String) {
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: key)
     }
     
-    class func loadData(key: String) -> String {
+    internal class func dataForKey(key: String) -> String {
         let data: String = NSUserDefaults.standardUserDefaults().objectForKey(key) as! String
         return data
     }

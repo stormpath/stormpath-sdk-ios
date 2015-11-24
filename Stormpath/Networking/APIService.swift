@@ -8,9 +8,9 @@
 
 import UIKit
 
-class APIService: NSObject {
+internal class APIService: NSObject {
     
-    class func requestWithURLString(URLString: String) -> NSMutableURLRequest {
+    internal class func requestWithURLString(URLString: String) -> NSMutableURLRequest {
         
         let URL: NSURL = NSURL.init(string: URLString)!
         let request: NSMutableURLRequest = NSMutableURLRequest.init(URL: URL)
@@ -24,7 +24,7 @@ class APIService: NSObject {
     
     // MARK: Registration
     
-    class func register(customPath: String?, userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
+    internal class func register(customPath: String?, userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
         
         let URLString = URLPathService.registerPath(customPath)
         let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
@@ -44,7 +44,7 @@ class APIService: NSObject {
     
     // MARK: Login
     
-    class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithDictionary) {
+    internal class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
         
         // FIXME: Logout before login, otherwise no new tokens are fetched?
         
@@ -66,16 +66,18 @@ class APIService: NSObject {
                 if let responseData = data {
                     do {
                         let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(responseData, options: []) as! NSDictionary
-                        completion(tokensDictionary, nil)
+                        
                         
                         if let accessToken: String = tokensDictionary["access_token"] as? String {
-                            KeychainService.setValue(accessToken, forKey: accesTokenKey)
-                        } else {
-                            // LOG
-                        }
-                        
-                        if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
-                            KeychainService.setValue(refreshToken, forKey: refreshTokenKey)
+                            KeychainService.accessToken = accessToken
+                            
+                            if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
+                                KeychainService.refreshToken = refreshToken
+                            } else {
+                                // LOG
+                            }
+                            
+                            completion(accessToken, nil)
                         } else {
                             // LOG
                         }
@@ -96,7 +98,7 @@ class APIService: NSObject {
         
     }
     
-    class func logout(customPath: String?, completion: CompletionBlockWithError) {
+    internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
         
         let URLString = URLPathService.logoutPath(customPath)
         let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
@@ -116,7 +118,7 @@ class APIService: NSObject {
     
     // MARK: Parse response data
     
-    class func parseResponseData(data: NSData?, error: NSError?, completion: CompletionBlockWithDictionary) -> Void {
+    internal class func parseResponseData(data: NSData?, error: NSError?, completion: CompletionBlockWithDictionary) -> Void {
         
         // First make sure there are no network errors
         guard error == nil && data != nil else {

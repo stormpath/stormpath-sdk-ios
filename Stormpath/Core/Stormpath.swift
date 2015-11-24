@@ -9,11 +9,8 @@
 import UIKit
 
 public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
+public typealias CompletionBlockWithString     = ((NSString?, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
-
-let APIKeyKeychainKey: String    = "APIKeyKeychainKey"
-let APISecretKeychainKey: String = "APISecretKeychainKey"
-let APIURLKeychainKey: String    = "APIURLKeychainKey"
 
 public final class Stormpath: NSObject {
     
@@ -37,50 +34,17 @@ public final class Stormpath: NSObject {
     
     // API vars
     
-    class var APIURL: String {
+    internal class var APIURL: String {
         get {
-            return KeychainService.loadData(APIURLKeychainKey)
+            return KeychainService.APIURL
         }
         
         set {
-            KeychainService.save(newValue, key: APIURLKeychainKey)
+            KeychainService.APIURL = newValue
         }
     }
     
     // MARK: User registration
-    
-    /**
-    This convenience method registers a user and stores session tokens which can then be used later.
-
-    - parameter customPath: Relative path for your register.
-    - parameter username: User username.
-    - parameter password: User password.
-    - parameter completion: The completion block to be invoked after the API request is finished. It returns a dictionary with user data,
-        or an error if one occured.
-    */
-    
-    public class func register(customPath: String, username: String, password: String, completion: CompletionBlockWithDictionary) {
-        
-        let userDictionary: NSDictionary = ["email": username, "password": password]
-        APIService.register(customPath, userDictionary: userDictionary, completion: completion)
-        
-    }
-    
-    /**
-     Convenience method for user registration that doesn't use a custom path. Instead, /register is used as the relative path.
-     
-     - parameter username: User username.
-     - parameter password: User password.
-     - parameter completion: The completion block to be invoked after the API request is finished. It returns a dictionary with user data,
-        or an error if one occured.
-     */
-    
-    public class func register(username: String, password: String, completion: CompletionBlockWithDictionary) {
-        
-        let userDictionary: NSDictionary = ["email": username, "password": password]
-        APIService.register(nil, userDictionary: userDictionary, completion: completion)
-        
-    }
     
     /**
      This method registers a user from the data provided.
@@ -121,7 +85,7 @@ public final class Stormpath: NSObject {
     - parameter completion: The completion block to be invoked after the API request is finished. If the method fails, the error will be passed in the completion.
     */
     
-    public class func login(username: String, password: String, completion: CompletionBlockWithDictionary) {
+    public class func login(username: String, password: String, completion: CompletionBlockWithString) {
         
         APIService.login(nil, username: username, password: password, completion: completion)
         
@@ -151,7 +115,7 @@ public final class Stormpath: NSObject {
     // MARK: Token management
     
     public class func accessToken() -> String {
-        return ""
+        return KeychainService.accessToken
     }
     
     public class func refreshAccesToken() {
