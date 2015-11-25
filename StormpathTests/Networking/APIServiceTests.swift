@@ -13,24 +13,26 @@ class APIServiceTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        Stormpath.cleanUp()
         super.tearDown()
     }
     
     // MARK: Tests
     
     func testAPIExistsAtGivenURL() {
-        Stormpath.setUpWithURL("http://localhost:3000")
+        Stormpath.setUpWithURL("http://localhost:3000/")
+        XCTAssert(Stormpath.APIURL != nil)
         
-        let URL = NSURL(string: Stormpath.APIURL)!
+        let URL = NSURL(string: Stormpath.APIURL!)
+        XCTAssert(URL != nil)
+        
         let expectation = expectationWithDescription("GET \(URL)")
         
         let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithURL(URL) { data, response, error in
+        let task = session.dataTaskWithURL(URL!) { data, response, error in
             XCTAssertNotNil(data, "data should not be nil")
             XCTAssertNil(error, "error should be nil")
             
@@ -56,12 +58,15 @@ class APIServiceTests: XCTestCase {
     
     func testAPIExistsAtGivenURLWithTrailingSlash() {
         Stormpath.setUpWithURL("http://localhost:3000/")
+        XCTAssert(Stormpath.APIURL != nil)
         
-        let URL = NSURL(string: Stormpath.APIURL)!
+        let URL = NSURL(string: Stormpath.APIURL!)
+        XCTAssert(URL != nil)
+        
         let expectation = expectationWithDescription("GET \(URL)")
         
         let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithURL(URL) { data, response, error in
+        let task = session.dataTaskWithURL(URL!) { data, response, error in
             XCTAssertNotNil(data, "data should not be nil")
             XCTAssertNil(error, "error should be nil")
             

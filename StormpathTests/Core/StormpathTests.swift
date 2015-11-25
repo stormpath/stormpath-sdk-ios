@@ -13,8 +13,6 @@ class StormpathTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-
-        Stormpath.setUpWithURL("http://localhost:3000")
     }
     
     override func tearDown() {
@@ -26,7 +24,9 @@ class StormpathTests: XCTestCase {
     
     func testInitialSetup() {
         // Test that the initial setup stores the data properly
+        Stormpath.setUpWithURL("http://localhost:3000")
         XCTAssertNotNil(Stormpath.APIURL)
+        Stormpath.cleanUp()
     }
     
 }

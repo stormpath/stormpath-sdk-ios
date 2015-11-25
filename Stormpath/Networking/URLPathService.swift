@@ -12,51 +12,44 @@ internal final class URLPathService: NSObject {
     
     // MARK: Convenience methods
     
+    // We can guarantee there will not be nil values here, the APIURL must be already set
+    
     internal class func registerPath(relativeCustomPath: String?) -> String {
         
-        if let unwrappedPath = relativeCustomPath {
-            if unwrappedPath.isEmpty == false {
-                return URLPathService.urlStringForPath(unwrappedPath)
-            }
+        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
+            return URLPathService.urlStringForPath("/register")
         }
-
-        return URLPathService.urlStringForPath("/register")
+        
+        return URLPathService.urlStringForPath(relativeCustomPath!)
+        
     }
     
     internal class func loginPath(relativeCustomPath: String?) -> String {
         
-        if let unwrappedPath = relativeCustomPath {
-            if unwrappedPath.isEmpty == false {
-                return URLPathService.urlStringForPath(unwrappedPath)
-            }
+        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
+            return URLPathService.urlStringForPath("/oauth/token")
         }
         
-        return URLPathService.urlStringForPath("/oauth/token")
+        return URLPathService.urlStringForPath(relativeCustomPath!)
         
     }
     
     internal class func logoutPath(relativeCustomPath: String?) -> String {
         
-        if let unwrappedPath = relativeCustomPath {
-            if unwrappedPath.isEmpty == false {
-                return URLPathService.urlStringForPath(unwrappedPath)
-            }
+        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
+            return URLPathService.urlStringForPath("/logout")
         }
         
-        return URLPathService.urlStringForPath("/logout")
-        
+        return URLPathService.urlStringForPath(relativeCustomPath!)
+
     }
     
     // MARK: Utility
     
     private class func urlStringForPath(path: String) -> String {
         
-        // TODO: Replace asserts with guards
-        assert(Stormpath.APIURL.isEmpty == false, "Stormpath.APIURL needs to be set before calling API methods")
-        assert(path.isEmpty == false, "Relative path must be provided")
-        
         let cleanPath = URLPathService.trimSlashesFromString(path)
-        let fullPath = Stormpath.APIURL + "/" + cleanPath
+        let fullPath = Stormpath.APIURL! + "/" + cleanPath
         
         return fullPath
         
@@ -65,6 +58,7 @@ internal final class URLPathService: NSObject {
     private class func trimSlashesFromString(string: String) -> String {
         
         var cleanString = string
+        
         while cleanString.hasSuffix("/") {
             cleanString = String(cleanString.characters.dropLast())
         }

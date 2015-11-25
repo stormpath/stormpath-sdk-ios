@@ -16,7 +16,7 @@ internal class KeychainService: NSObject {
     
     // Convenience vars
     
-    internal class var accessToken: String {
+    internal class var accessToken: String? {
         get {
             return KeychainService.dataForKey(accessTokenKey)
         }
@@ -26,7 +26,7 @@ internal class KeychainService: NSObject {
         }
     }
     
-    internal class var refreshToken: String {
+    internal class var refreshToken: String? {
         get {
             return KeychainService.dataForKey(refreshTokenKey)
         }
@@ -36,7 +36,7 @@ internal class KeychainService: NSObject {
         }
     }
     
-    internal class var APIURL: String {
+    internal class var APIURL: String? {
         get {
             return KeychainService.dataForKey(APIURLKey)
         }
@@ -48,13 +48,21 @@ internal class KeychainService: NSObject {
     
     // This class does not yet use the keychain, will do in the future
     
-    internal class func save(data: String, key: String) {
-        NSUserDefaults.standardUserDefaults().setObject(data, forKey: key)
+    internal class func save(data: String?, key: String?) {
+        guard data != nil && key != nil else {
+            return
+        }
+        
+        // FIXME: Use real keychain
+        NSUserDefaults.standardUserDefaults().setObject(data, forKey: key!)
     }
     
-    internal class func dataForKey(key: String) -> String {
-        let data: String = NSUserDefaults.standardUserDefaults().objectForKey(key) as! String
-        return data
+    internal class func dataForKey(key: String) -> String? {
+        if let data: String = NSUserDefaults.standardUserDefaults().objectForKey(key) as? String {
+            return data
+        } else {
+            return nil
+        }
     }
     
 }
