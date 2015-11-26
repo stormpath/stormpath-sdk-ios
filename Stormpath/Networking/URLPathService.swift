@@ -44,6 +44,14 @@ internal final class URLPathService: NSObject {
 
     }
     
+    internal class func passwordResetPath(relativeCustomPath: String?) -> String {
+        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
+            return URLPathService.urlStringForPath("/change")
+        }
+        
+        return URLPathService.urlStringForPath(relativeCustomPath!)
+    }
+    
     // MARK: Utility
     
     private class func urlStringForPath(path: String) -> String {

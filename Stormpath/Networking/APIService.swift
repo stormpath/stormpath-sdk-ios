@@ -24,7 +24,7 @@ internal class APIService: NSObject {
     
     // MARK: Registration
     
-    internal class func register(customPath: String?, userDictionary: NSDictionary, completion: CompletionBlockWithDictionary) {
+    internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completion: CompletionBlockWithDictionary) {
         
         let URLString = URLPathService.registerPath(customPath)
         let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
@@ -122,6 +122,38 @@ internal class APIService: NSObject {
         
     }
     
+    // MARK: Forgot password
+    
+    internal class func resetPassword(customPath: String?, email: String, completion: CompletionBlockWithError) {
+     
+        let URLString = URLPathService.passwordResetPath(customPath)
+        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        
+        request.HTTPMethod = "POST"
+        
+        let emailDictionary: Dictionary = ["email": email]
+        
+        if let HTTPBodyData: NSData = try! NSJSONSerialization.dataWithJSONObject(emailDictionary, options: []) {
+            request.HTTPBody = HTTPBodyData
+            
+            let session: NSURLSession = NSURLSession.sharedSession()
+            
+            let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+                dispatch_async(dispatch_get_main_queue(), {
+                    print(response)
+                    print(String(data: data!, encoding: NSUTF8StringEncoding))
+                    print(error)
+                    completion(error)
+                })
+            }
+            
+            task.resume()
+        } else {
+            // LOG - the dictionary conversion to JSON failed
+        }
+        
+    }
+    
     // MARK: Parse response data
     
     internal class func parseRegisterResponseData(data: NSData?, error: NSError?, completion: CompletionBlockWithDictionary) {
@@ -138,7 +170,7 @@ internal class APIService: NSObject {
         }
         
         do {
-            if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
+            if let userResponseDictionary: Dictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? Dictionary<String, String> {
                 dispatch_async(dispatch_get_main_queue(), {
                     completion(userResponseDictionary, nil)
                 })
@@ -164,11 +196,11 @@ internal class APIService: NSObject {
         }
         
         do {
-            if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-                if let accessToken: String = tokensDictionary["access_token"] as? String {
+            if let tokensDictionary: Dictionary<String, String> = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? Dictionary<String, String> {
+                if let accessToken: String = tokensDictionary["access_token"] {
                     KeychainService.accessToken = accessToken
                     
-                    if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
+                    if let refreshToken: String = tokensDictionary["refresh_token"] {
                         KeychainService.refreshToken = refreshToken
                     } else {
                         // LOG
