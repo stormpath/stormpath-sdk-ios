@@ -27,7 +27,7 @@ class KeychainServiceTests: XCTestCase {
     // MARK: Tests
     
     func testDataSave() {
-        KeychainService.save(testData, key: testDataKey)
+        KeychainService.saveData(testData, key: testDataKey)
         
         let loadedData = KeychainService.dataForKey(testDataKey)
         
@@ -39,7 +39,7 @@ class KeychainServiceTests: XCTestCase {
     
     func testDataSavePerformance() {
         self.measureBlock {
-            KeychainService.save(testData, key: testDataKey)
+            KeychainService.saveData(testData, key: testDataKey)
         }
     }
     
