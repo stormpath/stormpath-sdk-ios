@@ -24,10 +24,10 @@ class APIServiceTests: XCTestCase {
     
     func testAPIExistsAtGivenURL() {
         Stormpath.setUpWithURL("http://localhost:3000/")
-        XCTAssert(Stormpath.APIURL != nil)
+        XCTAssertNotNil(Stormpath.APIURL)
         
         let URL = NSURL(string: Stormpath.APIURL!)
-        XCTAssert(URL != nil)
+        XCTAssertNotNil(URL)
         
         let expectation = expectationWithDescription("GET \(URL)")
         
@@ -58,10 +58,10 @@ class APIServiceTests: XCTestCase {
     
     func testAPIExistsAtGivenURLWithTrailingSlash() {
         Stormpath.setUpWithURL("http://localhost:3000/")
-        XCTAssert(Stormpath.APIURL != nil)
+        XCTAssertNotNil(Stormpath.APIURL)
         
         let URL = NSURL(string: Stormpath.APIURL!)
-        XCTAssert(URL != nil)
+        XCTAssertNotNil(URL)
         
         let expectation = expectationWithDescription("GET \(URL)")
         
@@ -88,6 +88,33 @@ class APIServiceTests: XCTestCase {
             
             task.cancel()
         }
+    }
+    
+    // MARK: Tests - Data parsing
+    
+//    func testValidRegisterResponseParsing() {
+//        
+//        
+//    }
+    
+    func testValidLoginResponseParsing() {
+        Stormpath.setUpWithURL("http://localhost:3000/")
+        
+        let validResponse: String = "{\"access_token\":\"accessToken\",\"refresh_token\":\"refreshToken\"}"
+//        let validResponse: String = "{\"access_token\":\"accessToken\",\"refresh_token\":\"refreshToken\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"stormpath_access_token_href\":\"https://api.stormpath.com/v1/accessTokens/tokens\"}"
+        let validData: NSData = validResponse.dataUsingEncoding(NSUTF8StringEncoding)!
+        
+        APIService.parseLoginResponseData(validData, error: nil) { (accessToken, error) -> Void in
+            // Confirm that parsing was successful
+            XCTAssertNil(error)
+            XCTAssertNotNil(accessToken)
+            XCTAssertEqual(accessToken, "accessToken")
+            
+            // Confirm that values are stored in Keychain properly
+            XCTAssertEqual("accessToken", KeychainService.accessToken)
+            XCTAssertEqual("refreshToken", KeychainService.refreshToken)
+        }
+        
     }
     
 }

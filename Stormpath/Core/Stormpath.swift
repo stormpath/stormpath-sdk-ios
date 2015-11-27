@@ -8,7 +8,7 @@
 
 import UIKit
 
-public typealias CompletionBlockWithDictionary = ((Dictionary<String, String>?, NSError?) -> Void)
+public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
 public typealias CompletionBlockWithString     = ((NSString?, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
@@ -136,6 +136,16 @@ public final class Stormpath: NSObject {
         
         assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.refreshAccessToken(customPath, completion: completion)
+        
+    }
+    
+    /**
+     Sets the log level to enable console output of network requests to your API.
+     
+     - parameter level: Level of logging, defaults to None. Info will log all of the request and response data. Error will only log if there was a critical issue.
+     */
+     
+    public class func setLogLevel(level: LogLevel) {
         
     }
     

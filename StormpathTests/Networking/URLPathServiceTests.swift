@@ -78,4 +78,5 @@ class URLPathServiceTests: XCTestCase {
         XCTAssertEqual(URLPathService.logoutPath(""), standardLogoutPath)
         XCTAssertEqual(URLPathService.logoutPath("//my/custom/path/to/logout//"), customLogoutPath)
     }
+    
 }

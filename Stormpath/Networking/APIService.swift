@@ -63,6 +63,7 @@ internal class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            Logger.sharedLogger.logRequest(request, title: "Login")
             APIService.parseLoginResponseData(data, error: error, completion: completion)
         }
         
@@ -88,7 +89,6 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                print(String(data: data!, encoding: NSUTF8StringEncoding))
                 APIService.parseLoginResponseData(data, error: error, completion: completion)
             }
             
@@ -140,9 +140,6 @@ internal class APIService: NSObject {
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
                 dispatch_async(dispatch_get_main_queue(), {
-                    print(response)
-                    print(String(data: data!, encoding: NSUTF8StringEncoding))
-                    print(error)
                     completion(error)
                 })
             }
@@ -170,7 +167,7 @@ internal class APIService: NSObject {
         }
         
         do {
-            if let userResponseDictionary: Dictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? Dictionary<String, String> {
+            if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
                 dispatch_async(dispatch_get_main_queue(), {
                     completion(userResponseDictionary, nil)
                 })
@@ -196,11 +193,12 @@ internal class APIService: NSObject {
         }
         
         do {
-            if let tokensDictionary: Dictionary<String, String> = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? Dictionary<String, String> {
-                if let accessToken: String = tokensDictionary["access_token"] {
+            if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
+                debugPrint(String(data: data!, encoding: NSUTF8StringEncoding))
+                if let accessToken: String = tokensDictionary["access_token"] as? String {
                     KeychainService.accessToken = accessToken
                     
-                    if let refreshToken: String = tokensDictionary["refresh_token"] {
+                    if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
                         KeychainService.refreshToken = refreshToken
                     } else {
                         // LOG
@@ -212,6 +210,8 @@ internal class APIService: NSObject {
                 } else {
                     // LOG
                 }
+            } else {
+                completion(nil, nil)
             }
         } catch let error as NSError {
             dispatch_async(dispatch_get_main_queue(), {

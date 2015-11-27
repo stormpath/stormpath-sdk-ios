@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4992A5D81C086FED00676E85 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4992A5D71C086FED00676E85 /* Logger.swift */; };
 		4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996C0B81BFBBDE600FA6CD4 /* KeychainService.swift */; };
 		4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */; };
 		49A0C4451BFA360A00016534 /* Stormpath.h in Headers */ = {isa = PBXBuildFile; fileRef = 49A0C4441BFA360A00016534 /* Stormpath.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4992A5D71C086FED00676E85 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4996C0B81BFBBDE600FA6CD4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		49A0C4411BFA360A00016534 /* Stormpath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stormpath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +79,7 @@
 			children = (
 				49A34D121C03614500054799 /* URLPathService.swift */,
 				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
+				4992A5D71C086FED00676E85 /* Logger.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4992A5D81C086FED00676E85 /* Logger.swift in Sources */,
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
 				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
 				49A34D131C03614500054799 /* URLPathService.swift in Sources */,

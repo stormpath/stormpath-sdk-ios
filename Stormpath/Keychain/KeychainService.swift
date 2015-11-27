@@ -15,14 +15,16 @@ let APIURLKey: String           = "StormpathAPIURLKey"
 
 // Keychain constants
 
-let serviceName: String         = "StormpathKeychainService"
+let serviceName: String             = "StormpathKeychainService"
 
-let SecValueData: String        = kSecValueData as String
-let SecAttrAccessible: String   = kSecAttrAccessible as String
-let SecClass: String            = kSecClass as String
-let SecAttrService: String      = kSecAttrService as String
-let SecAttrGeneric: String      = kSecAttrGeneric as String
-let SecAttrAccount: String      = kSecAttrAccount as String
+let SecValueData: String            = kSecValueData as String
+let SecAttrAccessible: String       = kSecAttrAccessible as String
+let SecClass: String                = kSecClass as String
+let SecAttrService: String          = kSecAttrService as String
+let SecAttrGeneric: String          = kSecAttrGeneric as String
+let SecAttrAccount: String          = kSecAttrAccount as String
+let SecMatchLimit: String           = kSecMatchLimit as String
+let SecReturnData: String           = kSecReturnData as String
 
 internal class KeychainService: NSObject {
     
@@ -30,73 +32,92 @@ internal class KeychainService: NSObject {
     
     internal class var accessToken: String? {
         get {
-            return self.dataForKey(accessTokenKey)
+            return self.stringForKey(accessTokenKey)
         }
         
         set {
-            self.saveData(newValue, key: accessTokenKey)
+            self.saveString(newValue, key: accessTokenKey)
         }
     }
     
     internal class var refreshToken: String? {
         get {
-            return self.dataForKey(refreshTokenKey)
+            return self.stringForKey(refreshTokenKey)
         }
         
         set {
-            self.saveData(newValue, key: refreshTokenKey)
+            self.saveString(newValue, key: refreshTokenKey)
         }
     }
     
     internal class var APIURL: String? {
         get {
-            return self.dataForKey(APIURLKey)
+            return self.stringForKey(APIURLKey)
         }
         
         set {
-            self.saveData(newValue, key: APIURLKey)
+            self.saveString(newValue, key: APIURLKey)
         }
     }
     
     // MARK: Core methods
     
-    internal class func saveData(data: String?, key: String) {
-        guard data != nil else {
-            self.deleteDataForKey(key)
+    internal class func saveString(value: String?, key: String) {
+        guard value != nil else {
+            self.deletestringForKey(key)
             return
         }
         
-        var keychainQueryDictionary: Dictionary<String, AnyObject> = self.keychainQueryDictionaryForKey(key)
-        keychainQueryDictionary[SecValueData] = data
-        keychainQueryDictionary[SecAttrAccessible] = kSecClassGenericPassword as String
+        var keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        
+        keychainQueryDictionary[SecValueData] = value!.dataUsingEncoding(NSUTF8StringEncoding)
+        keychainQueryDictionary[SecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
         
         let status: OSStatus = SecItemAdd(keychainQueryDictionary, nil)
         
         // If the value exists, update it instead
-        if (status == errSecDuplicateItem) {
-            self.updateData(data!, key: key)
+        if status == errSecDuplicateItem {
+            self.updateValue(value!, key: key)
+        } else if status != errSecSuccess {
+            // ADD LOG
         }
     }
     
-    internal class func dataForKey(key: String) -> String? {
-        if let data: String = NSUserDefaults.standardUserDefaults().objectForKey(key) as? String {
-            return data
-        } else {
-            return nil
+    internal class func stringForKey(key: String) -> String? {
+        var keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        var result: AnyObject?
+    
+        keychainQueryDictionary[SecMatchLimit] = kSecMatchLimitOne
+        keychainQueryDictionary[SecReturnData] = kCFBooleanTrue
+        
+        let status = withUnsafeMutablePointer(&result) {
+            SecItemCopyMatching(keychainQueryDictionary, UnsafeMutablePointer($0))
         }
+        
+        if status == noErr {
+            var stringValue: String?
+            if let data = result as? NSData {
+                stringValue = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+                return stringValue
+            }
+        }
+        
+        return nil
     }
     
     // MARK: Keychain access helpers
     
-    internal class func updateData(data: String, key: String) {
-        let keychainQueryDictionary: Dictionary<String, AnyObject> = self.keychainQueryDictionaryForKey(key)
-        let updateDictionary = [SecValueData: data]
+    internal class func updateValue(value: String, key: String) {
+        let keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        
+        let valueData = value.dataUsingEncoding(NSUTF8StringEncoding)
+        let updateDictionary: NSDictionary = [SecValueData: valueData!]
         
         SecItemUpdate(keychainQueryDictionary, updateDictionary)
     }
     
-    internal class func deleteDataForKey(key: String) -> Bool {
-        let keychainQueryDictionary: Dictionary<String, AnyObject> = self.keychainQueryDictionaryForKey(key)
+    internal class func deletestringForKey(key: String) -> Bool {
+        let keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
         
         let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
         
@@ -107,15 +128,15 @@ internal class KeychainService: NSObject {
         }
     }
     
-    internal class func keychainQueryDictionaryForKey(key: String) -> Dictionary<String, AnyObject> {
-        var keychainQueryDictionary: Dictionary<String, AnyObject> = [SecClass: kSecClassInternetPassword]
+    internal class func keychainQueryDictionaryForKey(key: String) -> [String: AnyObject] {
+        var keychainQueryDictionary: [String: AnyObject] = [String: AnyObject]()
+        
+        keychainQueryDictionary[SecClass] = kSecClassGenericPassword
         keychainQueryDictionary[SecAttrService] = serviceName
         
-        // Uniquely identify the account who will be accessing the keychain
-        let encodedIdentifier: NSData? = key.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        keychainQueryDictionary[SecAttrGeneric] = encodedIdentifier
-        keychainQueryDictionary[SecAttrAccount] = encodedIdentifier
+        let identifier: NSData? = key.dataUsingEncoding(NSUTF8StringEncoding)
+        keychainQueryDictionary[SecAttrGeneric] = identifier
+        keychainQueryDictionary[SecAttrAccount] = identifier
         
         return keychainQueryDictionary
     }

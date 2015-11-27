@@ -27,26 +27,16 @@ class KeychainServiceTests: XCTestCase {
     // MARK: Tests
     
     func testDataSave() {
-        KeychainService.saveData(testData, key: testDataKey)
+        // First clean the saved data
+        KeychainService.saveString(nil, key: testDataKey)
+        XCTAssertNil(KeychainService.stringForKey(testDataKey))
         
-        let loadedData = KeychainService.dataForKey(testDataKey)
+        KeychainService.saveString(testData, key: testDataKey)
+        
+        let loadedData = KeychainService.stringForKey(testDataKey)
         
         XCTAssertNotNil(loadedData)
         XCTAssertEqual(loadedData, testData)
-    }
-    
-    // MARK: Performance tests
-    
-    func testDataSavePerformance() {
-        self.measureBlock {
-            KeychainService.saveData(testData, key: testDataKey)
-        }
-    }
-    
-    func testDataFetchPerformance() {
-        self.measureBlock {
-            KeychainService.dataForKey(testDataKey)
-        }
     }
     
 }
