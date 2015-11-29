@@ -37,7 +37,19 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                APIService.parseRegisterResponseData(data, error: error, completion: completion)
+                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+                
+                if error != nil {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completion(nil, error)
+                    })
+                } else if HTTPResponse.statusCode != 200 {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                    })
+                } else {
+                    self.parseRegisterResponseData(data, completion: completion)
+                }
             }
             
             task.resume()
@@ -64,7 +76,21 @@ internal class APIService: NSObject {
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             Logger.sharedLogger.logRequest(request, title: "Login")
-            APIService.parseLoginResponseData(data, error: error, completion: completion)
+            
+            
+            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            
+            if error != nil {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    completion(nil, error)
+                })
+            } else if HTTPResponse.statusCode != 200 {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                })
+            } else {
+                APIService.parseLoginResponseData(data, completion: completion)
+            }
         }
         
         task.resume()
@@ -89,14 +115,28 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                APIService.parseLoginResponseData(data, error: error, completion: completion)
+                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+                
+                if error != nil {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completion(nil, error)
+                    })
+                } else if HTTPResponse.statusCode != 200 {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                    })
+                } else {
+                    APIService.parseLoginResponseData(data, completion: completion)
+                }
             }
             
             task.resume()
         } else {
             // LOG attempted to call refresh without ever calling login first
+            let error = NSError(domain: URLString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
+            
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(nil, nil)
+                completion(nil, error)
             })
         }
         
@@ -153,19 +193,20 @@ internal class APIService: NSObject {
     
     // MARK: Parse response data
     
-    internal class func parseRegisterResponseData(data: NSData?, error: NSError?, completion: CompletionBlockWithDictionary) {
+    internal class func parseRegisterResponseData(data: NSData?, completion: CompletionBlockWithDictionary) {
         
         // First make sure there are no network errors
-        guard error == nil && data != nil else {
-            dispatch_async(dispatch_get_main_queue(), {
-                completion(nil, error)
-            })
-            
+        guard  data != nil else {
             // LOG
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                completion(nil, nil)
+            })
             
             return
         }
         
+        // Attempt to parse the response JSON
         do {
             if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
                 dispatch_async(dispatch_get_main_queue(), {
@@ -177,24 +218,24 @@ internal class APIService: NSObject {
                 completion(nil, error)
             })
         }
-        
+
     }
     
-    internal class func parseLoginResponseData(data: NSData?, error: NSError?, completion: CompletionBlockWithString) {
+    internal class func parseLoginResponseData(data: NSData?, completion: CompletionBlockWithString) {
         
-        guard error == nil && data != nil else {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(nil, error)
-            })
+        // Check for network errors first
+        guard data != nil else {
+            // LOG This should not happen
             
-            // LOG
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                completion(nil, nil)
+            })
             
             return
         }
         
         do {
             if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
-                debugPrint(String(data: data!, encoding: NSUTF8StringEncoding))
                 if let accessToken: String = tokensDictionary["access_token"] as? String {
                     KeychainService.accessToken = accessToken
                     
@@ -208,7 +249,10 @@ internal class APIService: NSObject {
                         completion(accessToken, nil)
                     })
                 } else {
-                    // LOG
+                    // LOG there was no token
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(nil, nil)
+                    })
                 }
             } else {
                 completion(nil, nil)
@@ -219,6 +263,26 @@ internal class APIService: NSObject {
             })
         }
         
+    }
+    
+    // MARK: Helpers
+    
+    private class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
+        var userInfo = [String: AnyObject]()
+        
+        userInfo[NSLocalizedFailureReasonErrorKey] = NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode)
+        
+        // If the API returned an error object, extract the reason and put it in the error description instead
+        if data != nil {
+            let errorDictionary = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            if let errorDescription = errorDictionary["error"] {
+                userInfo[NSLocalizedDescriptionKey] = errorDescription
+            }
+        }
+        
+        let error: NSError = NSError(domain: "", code: response.statusCode, userInfo: userInfo)
+        
+        return error
     }
     
 }

@@ -128,6 +128,8 @@ internal class KeychainService: NSObject {
         }
     }
     
+    // MARK: Keychain query dictionary
+    
     internal class func keychainQueryDictionaryForKey(key: String) -> [String: AnyObject] {
         var keychainQueryDictionary: [String: AnyObject] = [String: AnyObject]()
         
