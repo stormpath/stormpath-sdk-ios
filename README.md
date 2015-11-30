@@ -46,7 +46,34 @@ If you wish to use the framework manually, just download it and drag'n'drop it i
 
 # Usage
 
-TBA.
+## 1. Setting up
+
+To set up the SDK, just point it towards your API endpoint (in your AppDelegate or anywhere before you start the actual usage), like so:
+
+```Swift
+Stormpath.setUpWithURL("http://api.stormpath.com")
+```
+
+## 2. User registration
+
+In order to register a user, first collect some user data, and put it in a `Dictionary`:
+
+```Swift
+let userDictionary = ["username": "User", "email": "user@delete.com", "password": "Password1"]
+```
+
+Then, just invoke the register method on `Stormpath` class:
+
+```Swift
+Stormpath.register(nil, userDictionary: userDictionary) { (createdUserDictionary, error) -> Void in
+
+            if error == nil {
+                // Registration succeeded, userDictionary holds your new user's data
+            } else {
+                // Something went wrong, check the error to see what
+            }
+        }
+```
 
 # License
 
