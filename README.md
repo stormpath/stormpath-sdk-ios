@@ -111,7 +111,21 @@ Stormpath.logout({ (error) -> Void in
 })
 ```
 
-## 5. Custom routes
+## 5. Password reset
+
+To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
+
+```Swift
+Stormpath.resetPassword(nil, email: "user@delete.com", completion: { (error) -> Void in
+    if error != nil {
+        // Tell the user the email is on its way!
+    } else {
+        // Something went awry
+    }
+})
+```
+
+## 6. Custom routes
 
 If your API has custom routes, just pass the relative path as a parameter to login, register or others:
 
