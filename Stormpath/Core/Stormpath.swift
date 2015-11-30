@@ -120,9 +120,11 @@ public final class Stormpath: NSObject {
     - returns: Access token for your API calls.
     */
     
-    public class func accessToken() -> String? {
+    public class var accessToken: String? {
         
-        return KeychainService.accessToken
+        get {
+            return KeychainService.accessToken
+        }
         
     }
     

@@ -141,6 +141,7 @@ class APIServiceTests: XCTestCase {
             
             // Confirm that values are stored in Keychain properly
             XCTAssertEqual("accessToken", KeychainService.accessToken)
+            XCTAssertEqual(KeychainService.accessToken, Stormpath.accessToken)
             XCTAssertEqual("refreshToken", KeychainService.refreshToken)
         }
     }
@@ -153,6 +154,8 @@ class APIServiceTests: XCTestCase {
         
         APIService.parseLoginResponseData(invalidData) { (accesToken, error) -> Void in
             XCTAssertNil(accesToken)
+            XCTAssertNil(KeychainService.accessToken)
+            XCTAssertNil(Stormpath.accessToken)
         }
     }
     
@@ -161,6 +164,8 @@ class APIServiceTests: XCTestCase {
                 
         APIService.parseLoginResponseData(nil) { (accessToken, error) -> Void in
             XCTAssertNil(accessToken)
+            XCTAssertNil(KeychainService.accessToken)
+            XCTAssertNil(Stormpath.accessToken)
             XCTAssertNotNil(error)
         }
     }
@@ -171,6 +176,8 @@ class APIServiceTests: XCTestCase {
         
         APIService.refreshAccessToken(nil) { (accessToken, error) -> Void in
             XCTAssertNil(accessToken)
+            XCTAssertNil(KeychainService.accessToken)
+            XCTAssertNil(Stormpath.accessToken)
             XCTAssertNotNil(error)
         }
     }
