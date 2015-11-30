@@ -88,6 +88,14 @@ Stormpath.login(nil, username: self.usernameTextField.text!, password: self.pass
 }
 ```
 
+There's no need to save the `acceessToken` anywhere, the SDK automatically stores it into the Keychain and it's accessible as a function on the `Stormpath` class:
+
+```Swift
+Stormpath.accessToken()
+```
+
+Keep this value safe if you're storing it somewhere else.
+
 ## 4. Logout
 
 Logging out is simple:
