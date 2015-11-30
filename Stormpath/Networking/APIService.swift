@@ -27,7 +27,7 @@ internal class APIService: NSObject {
     internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completion: CompletionBlockWithDictionary) {
         
         let URLString = URLPathService.registerPath(customPath)
-        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         request.HTTPMethod = "POST"
         
@@ -63,7 +63,7 @@ internal class APIService: NSObject {
     internal class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
         
         let URLString = URLPathService.loginPath(customPath)
-        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
         let body: String = String(format: "username=%@&password=%@&grant_type=password", username, password)
@@ -89,7 +89,7 @@ internal class APIService: NSObject {
                     completion(nil, self.errorForResponse(HTTPResponse, data: data))
                 })
             } else {
-                APIService.parseLoginResponseData(data, completion: completion)
+                self.parseLoginResponseData(data, completion: completion)
             }
         }
         
@@ -102,7 +102,7 @@ internal class APIService: NSObject {
     internal class func refreshAccessToken(customPath: String?, completion: CompletionBlockWithString) {
         
         let URLString = URLPathService.loginPath(customPath)
-        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
         if let refreshToken = KeychainService.refreshToken {
@@ -126,7 +126,7 @@ internal class APIService: NSObject {
                         completion(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    APIService.parseLoginResponseData(data, completion: completion)
+                    self.parseLoginResponseData(data, completion: completion)
                 }
             }
             
@@ -147,12 +147,15 @@ internal class APIService: NSObject {
     internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
         
         let URLString = URLPathService.logoutPath(customPath)
-        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         request.HTTPMethod = "GET"
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            KeychainService.accessToken = nil
+            KeychainService.refreshToken = nil
+            
             dispatch_async(dispatch_get_main_queue(), {
                 completion(error)
             })
@@ -167,7 +170,7 @@ internal class APIService: NSObject {
     internal class func resetPassword(customPath: String?, email: String, completion: CompletionBlockWithError) {
      
         let URLString = URLPathService.passwordResetPath(customPath)
-        let request: NSMutableURLRequest = APIService.requestWithURLString(URLString)
+        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         request.HTTPMethod = "POST"
         

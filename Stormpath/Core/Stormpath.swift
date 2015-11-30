@@ -38,9 +38,9 @@ public final class Stormpath: NSObject {
         
         // Trim the trailing slash if needed
         if APIURL.hasSuffix("/") {
-            Stormpath.APIURL = String(APIURL.characters.dropLast())
+            self.APIURL = String(APIURL.characters.dropLast())
         } else {
-            Stormpath.APIURL = APIURL
+            self.APIURL = APIURL
         }
     }
     
@@ -57,7 +57,7 @@ public final class Stormpath: NSObject {
     
     public class func register(customPath: String?, userDictionary: Dictionary<String, String>, completion: CompletionBlockWithDictionary) {
         
-        assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.register(customPath, userDictionary: userDictionary, completion: completion)
         
     }
@@ -75,7 +75,7 @@ public final class Stormpath: NSObject {
     
     public class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
         
-        assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.login(customPath, username: username, password: password, completion: completion)
         
     }
@@ -91,7 +91,7 @@ public final class Stormpath: NSObject {
     
     public class func logout(completion: CompletionBlockWithError) {
         
-        assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.logout(nil, completion: completion)
         
     }
@@ -107,7 +107,7 @@ public final class Stormpath: NSObject {
     
     public class func resetPassword(customPath: String?, email: String, completion: CompletionBlockWithError) {
         
-        assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.resetPassword(customPath, email: email, completion: completion)
         
     }
@@ -134,7 +134,7 @@ public final class Stormpath: NSObject {
     
     public class func refreshAccesToken(customPath: String?, completion: CompletionBlockWithString) {
         
-        assert(Stormpath.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.refreshAccessToken(customPath, completion: completion)
         
     }
@@ -150,13 +150,15 @@ public final class Stormpath: NSObject {
     }
     
     /**
-     Clean up all saved data. No need to call this method directly, this is done automatically on logout.
+     Clean up all saved data. This is used for testing only.
      */
     
     internal class func cleanUp() {
+        
         Stormpath.APIURL = nil
         KeychainService.accessToken = nil
         KeychainService.refreshToken = nil
+        
     }
     
 }

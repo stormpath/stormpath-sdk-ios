@@ -66,13 +66,49 @@ Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
 Stormpath.register(nil, userDictionary: userDictionary) { (createdUserDictionary, error) -> Void in
-
             if error == nil {
-                // Registration succeeded, userDictionary holds your new user's data
+                // Registration succeeded, createdUserDictionary holds your new user's data
             } else {
                 // Something went wrong, check the error to see what
             }
         }
+```
+
+## 3. Logging in
+
+To log in, collect the username and password from the user, and then pass them to login method:
+
+```Swift
+Stormpath.login(nil, username: self.usernameTextField.text!, password: self.passwordTextField.text!) { (accessToken, error) -> Void in
+    if error == nil {
+        // accessToken contains the token used for your other API calls
+    } else {
+        // Error handling goes here
+    }
+}
+```
+
+## 4. Logout
+
+Logging out is simple:
+
+```Swift
+Stormpath.logout({ (error) -> Void in
+    SVProgressHUD.dismiss()
+    if error == nil {
+        // All done
+    } else {
+        // Something went wrong, but the user is still locally logged out and the tokens are cleared
+    }
+})
+```
+
+## 5. Custom routes
+
+If your API has custom routes, just pass the relative path as a parameter to login, register or others:
+
+```Swift
+Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... }
 ```
 
 # License
