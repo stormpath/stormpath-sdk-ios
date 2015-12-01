@@ -144,10 +144,12 @@ public final class Stormpath: NSObject {
     /**
      Sets the log level to enable console output of network requests to your API.
      
-     - parameter level: Level of logging, defaults to None. Info will log all of the request and response data. Error will only log if there was a critical issue.
+     - parameter level: Level of logging, defaults to None. Debug will log all of the request and response data. Error will only log if there was an error using the lib.
      */
      
     public class func setLogLevel(level: LogLevel) {
+        
+        Logger.sharedLogger.logLevel = level
         
     }
     

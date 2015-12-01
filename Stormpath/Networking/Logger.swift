@@ -12,14 +12,14 @@ import UIKit
 
 public enum LogLevel {
     case None
-    case Info
+    case Debug
     case Error
 }
 
 internal class Logger: NSObject {
     
     static let sharedLogger = Logger()
-    var loggingEnabled: Bool = true
+    var logLevel: LogLevel = .None
     
     private override init() {
         
@@ -27,26 +27,45 @@ internal class Logger: NSObject {
     
     internal func log(string: String) {
         
-        if self.loggingEnabled {
-            print("[Stormpath] " + string)
+        switch self.logLevel {
+        case .None:
+            break
+            
+        case .Debug, .Error:
+            print("[STORMPATH] \(string)")
+            break
         }
         
     }
     
-    internal func logRequest(request: NSURLRequest, title: String) {
+    internal func logRequest(request: NSURLRequest) {
         
-        if self.loggingEnabled {
-            debugPrint("[Stormpath] ", title)
-            debugPrint(request)
+        if self.logLevel == .Debug {
+            print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString) \n\(request.allHTTPHeaderFields!)")
         }
         
     }
     
-    internal func logResponse(response: NSURLResponse, title: String) {
+    internal func logResponse(response: NSHTTPURLResponse, data: NSData?) {
         
-        if self.loggingEnabled {
-            debugPrint("[Stormpath] ", title)
-            debugPrint(response)
+        if self.logLevel == .Debug {
+            print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString) \n\(response.allHeaderFields)")
+            if data != nil {
+                print(String(data: data!, encoding: NSUTF8StringEncoding)!)
+            }
+        }
+        
+    }
+    
+    internal func logError(error: NSError) {
+        
+        switch self.logLevel {
+            case .None:
+                break
+                
+            case .Debug, .Error:
+                print("[STORMPATH][ERROR] \(error.code) \(error.localizedDescription)")
+                break
         }
         
     }

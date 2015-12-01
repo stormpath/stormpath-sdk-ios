@@ -133,6 +133,16 @@ If your API has custom routes, just pass the relative path as a parameter to log
 Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... }
 ```
 
+## 7. Logging
+
+At the moment, Stormpath SDK offers rudimentary logging to console for your debugging needs. To enable, do this:
+
+```Swift
+Stormpath.setLogLevel(.Debug)
+```
+
+Please be considerate and turn off the logging for your production builds.
+
 # License
 
 This project is open-source via [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). See LICENSE file for details.
