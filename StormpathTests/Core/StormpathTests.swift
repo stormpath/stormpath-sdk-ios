@@ -9,6 +9,8 @@
 import XCTest
 @testable import Stormpath
 
+internal let APIURL: String = "http://localhost:3000"
+
 class StormpathTests: XCTestCase {
     
     override func setUp() {
@@ -16,17 +18,19 @@ class StormpathTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
+        
+        Stormpath.APIURL = nil
+        KeychainService.accessToken = nil
+        KeychainService.refreshToken = nil
     }
     
     // MARK: Tests
     
     func testInitialSetup() {
         // Test that the initial setup stores the data properly
-        Stormpath.setUpWithURL("http://localhost:3000")
+        Stormpath.setUpWithURL(APIURL)
         XCTAssertNotNil(Stormpath.APIURL)
-        Stormpath.cleanUp()
     }
     
 }

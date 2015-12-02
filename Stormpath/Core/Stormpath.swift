@@ -89,10 +89,10 @@ public final class Stormpath: NSObject {
     */
 
     
-    public class func logout(completion: CompletionBlockWithError) {
+    public class func logout(customPath: String, completion: CompletionBlockWithError) {
         
         assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.logout(nil, completion: completion)
+        APIService.logout(customPath, completion: completion)
         
     }
     
@@ -150,18 +150,6 @@ public final class Stormpath: NSObject {
     public class func setLogLevel(level: LogLevel) {
         
         Logger.sharedLogger.logLevel = level
-        
-    }
-    
-    /**
-     Clean up all saved data. This is used for testing only.
-     */
-    
-    internal class func cleanUp() {
-        
-        Stormpath.APIURL = nil
-        KeychainService.accessToken = nil
-        KeychainService.refreshToken = nil
         
     }
     

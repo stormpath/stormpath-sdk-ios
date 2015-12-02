@@ -16,14 +16,18 @@ class APIServiceTests: XCTestCase {
     }
     
     override func tearDown() {
-        Stormpath.cleanUp()
         super.tearDown()
+        
+        Stormpath.APIURL = nil
+        KeychainService.accessToken = nil
+        KeychainService.refreshToken = nil
     }
     
     // MARK: Tests
     
+    // This will test that the API exists at the URL used for testing
     func testAPIExistsAtGivenURL() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         XCTAssertNotNil(Stormpath.APIURL)
         
         let URL = NSURL(string: Stormpath.APIURL!)
@@ -56,8 +60,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // Same as above, but this one makes sure the trailing slash doesn't create odd strings
     func testAPIExistsAtGivenURLWithTrailingSlash() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         XCTAssertNotNil(Stormpath.APIURL)
         
         let URL = NSURL(string: Stormpath.APIURL!)
@@ -92,8 +97,9 @@ class APIServiceTests: XCTestCase {
     
     // MARK: Test register responses
     
+    // Test that the valid response produces a valid dictionary
     func testValidRegisterResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         
         let validResponse: String = "{\"email\":\"user@stormpath.com\",\"password\":\"Password1\",\"username\":\"user@stormpath.com\"}"
         let validData: NSData = validResponse.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -104,8 +110,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // Invalid response should not produce a dictionary but an error
     func testInvalidRegisterResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         
         let invalidResponse = "this_should_not_work"
         let invalidData = invalidResponse.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -116,8 +123,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // This one tests no data given in a response
     func testErrorRegisterResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         
         APIService.parseRegisterResponseData(nil) { (userDictionary, error) -> Void in
             XCTAssertNil(userDictionary)
@@ -127,8 +135,9 @@ class APIServiceTests: XCTestCase {
     
     // MARK: Test login and refresh token responses
     
+    // Test that the valid login response returns the access_token, and stores both access_token and refresh_token properly
     func testValidLoginResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         
         let validResponse: String = "{\"access_token\":\"accessToken\",\"refresh_token\":\"refreshToken\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"stormpath_access_token_href\":\"https://api.stormpath.com/v1/accessTokens/tokens\"}"
         let validData: NSData = validResponse.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -146,8 +155,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // Invalid JSON should not store either access_token or refresh_token
     func testInvalidLoginResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         
         let invalidResponse = "this_should_not_work"
         let invalidData = invalidResponse.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -159,8 +169,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // No data received should not store tokens either
     func testErrorLoginResponseParsing() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
                 
         APIService.parseLoginResponseData(nil) { (accessToken, error) -> Void in
             XCTAssertNil(accessToken)
@@ -170,8 +181,9 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // Test that refreshing access_tokens fails when the refresh token is not set
     func testRefreshAccessTokenWhenRefreshTokenMising() {
-        Stormpath.setUpWithURL("http://localhost:3000/")
+        Stormpath.setUpWithURL(APIURL)
         KeychainService.refreshToken = nil
         
         APIService.refreshAccessToken(nil) { (accessToken, error) -> Void in
