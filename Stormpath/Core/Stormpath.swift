@@ -9,7 +9,7 @@
 import UIKit
 
 public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
-public typealias CompletionBlockWithString     = ((NSString?, NSError?) -> Void)
+public typealias CompletionBlockWithString     = ((String?, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {

@@ -39,16 +39,20 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
                 
-                Logger.logResponse(HTTPResponse, data: data)
-                
-                if error != nil {
+                guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, error)
                     })
-                } else if HTTPResponse.statusCode != 200 {
+                    
+                    return
+                }
+                
+                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+                Logger.logResponse(HTTPResponse, data: data)
+                
+                if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
@@ -82,16 +86,20 @@ internal class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
             
-            Logger.logResponse(HTTPResponse, data: data)
-            
-            if error != nil {
+            guard response != nil && error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     completion(nil, error)
                 })
-            } else if HTTPResponse.statusCode != 200 {
+                
+                return
+            }
+            
+            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            Logger.logResponse(HTTPResponse, data: data)
+            
+            if HTTPResponse.statusCode != 200 {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     completion(nil, self.errorForResponse(HTTPResponse, data: data))
                 })
@@ -124,17 +132,20 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
                 
-                Logger.logResponse(HTTPResponse, data: data)
-                
-                if error != nil {
+                guard response != nil && error == nil else {
                     Logger.logError(error!)
-                    
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, error)
                     })
-                } else if HTTPResponse.statusCode != 200 {
+                    
+                    return
+                }
+                
+                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+                Logger.logResponse(HTTPResponse, data: data)
+                
+                if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
@@ -166,16 +177,24 @@ internal class APIService: NSObject {
         
         Logger.logRequest(request)
         
+        // Regardless of how the API calls goes, we can logout the user locally
+        KeychainService.accessToken = nil
+        KeychainService.refreshToken = nil
+        
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            Logger.logResponse(response as! NSHTTPURLResponse, data: data)
-            if error != nil {
+            
+            guard response != nil && error == nil else {
                 Logger.logError(error!)
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    completion(error)
+                })
+                
+                return
             }
             
-            KeychainService.accessToken = nil
-            KeychainService.refreshToken = nil
+            Logger.logResponse(response as! NSHTTPURLResponse, data: data)
             
             dispatch_async(dispatch_get_main_queue(), {
                 completion(error)
@@ -207,10 +226,16 @@ internal class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                Logger.logResponse(response as! NSHTTPURLResponse, data: data)
-                if error != nil {
+                guard response != nil && error == nil else {
                     Logger.logError(error!)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completion(error)
+                    })
+                    
+                    return
                 }
+                
+                Logger.logResponse(response as! NSHTTPURLResponse, data: data)
                 
                 dispatch_async(dispatch_get_main_queue(), {
                     completion(error)
