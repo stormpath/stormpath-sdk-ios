@@ -65,13 +65,13 @@ let userDictionary = ["username": "User", "email": "user@delete.com", "password"
 Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
-Stormpath.register(nil, userDictionary: userDictionary) { (createdUserDictionary, error) -> Void in
-            if error == nil {
-                // Registration succeeded, createdUserDictionary holds your new user's data
-            } else {
-                // Something went wrong, check the error to see what
-            }
-        }
+Stormpath.register(userDictionary: userDictionary) { (createdUserDictionary, error) -> Void in
+    if error == nil {
+        // Registration succeeded, createdUserDictionary holds your new user's data
+    } else {
+        // Something went wrong, check the error to see what
+    }
+}
 ```
 
 ## 3. Logging in
@@ -79,7 +79,7 @@ Stormpath.register(nil, userDictionary: userDictionary) { (createdUserDictionary
 To log in, collect the username and password from the user, and then pass them to login method:
 
 ```Swift
-Stormpath.login(nil, username: self.usernameTextField.text!, password: self.passwordTextField.text!) { (accessToken, error) -> Void in
+Stormpath.login(username: self.usernameTextField.text!, password: self.passwordTextField.text!) { (accessToken, error) -> Void in
     if error == nil {
         // accessToken contains the token used for your other API calls
     } else {
@@ -116,7 +116,7 @@ Stormpath.logout({ (error) -> Void in
 To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
 
 ```Swift
-Stormpath.resetPassword(nil, email: "user@delete.com", completion: { (error) -> Void in
+Stormpath.resetPassword(email: "user@delete.com", completion: { (error) -> Void in
     if error != nil {
         // Tell the user the email is on its way!
     } else {
@@ -130,7 +130,7 @@ Stormpath.resetPassword(nil, email: "user@delete.com", completion: { (error) -> 
 If your API has custom routes, just pass the relative path as a parameter to login, register or others:
 
 ```Swift
-Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... }
+Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... })
 ```
 
 ## 7. Logging
@@ -141,7 +141,7 @@ At the moment, Stormpath SDK offers rudimentary logging to console for your debu
 Stormpath.setLogLevel(.Debug)
 ```
 
-Please be considerate and turn off the logging for your production builds.
+*Note:* Please be considerate and turn off the logging for your production builds.
 
 # License
 

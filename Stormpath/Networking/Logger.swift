@@ -18,14 +18,13 @@ public enum LogLevel {
 
 internal class Logger: NSObject {
     
-    static let sharedLogger = Logger()
-    var logLevel: LogLevel = .None
+    static var logLevel: LogLevel = .None
     
     private override init() {
         
     }
     
-    internal func log(string: String) {
+    internal class func log(string: String) {
         
         switch self.logLevel {
         case .None:
@@ -38,7 +37,7 @@ internal class Logger: NSObject {
         
     }
     
-    internal func logRequest(request: NSURLRequest) {
+    internal class func logRequest(request: NSURLRequest) {
         
         if self.logLevel == .Debug {
             print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString) \n\(request.allHTTPHeaderFields!)")
@@ -46,7 +45,7 @@ internal class Logger: NSObject {
         
     }
     
-    internal func logResponse(response: NSHTTPURLResponse, data: NSData?) {
+    internal class func logResponse(response: NSHTTPURLResponse, data: NSData?) {
         
         if self.logLevel == .Debug {
             print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString) \n\(response.allHeaderFields)")
@@ -57,7 +56,7 @@ internal class Logger: NSObject {
         
     }
     
-    internal func logError(error: NSError) {
+    internal class func logError(error: NSError) {
         
         switch self.logLevel {
             case .None:

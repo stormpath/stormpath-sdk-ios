@@ -31,7 +31,7 @@ internal class APIService: NSObject {
         
         request.HTTPMethod = "POST"
         
-        Logger.sharedLogger.logRequest(request)
+        Logger.logRequest(request)
         
         if let HTTPBodyData: NSData = try! NSJSONSerialization.dataWithJSONObject(userDictionary, options: []) {
             request.HTTPBody = HTTPBodyData
@@ -41,10 +41,10 @@ internal class APIService: NSObject {
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
                 let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
                 
-                Logger.sharedLogger.logResponse(HTTPResponse, data: data)
+                Logger.logResponse(HTTPResponse, data: data)
                 
                 if error != nil {
-                    Logger.sharedLogger.logError(error!)
+                    Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, error)
                     })
@@ -59,7 +59,7 @@ internal class APIService: NSObject {
             
             task.resume()
         } else {
-            Logger.sharedLogger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
+            Logger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
         }
     }
     
@@ -77,17 +77,17 @@ internal class APIService: NSObject {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
         
-        Logger.sharedLogger.logRequest(request)
+        Logger.logRequest(request)
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
             
-            Logger.sharedLogger.logResponse(HTTPResponse, data: data)
+            Logger.logResponse(HTTPResponse, data: data)
             
             if error != nil {
-                Logger.sharedLogger.logError(error!)
+                Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     completion(nil, error)
                 })
@@ -119,17 +119,17 @@ internal class APIService: NSObject {
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
             
-            Logger.sharedLogger.logRequest(request)
+            Logger.logRequest(request)
             
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
                 let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
                 
-                Logger.sharedLogger.logResponse(HTTPResponse, data: data)
+                Logger.logResponse(HTTPResponse, data: data)
                 
                 if error != nil {
-                    Logger.sharedLogger.logError(error!)
+                    Logger.logError(error!)
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(nil, error)
@@ -147,7 +147,7 @@ internal class APIService: NSObject {
         } else {
             let error = NSError(domain: URLString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
-            Logger.sharedLogger.logError(error)
+            Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completion(nil, error)
@@ -164,14 +164,14 @@ internal class APIService: NSObject {
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         request.HTTPMethod = "GET"
         
-        Logger.sharedLogger.logRequest(request)
+        Logger.logRequest(request)
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            Logger.sharedLogger.logResponse(response as! NSHTTPURLResponse, data: data)
+            Logger.logResponse(response as! NSHTTPURLResponse, data: data)
             if error != nil {
-                Logger.sharedLogger.logError(error!)
+                Logger.logError(error!)
             }
             
             KeychainService.accessToken = nil
@@ -195,21 +195,21 @@ internal class APIService: NSObject {
         
         request.HTTPMethod = "POST"
         
-        Logger.sharedLogger.logRequest(request)
+        Logger.logRequest(request)
         
         let emailDictionary: Dictionary = ["email": email]
         
         if let HTTPBodyData: NSData = try! NSJSONSerialization.dataWithJSONObject(emailDictionary, options: []) {
             request.HTTPBody = HTTPBodyData
             
-            Logger.sharedLogger.logRequest(request)
+            Logger.logRequest(request)
             
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                Logger.sharedLogger.logResponse(response as! NSHTTPURLResponse, data: data)
+                Logger.logResponse(response as! NSHTTPURLResponse, data: data)
                 if error != nil {
-                    Logger.sharedLogger.logError(error!)
+                    Logger.logError(error!)
                 }
                 
                 dispatch_async(dispatch_get_main_queue(), {
@@ -219,7 +219,7 @@ internal class APIService: NSObject {
             
             task.resume()
         } else {
-            Logger.sharedLogger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
+            Logger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
         }
         
     }
@@ -229,8 +229,8 @@ internal class APIService: NSObject {
     internal class func parseRegisterResponseData(data: NSData?, completion: CompletionBlockWithDictionary) {
         
         // First make sure there are no network errors
-        guard  data != nil else {
-            Logger.sharedLogger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
+        guard data != nil else {
+            Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), {
                 completion(nil, nil)
@@ -247,7 +247,7 @@ internal class APIService: NSObject {
                 })
             }
         } catch let error as NSError {
-            Logger.sharedLogger.logError(error)
+            Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), {
                 completion(nil, error)
@@ -259,7 +259,7 @@ internal class APIService: NSObject {
     internal class func parseLoginResponseData(data: NSData?, completion: CompletionBlockWithString) {
         
         guard data != nil else {
-            Logger.sharedLogger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
+            Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completion(nil, nil)
@@ -276,14 +276,14 @@ internal class APIService: NSObject {
                     if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
                         KeychainService.refreshToken = refreshToken
                     } else {
-                        Logger.sharedLogger.log("There was no refresh_token present in the response!")
+                        Logger.log("There was no refresh_token present in the response!")
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(accessToken, nil)
                     })
                 } else {
-                    Logger.sharedLogger.log("There was no access_token present in the response!")
+                    Logger.log("There was no access_token present in the response!")
                     
                     dispatch_async(dispatch_get_main_queue(), {
                         completion(nil, nil)
@@ -316,7 +316,7 @@ internal class APIService: NSObject {
         }
         
         let error: NSError = NSError(domain: "", code: response.statusCode, userInfo: userInfo)
-        Logger.sharedLogger.logError(error)
+        Logger.logError(error)
         
         return error
     }
