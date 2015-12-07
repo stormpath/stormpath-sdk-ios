@@ -117,7 +117,7 @@ public final class Stormpath: NSObject {
     // MARK: Token management
     
     /**
-    Provides the last access token fetched by either login or refreshAccessToken functions.
+    Provides the last access token fetched by either login or refreshAccessToken functions. NOTE: This value might be expired, to make sure you always have the valid token, use the accessToken() method.
     
     - returns: Access token for your API calls.
     */
@@ -127,6 +127,19 @@ public final class Stormpath: NSObject {
         get {
             return KeychainService.accessToken
         }
+        
+    }
+    
+    /**
+     Returns the token immediately if it's not expired and if there's one available, otherwise refreshes the token and returns the refreshed value.
+     
+     - parameter completion: Block invoked when the token is fetched. The string will either contain the token, or there will be an error passed if something went wrong.
+     */
+    
+    public class func accessToken(completion: CompletionBlockWithString) {
+        
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        APIService.accessTokenWithCompletion(completion)
         
     }
     

@@ -8,7 +8,72 @@
 
 import UIKit
 
+internal let AccesTokenExpiryDateKey: String    = "accesTokenExpiryDateKey"
+
+internal let CustomRegisterPath: String         = "customRegisterPath"
+internal let CustomLoginRefreshPath: String     = "customOAuthPath"
+internal let CustomLogoutPath: String           = "customLogoutPath"
+internal let CustomResetPasswordPath: String    = "customResetPasswordPath"
+
 internal class APIService: NSObject {
+    
+    // Store the custom paths so we can use them without needing to pass them around all the time
+    
+    internal class var customRegisterPath: String {
+        get {
+            if let storedValue = KeychainService.stringForKey(CustomRegisterPath) {
+                return storedValue
+            } else {
+                return ""
+            }
+        }
+        
+        set {
+            KeychainService.saveString(newValue, key: CustomRegisterPath)
+        }
+    }
+    
+    internal class var customLoginRefreshPath: String {
+        get {
+            if let storedValue = KeychainService.stringForKey(CustomLoginRefreshPath) {
+                return storedValue
+            } else {
+                return ""
+            }
+        }
+        
+        set {
+            KeychainService.saveString(newValue, key: CustomLoginRefreshPath)
+        }
+    }
+    
+    internal class var customLogoutPath: String {
+        get {
+            if let storedValue = KeychainService.stringForKey(CustomLogoutPath) {
+                return storedValue
+            } else {
+                return ""
+            }
+        }
+        
+        set {
+            KeychainService.saveString(newValue, key: CustomLogoutPath)
+        }
+    }
+    
+    internal class var customResetPasswordPath: String {
+        get {
+            if let storedValue = KeychainService.stringForKey(CustomResetPasswordPath) {
+                return storedValue
+            } else {
+                return ""
+            }
+        }
+        
+        set {
+            KeychainService.saveString(newValue, key: CustomResetPasswordPath)
+        }
+    }
     
     internal class func requestWithURLString(URLString: String) -> NSMutableURLRequest {
         
@@ -25,6 +90,10 @@ internal class APIService: NSObject {
     // MARK: Registration
     
     internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completion: CompletionBlockWithDictionary) {
+        
+        if customPath != nil {
+            self.customRegisterPath = customPath!
+        }
         
         let URLString = URLPathService.registerPath(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
@@ -57,6 +126,7 @@ internal class APIService: NSObject {
                         completion(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
+                    self.parseRegisterHeaderData(HTTPResponse)
                     self.parseRegisterResponseData(data, completion: completion)
                 }
             }
@@ -71,7 +141,11 @@ internal class APIService: NSObject {
     
     internal class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
         
-        let URLString = URLPathService.loginPath(customPath)
+        if customPath != nil {
+            self.customLoginRefreshPath = customPath!
+        }
+        
+        let URLString = URLPathService.loginPath(self.customLoginRefreshPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
@@ -116,7 +190,11 @@ internal class APIService: NSObject {
     
     internal class func refreshAccessToken(customPath: String?, completion: CompletionBlockWithString) {
         
-        let URLString = URLPathService.loginPath(customPath)
+        if customPath != nil {
+            self.customLoginRefreshPath = customPath!
+        }
+        
+        let URLString = URLPathService.loginPath(self.customLoginRefreshPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
@@ -171,6 +249,10 @@ internal class APIService: NSObject {
     
     internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
         
+        if customPath != nil {
+            self.customLogoutPath = customPath!
+        }
+        
         let URLString = URLPathService.logoutPath(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         request.HTTPMethod = "GET"
@@ -208,6 +290,10 @@ internal class APIService: NSObject {
     // MARK: Forgot password
     
     internal class func resetPassword(customPath: String?, email: String, completion: CompletionBlockWithError) {
+        
+        if customPath != nil {
+            self.customResetPasswordPath = customPath!
+        }
      
         let URLString = URLPathService.passwordResetPath(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
@@ -250,6 +336,15 @@ internal class APIService: NSObject {
     }
     
     // MARK: Parse response data
+    
+    internal class func parseRegisterHeaderData(response: NSHTTPURLResponse) {
+        // TODO: Implement this once we figure out why there are no cookies in register
+        
+//        print("---------------------------------------")
+//        print([NSHTTPCookie .cookiesWithResponseHeaderFields(response.allHeaderFields as! [String: String], forURL: response
+//            .URL!)])
+//        print("---------------------------------------")
+    }
     
     internal class func parseRegisterResponseData(data: NSData?, completion: CompletionBlockWithDictionary) {
         
@@ -304,6 +399,11 @@ internal class APIService: NSObject {
                         Logger.log("There was no refresh_token present in the response!")
                     }
                     
+                    if let expiresIn: Double = tokensDictionary["expires_in"] as? Double {
+                        let expiryDate = NSDate().dateByAddingTimeInterval(expiresIn)
+                        NSUserDefaults.standardUserDefaults().setObject(expiryDate, forKey: AccesTokenExpiryDateKey)
+                    }
+                    
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completion(accessToken, nil)
                     })
@@ -344,6 +444,31 @@ internal class APIService: NSObject {
         Logger.logError(error)
         
         return error
+    }
+    
+    // MARK: Token handling
+    
+    internal class func accessTokenWithCompletion(completion: CompletionBlockWithString) {
+        if self.accessTokenExpired() == false {
+            completion(KeychainService.accessToken, nil)
+        } else {
+            self.refreshAccessToken(KeychainService.stringForKey(self.customLoginRefreshPath), completion: completion)
+        }
+    }
+    
+    internal class func accessTokenExpired() -> Bool {
+        if let date = NSUserDefaults.standardUserDefaults().objectForKey(AccesTokenExpiryDateKey) {
+            let today: NSDate = NSDate()
+            let expiryDate: NSDate = date as! NSDate
+            
+            if today.compare(expiryDate) == NSComparisonResult.OrderedAscending {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return true
+        }
     }
     
 }

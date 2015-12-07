@@ -41,6 +41,9 @@ internal class Logger: NSObject {
         
         if self.logLevel == .Debug {
             print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString) \n\(request.allHTTPHeaderFields!)")
+            if let bodyData = request.HTTPBody, bodyString = String.init(data: bodyData, encoding: NSUTF8StringEncoding) {
+                print(bodyString)
+            }
         }
         
     }

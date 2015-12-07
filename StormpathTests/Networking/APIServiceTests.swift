@@ -193,4 +193,31 @@ class APIServiceTests: XCTestCase {
             XCTAssertNotNil(error)
         }
     }
+    
+    // MARK: Test dates
+    
+    func testDateComparisons() {
+        let before: NSDate = NSDate().dateByAddingTimeInterval(-100)
+        let now: NSDate = NSDate()
+        let after: NSDate = NSDate().dateByAddingTimeInterval(100)
+        
+        // Test nil
+        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
+        XCTAssert(APIService.accessTokenExpired() == true)
+        
+        // Test expired
+        NSUserDefaults.standardUserDefaults().setObject(before, forKey: AccesTokenExpiryDateKey)
+        XCTAssert(APIService.accessTokenExpired() == true)
+        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
+        
+        // Test equal dates
+        NSUserDefaults.standardUserDefaults().setObject(now, forKey: AccesTokenExpiryDateKey)
+        XCTAssert(APIService.accessTokenExpired() == true)
+        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
+        
+        // Test not expired
+        NSUserDefaults.standardUserDefaults().setObject(after, forKey: AccesTokenExpiryDateKey)
+        XCTAssert(APIService.accessTokenExpired() == false)
+        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
+    }
 }
