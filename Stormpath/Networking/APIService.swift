@@ -338,12 +338,27 @@ internal class APIService: NSObject {
     // MARK: Parse response data
     
     internal class func parseRegisterHeaderData(response: NSHTTPURLResponse) {
-        // TODO: Implement this once we figure out why there are no cookies in register
-        
-//        print("---------------------------------------")
-//        print([NSHTTPCookie .cookiesWithResponseHeaderFields(response.allHeaderFields as! [String: String], forURL: response
-//            .URL!)])
-//        print("---------------------------------------")
+        if let headerFields = response.allHeaderFields as? [String: String], cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!) {
+            
+            var foundToken: Bool = false
+            
+            for cookie in cookies {
+                if cookie.name == "access_token" {
+                    KeychainService.saveString(cookie.value, key: AccessTokenKey)
+                    NSUserDefaults.standardUserDefaults().setObject(cookie.expiresDate, forKey: AccesTokenExpiryDateKey)
+                    
+                    foundToken = true
+                }
+                
+                if cookie.name == "refresh_token" {
+                    KeychainService.saveString(cookie.value, key: RefreshTokenKey)
+                }
+            }
+            
+            if (foundToken == false) {
+                Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
+            }
+        }
     }
     
     internal class func parseRegisterResponseData(data: NSData?, completion: CompletionBlockWithDictionary) {

@@ -9,8 +9,8 @@
 import UIKit
 import Foundation
 
-let accessTokenKey: String      = "StormpathAccessTokenKey"
-let refreshTokenKey: String     = "StormpathRefreshTokenKey"
+let AccessTokenKey: String      = "StormpathAccessTokenKey"
+let RefreshTokenKey: String     = "StormpathRefreshTokenKey"
 let APIURLKey: String           = "StormpathAPIURLKey"
 
 // Keychain constants
@@ -32,21 +32,21 @@ internal class KeychainService: NSObject {
     
     internal class var accessToken: String? {
         get {
-            return self.stringForKey(accessTokenKey)
+            return self.stringForKey(AccessTokenKey)
         }
         
         set {
-            self.saveString(newValue, key: accessTokenKey)
+            self.saveString(newValue, key: AccessTokenKey)
         }
     }
     
     internal class var refreshToken: String? {
         get {
-            return self.stringForKey(refreshTokenKey)
+            return self.stringForKey(RefreshTokenKey)
         }
         
         set {
-            self.saveString(newValue, key: refreshTokenKey)
+            self.saveString(newValue, key: RefreshTokenKey)
         }
     }
     

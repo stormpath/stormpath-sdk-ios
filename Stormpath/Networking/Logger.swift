@@ -12,8 +12,9 @@ import UIKit
 
 public enum LogLevel {
     case None
-    case Debug
     case Error
+    case Debug
+    case Verbose
 }
 
 internal class Logger: NSObject {
@@ -30,7 +31,7 @@ internal class Logger: NSObject {
         case .None:
             break
             
-        case .Debug, .Error:
+        case .Debug, .Verbose, .Error:
             print("[STORMPATH] \(string)")
             break
         }
@@ -39,10 +40,14 @@ internal class Logger: NSObject {
     
     internal class func logRequest(request: NSURLRequest) {
         
-        if self.logLevel == .Debug {
-            print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString) \n\(request.allHTTPHeaderFields!)")
-            if let bodyData = request.HTTPBody, bodyString = String.init(data: bodyData, encoding: NSUTF8StringEncoding) {
-                print(bodyString)
+        if self.logLevel == .Debug || self.logLevel == .Verbose  {
+            print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString)")
+            
+            if self.logLevel == .Verbose {
+                print("\(request.allHTTPHeaderFields!)")
+                if let bodyData = request.HTTPBody, bodyString = String.init(data: bodyData, encoding: NSUTF8StringEncoding) {
+                    print("BODY:\n \(bodyString)")
+                }
             }
         }
         
@@ -50,10 +55,14 @@ internal class Logger: NSObject {
     
     internal class func logResponse(response: NSHTTPURLResponse, data: NSData?) {
         
-        if self.logLevel == .Debug {
-            print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString) \n\(response.allHeaderFields)")
-            if data != nil {
-                print(String(data: data!, encoding: NSUTF8StringEncoding)!)
+        if self.logLevel == .Debug || self.logLevel == .Verbose  {
+            print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString)")
+            
+            if self.logLevel == .Verbose {
+                print("\(response.allHeaderFields)")
+                if data != nil {
+                    print(String(data: data!, encoding: NSUTF8StringEncoding)!)
+                }
             }
         }
         
@@ -65,8 +74,10 @@ internal class Logger: NSObject {
             case .None:
                 break
                 
-            case .Debug, .Error:
+            case .Debug, .Verbose, .Error:
                 print("[STORMPATH][ERROR] \(error.code) \(error.localizedDescription)")
+                print(error.userInfo)
+                
                 break
         }
         
