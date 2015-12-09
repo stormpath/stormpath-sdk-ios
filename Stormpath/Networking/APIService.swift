@@ -8,8 +8,6 @@
 
 import UIKit
 
-internal let AccesTokenExpiryDateKey: String    = "accesTokenExpiryDateKey"
-
 internal let CustomRegisterPath: String         = "customRegisterPath"
 internal let CustomLoginRefreshPath: String     = "customOAuthPath"
 internal let CustomLogoutPath: String           = "customLogoutPath"
@@ -126,8 +124,9 @@ internal class APIService: NSObject {
                         completion(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseRegisterHeaderData(HTTPResponse)
-                    self.parseRegisterResponseData(data, completion: completion)
+                    self.parseRegisterHeaderData(HTTPResponse, completion: { (headersParsed) -> () in
+                        self.parseRegisterResponseData(data, completion: completion)
+                    })
                 }
             }
             
@@ -337,7 +336,7 @@ internal class APIService: NSObject {
     
     // MARK: Parse response data
     
-    internal class func parseRegisterHeaderData(response: NSHTTPURLResponse) {
+    internal class func parseRegisterHeaderData(response: NSHTTPURLResponse, completion: ((Bool) -> ())) {
         if let headerFields = response.allHeaderFields as? [String: String], cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!) {
             
             var foundToken: Bool = false
@@ -345,8 +344,6 @@ internal class APIService: NSObject {
             for cookie in cookies {
                 if cookie.name == "access_token" {
                     KeychainService.saveString(cookie.value, key: AccessTokenKey)
-                    NSUserDefaults.standardUserDefaults().setObject(cookie.expiresDate, forKey: AccesTokenExpiryDateKey)
-                    
                     foundToken = true
                 }
                 
@@ -358,6 +355,11 @@ internal class APIService: NSObject {
             if (foundToken == false) {
                 Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
             }
+            
+            completion(foundToken)
+        } else {
+            Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
+            completion(false)
         }
     }
     
@@ -405,18 +407,15 @@ internal class APIService: NSObject {
         
         do {
             if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
+                // Extract the access_token
                 if let accessToken: String = tokensDictionary["access_token"] as? String {
                     KeychainService.accessToken = accessToken
                     
+                    // If there was an access_token, check for the refresh_token as well
                     if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
                         KeychainService.refreshToken = refreshToken
                     } else {
                         Logger.log("There was no refresh_token present in the response!")
-                    }
-                    
-                    if let expiresIn: Double = tokensDictionary["expires_in"] as? Double {
-                        let expiryDate = NSDate().dateByAddingTimeInterval(expiresIn)
-                        NSUserDefaults.standardUserDefaults().setObject(expiryDate, forKey: AccesTokenExpiryDateKey)
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -434,6 +433,7 @@ internal class APIService: NSObject {
             }
         } catch let error as NSError {
             dispatch_async(dispatch_get_main_queue(), {
+                Logger.logError(error)
                 completion(nil, error)
             })
         }
@@ -459,31 +459,6 @@ internal class APIService: NSObject {
         Logger.logError(error)
         
         return error
-    }
-    
-    // MARK: Token handling
-    
-    internal class func accessTokenWithCompletion(completion: CompletionBlockWithString) {
-        if self.accessTokenExpired() == false {
-            completion(KeychainService.accessToken, nil)
-        } else {
-            self.refreshAccessToken(KeychainService.stringForKey(self.customLoginRefreshPath), completion: completion)
-        }
-    }
-    
-    internal class func accessTokenExpired() -> Bool {
-        if let date = NSUserDefaults.standardUserDefaults().objectForKey(AccesTokenExpiryDateKey) {
-            let today: NSDate = NSDate()
-            let expiryDate: NSDate = date as! NSDate
-            
-            if today.compare(expiryDate) == NSComparisonResult.OrderedAscending {
-                return false
-            } else {
-                return true
-            }
-        } else {
-            return true
-        }
     }
     
 }

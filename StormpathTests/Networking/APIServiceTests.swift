@@ -133,6 +133,27 @@ class APIServiceTests: XCTestCase {
         }
     }
     
+    // MARK: Test registration header parsing
+    
+    func testEmptyHeadersInRegistration() {
+//        KeychainService.accessToken = nil
+//        KeychainService.refreshToken = nil
+//        
+//        let expectation = expectationWithDescription("Parsing finished")
+//
+//        let response: NSHTTPURLResponse = NSHTTPURLResponse.init(URL: NSURL.init(string: APIURL)!, statusCode: 200, HTTPVersion: "", headerFields: ["":""])!
+//        APIService.parseRegisterHeaderData(response) { (headersParsed) -> () in
+//            expectation.fulfill()
+//            XCTAssert(headersParsed == false)
+//            XCTAssertNil(KeychainService.accessToken)
+//            XCTAssertNil(KeychainService.refreshToken)
+//        }
+//        
+//        waitForExpectationsWithTimeout(5.0) { (error) -> Void in
+//        
+//        }
+    }
+    
     // MARK: Test login and refresh token responses
     
     // Test that the valid login response returns the access_token, and stores both access_token and refresh_token properly
@@ -193,31 +214,5 @@ class APIServiceTests: XCTestCase {
             XCTAssertNotNil(error)
         }
     }
-    
-    // MARK: Test dates
-    
-    func testDateComparisons() {
-        let before: NSDate = NSDate().dateByAddingTimeInterval(-100)
-        let now: NSDate = NSDate()
-        let after: NSDate = NSDate().dateByAddingTimeInterval(100)
-        
-        // Test nil
-        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
-        XCTAssert(APIService.accessTokenExpired() == true)
-        
-        // Test expired
-        NSUserDefaults.standardUserDefaults().setObject(before, forKey: AccesTokenExpiryDateKey)
-        XCTAssert(APIService.accessTokenExpired() == true)
-        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
-        
-        // Test equal dates
-        NSUserDefaults.standardUserDefaults().setObject(now, forKey: AccesTokenExpiryDateKey)
-        XCTAssert(APIService.accessTokenExpired() == true)
-        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
-        
-        // Test not expired
-        NSUserDefaults.standardUserDefaults().setObject(after, forKey: AccesTokenExpiryDateKey)
-        XCTAssert(APIService.accessTokenExpired() == false)
-        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: AccesTokenExpiryDateKey)
-    }
+
 }
