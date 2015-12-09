@@ -80,6 +80,20 @@ public final class Stormpath: NSObject {
         
     }
     
+    /**
+     Fetches the user data, and returns it in the form of a dictionary.
+     
+     - parameter customPath: Optional parameter, use it if you remapped the /me path to something else.
+     - parameter completion: Completion block invoked 
+     */
+    
+    public class func me(customPath: String? = nil, completion: CompletionBlockWithDictionary) {
+        
+        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        
+        
+    }
+    
     // MARK: User logout
     
     /**

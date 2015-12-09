@@ -10,6 +10,7 @@ import UIKit
 
 internal let CustomRegisterPath: String         = "customRegisterPath"
 internal let CustomLoginRefreshPath: String     = "customOAuthPath"
+internal let CustomMePath: String               = "customMePath"
 internal let CustomLogoutPath: String           = "customLogoutPath"
 internal let CustomResetPasswordPath: String    = "customResetPasswordPath"
 
@@ -42,6 +43,20 @@ internal class APIService: NSObject {
         
         set {
             KeychainService.saveString(newValue, key: CustomLoginRefreshPath)
+        }
+    }
+    
+    internal class var customMePath: String {
+        get {
+            if let storedValue = KeychainService.stringForKey(CustomMePath) {
+                return storedValue
+            } else {
+                return ""
+            }
+        }
+        
+        set {
+            KeychainService.saveString(newValue, key: CustomMePath)
         }
     }
     
@@ -93,7 +108,7 @@ internal class APIService: NSObject {
             self.customRegisterPath = customPath!
         }
         
-        let URLString = URLPathService.registerPath(customPath)
+        let URLString = URLPath.Register.path(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         request.HTTPMethod = "POST"
@@ -144,7 +159,7 @@ internal class APIService: NSObject {
             self.customLoginRefreshPath = customPath!
         }
         
-        let URLString = URLPathService.loginPath(self.customLoginRefreshPath)
+        let URLString = URLPath.OAuth.path(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
@@ -193,7 +208,7 @@ internal class APIService: NSObject {
             self.customLoginRefreshPath = customPath!
         }
         
-        let URLString = URLPathService.loginPath(self.customLoginRefreshPath)
+        let URLString = URLPath.OAuth.path(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         // Generate the form data, the data posted MUST be a form
@@ -244,6 +259,19 @@ internal class APIService: NSObject {
         
     }
     
+    // MARK: User data
+    
+    internal class func me(customPath: String?, completion: CompletionBlockWithDictionary) {
+        
+//        if customPath != nil {
+//            self.customMePath = customPath!
+//        }
+//        
+//        let URLString = URLPath.UserProfile.path(customPath)
+//        let request: NSMutableURLRequest = self.requestWithURLString(URLString)
+        
+    }
+    
     // MARK: Logout
     
     internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
@@ -252,7 +280,7 @@ internal class APIService: NSObject {
             self.customLogoutPath = customPath!
         }
         
-        let URLString = URLPathService.logoutPath(customPath)
+        let URLString = URLPath.Logout.path(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         request.HTTPMethod = "GET"
         
@@ -294,7 +322,7 @@ internal class APIService: NSObject {
             self.customResetPasswordPath = customPath!
         }
      
-        let URLString = URLPathService.passwordResetPath(customPath)
+        let URLString = URLPath.PasswordReset.path(customPath)
         let request: NSMutableURLRequest = self.requestWithURLString(URLString)
         
         request.HTTPMethod = "POST"

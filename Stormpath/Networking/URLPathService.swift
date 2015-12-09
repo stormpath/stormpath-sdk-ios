@@ -8,49 +8,23 @@
 
 import UIKit
 
-internal final class URLPathService: NSObject {
+internal enum URLPath: String {
+    case Register       = "/register"
+    case OAuth          = "/oauth/token"
+    case UserProfile    = "/me"
+    case Logout         = "/logout"
+    case PasswordReset  = "/forgot"
     
-    // MARK: Convenience methods
-    
-    // We can guarantee there will not be nil values here, the APIURL must be already set
-    
-    internal class func registerPath(relativeCustomPath: String?) -> String {
-        
-        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
-            return URLPathService.urlStringForPath("/register")
+    func path(customPath: String?) -> String {
+        guard customPath != nil && customPath?.isEmpty == false else {
+            return URLPathService.urlStringForPath(self.rawValue)
         }
         
-        return URLPathService.urlStringForPath(relativeCustomPath!)
-        
+        return URLPathService.urlStringForPath(customPath!)
     }
-    
-    internal class func loginPath(relativeCustomPath: String?) -> String {
-        
-        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
-            return URLPathService.urlStringForPath("/oauth/token")
-        }
-        
-        return URLPathService.urlStringForPath(relativeCustomPath!)
-        
-    }
-    
-    internal class func logoutPath(relativeCustomPath: String?) -> String {
-        
-        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
-            return URLPathService.urlStringForPath("/logout")
-        }
-        
-        return URLPathService.urlStringForPath(relativeCustomPath!)
+}
 
-    }
-    
-    internal class func passwordResetPath(relativeCustomPath: String?) -> String {
-        guard relativeCustomPath != nil && relativeCustomPath?.isEmpty == false else {
-            return URLPathService.urlStringForPath("/forgot")
-        }
-        
-        return URLPathService.urlStringForPath(relativeCustomPath!)
-    }
+internal final class URLPathService: NSObject {
     
     // MARK: Utility
     
