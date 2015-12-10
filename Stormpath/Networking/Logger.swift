@@ -46,7 +46,7 @@ internal class Logger: NSObject {
             if self.logLevel == .Verbose {
                 print("\(request.allHTTPHeaderFields!)")
                 if let bodyData = request.HTTPBody, bodyString = String.init(data: bodyData, encoding: NSUTF8StringEncoding) {
-                    print("BODY:\n \(bodyString)")
+                    print("\(bodyString)")
                 }
             }
         }
