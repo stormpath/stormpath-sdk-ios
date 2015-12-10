@@ -90,7 +90,7 @@ public final class Stormpath: NSObject {
     public class func me(customPath: String? = nil, completion: CompletionBlockWithDictionary) {
         
         assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        
+        APIService.me(customPath, completion: completion)
         
     }
     

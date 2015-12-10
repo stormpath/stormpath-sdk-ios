@@ -104,7 +104,7 @@ class APIServiceTests: XCTestCase {
         let validResponse: String = "{\"email\":\"user@stormpath.com\",\"password\":\"Password1\",\"username\":\"user@stormpath.com\"}"
         let validData: NSData = validResponse.dataUsingEncoding(NSUTF8StringEncoding)!
         
-        APIService.parseRegisterResponseData(validData) { (userDictionary, error) -> Void in
+        APIService.parseDictionaryResponseData(validData) { (userDictionary, error) -> Void in
             XCTAssertNotNil(userDictionary)
             XCTAssertNil(error)
         }
@@ -117,7 +117,7 @@ class APIServiceTests: XCTestCase {
         let invalidResponse = "this_should_not_work"
         let invalidData = invalidResponse.dataUsingEncoding(NSUTF8StringEncoding)!
         
-        APIService.parseRegisterResponseData(invalidData) { (userDictionary, error) -> Void in
+        APIService.parseDictionaryResponseData(invalidData) { (userDictionary, error) -> Void in
             XCTAssertNil(userDictionary)
             XCTAssertNotNil(error)
         }
@@ -127,7 +127,7 @@ class APIServiceTests: XCTestCase {
     func testErrorRegisterResponseParsing() {
         Stormpath.setUpWithURL(APIURL)
         
-        APIService.parseRegisterResponseData(nil) { (userDictionary, error) -> Void in
+        APIService.parseDictionaryResponseData(nil) { (userDictionary, error) -> Void in
             XCTAssertNil(userDictionary)
             XCTAssertNotNil(error)
         }
@@ -136,22 +136,15 @@ class APIServiceTests: XCTestCase {
     // MARK: Test registration header parsing
     
     func testEmptyHeadersInRegistration() {
-//        KeychainService.accessToken = nil
-//        KeychainService.refreshToken = nil
-//        
-//        let expectation = expectationWithDescription("Parsing finished")
-//
-//        let response: NSHTTPURLResponse = NSHTTPURLResponse.init(URL: NSURL.init(string: APIURL)!, statusCode: 200, HTTPVersion: "", headerFields: ["":""])!
-//        APIService.parseRegisterHeaderData(response) { (headersParsed) -> () in
-//            expectation.fulfill()
-//            XCTAssert(headersParsed == false)
-//            XCTAssertNil(KeychainService.accessToken)
-//            XCTAssertNil(KeychainService.refreshToken)
-//        }
-//        
-//        waitForExpectationsWithTimeout(5.0) { (error) -> Void in
-//        
-//        }
+        KeychainService.accessToken = nil
+        KeychainService.refreshToken = nil
+
+        let response: NSHTTPURLResponse = NSHTTPURLResponse.init(URL: NSURL.init(string: APIURL)!, statusCode: 200, HTTPVersion: "", headerFields: ["":""])!
+        APIService.parseRegisterHeaderData(response)
+        
+        // Invalid headers should not parse anything
+        XCTAssertNil(KeychainService.accessToken)
+        XCTAssertNil(KeychainService.refreshToken)
     }
     
     // MARK: Test login and refresh token responses

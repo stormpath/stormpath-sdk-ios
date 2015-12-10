@@ -45,17 +45,17 @@ class URLPathServiceTests: XCTestCase {
     // These set of methods test the register URL string generation
     
     func testStandardRegister() {
-        XCTAssertEqual(URLPath.Register.path(nil), standardRegisterPath)
+        XCTAssertEqual(URLPath.Register.URL(nil).absoluteString, standardRegisterPath)
     }
     
     func testCustomPathRegister() {
         let registerCustomPath = "/my/custom/path/to/register"
-        XCTAssertEqual(URLPath.Register.path(registerCustomPath), customRegisterPath)
+        XCTAssertEqual(URLPath.Register.URL(registerCustomPath).absoluteString, customRegisterPath)
     }
     
     func testWeirdInputRegister() {
-        XCTAssertEqual(URLPath.Register.path(""), standardRegisterPath)
-        XCTAssertEqual(URLPath.Register.path("//my/custom/path/to/register//"), customRegisterPath)
+        XCTAssertEqual(URLPath.Register.URL("").absoluteString, standardRegisterPath)
+        XCTAssertEqual(URLPath.Register.URL("my/custom/path/to/register").absoluteString, customRegisterPath)
     }
     
     // MARK: Tests - Login paths
@@ -63,17 +63,17 @@ class URLPathServiceTests: XCTestCase {
     // These methods make sure login URL string generation works as intended (these are also refresh token paths)
     
     func testStandardOAuth() {
-        XCTAssertEqual(URLPath.OAuth.path(nil), standardLoginPath)
+        XCTAssertEqual(URLPath.OAuth.URL(nil).absoluteString, standardLoginPath)
     }
     
     func testCustomPathOAuth() {
         let loginCustomPath = "/my/custom/path/to/login"
-        XCTAssertEqual(URLPath.OAuth.path(loginCustomPath), customLoginPath)
+        XCTAssertEqual(URLPath.OAuth.URL(loginCustomPath).absoluteString, customLoginPath)
     }
     
     func testWeirdInputOAuth() {
-        XCTAssertEqual(URLPath.OAuth.path(""), standardLoginPath)
-        XCTAssertEqual(URLPath.OAuth.path("//my/custom/path/to/login//"), customLoginPath)
+        XCTAssertEqual(URLPath.OAuth.URL("").absoluteString, standardLoginPath)
+        XCTAssertEqual(URLPath.OAuth.URL("my/custom/path/to/login").absoluteString, customLoginPath)
     }
     
     // MARK: Tests - Logout paths
@@ -81,17 +81,17 @@ class URLPathServiceTests: XCTestCase {
     // Test that the logout URL string generating works as intended
     
     func testStandardLogout() {
-        XCTAssertEqual(URLPath.Logout.path(nil), standardLogoutPath)
+        XCTAssertEqual(URLPath.Logout.URL(nil).absoluteString, standardLogoutPath)
     }
     
     func testCustomPathLogout() {
         let logoutCustomPath = "/my/custom/path/to/logout"
-        XCTAssertEqual(URLPath.Logout.path(logoutCustomPath), customLogoutPath)
+        XCTAssertEqual(URLPath.Logout.URL(logoutCustomPath).absoluteString, customLogoutPath)
     }
     
     func testWeirdInputLogout() {
-        XCTAssertEqual(URLPath.Logout.path(""), standardLogoutPath)
-        XCTAssertEqual(URLPath.Logout.path("//my/custom/path/to/logout//"), customLogoutPath)
+        XCTAssertEqual(URLPath.Logout.URL("").absoluteString, standardLogoutPath)
+        XCTAssertEqual(URLPath.Logout.URL("my/custom/path/to/logout").absoluteString, customLogoutPath)
     }
     
     // MARK: Tests - Forgot password paths
@@ -99,17 +99,17 @@ class URLPathServiceTests: XCTestCase {
     // Test that the forgot password string for URLs work (these should be same as login URLs)
     
     func testStandardForgotPassword() {
-        XCTAssertEqual(URLPath.PasswordReset.path(nil), standardForgotPasswordPath)
+        XCTAssertEqual(URLPath.ResetPassword.URL(nil).absoluteString, standardForgotPasswordPath)
     }
     
     func testCustomPathForgotPassword() {
         let forgotPasswordCustomPath = "/my/custom/path/to/forgot"
-        XCTAssertEqual(URLPath.PasswordReset.path(forgotPasswordCustomPath), customForgotPasswordPath)
+        XCTAssertEqual(URLPath.ResetPassword.URL(forgotPasswordCustomPath).absoluteString, customForgotPasswordPath)
     }
     
     func testWeirdInputForgotPassword() {
-        XCTAssertEqual(URLPath.PasswordReset.path(""), standardForgotPasswordPath)
-        XCTAssertEqual(URLPath.PasswordReset.path("//my/custom/path/to/forgot//"), customForgotPasswordPath)
+        XCTAssertEqual(URLPath.ResetPassword.URL("").absoluteString, standardForgotPasswordPath)
+        XCTAssertEqual(URLPath.ResetPassword.URL("my/custom/path/to/forgot").absoluteString, customForgotPasswordPath)
     }
     
 }
