@@ -119,8 +119,7 @@ internal class APIService: NSObject {
             
             let session: NSURLSession = NSURLSession.sharedSession()
             
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                
+            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -141,7 +140,7 @@ internal class APIService: NSObject {
                     self.parseRegisterHeaderData(HTTPResponse)
                     self.parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
-            }
+            })
             
             task.resume()
         } else {
@@ -171,8 +170,7 @@ internal class APIService: NSObject {
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            
+        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             guard response != nil && error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -192,7 +190,7 @@ internal class APIService: NSObject {
             } else {
                 self.parseLoginResponseData(data, completionHandler: completionHandler)
             }
-        }
+        })
         
         task.resume()
         
@@ -221,8 +219,7 @@ internal class APIService: NSObject {
             
             let session: NSURLSession = NSURLSession.sharedSession()
             
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                
+            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -242,7 +239,7 @@ internal class APIService: NSObject {
                 } else {
                     self.parseLoginResponseData(data, completionHandler: completionHandler)
                 }
-            }
+            })
             
             task.resume()
         } else {
@@ -333,8 +330,7 @@ internal class APIService: NSObject {
         
         let session: NSURLSession = NSURLSession.sharedSession()
         
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            
+        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             guard response != nil && error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -349,7 +345,7 @@ internal class APIService: NSObject {
             dispatch_async(dispatch_get_main_queue(), {
                 completionHandler(error)
             })
-        }
+        })
         
         task.resume()
         
@@ -378,7 +374,7 @@ internal class APIService: NSObject {
             
             let session: NSURLSession = NSURLSession.sharedSession()
             
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -393,7 +389,7 @@ internal class APIService: NSObject {
                 dispatch_async(dispatch_get_main_queue(), {
                     completionHandler(error)
                 })
-            }
+            })
             
             task.resume()
         } else {
