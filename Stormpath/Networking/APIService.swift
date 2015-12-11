@@ -267,8 +267,8 @@ internal class APIService: NSObject {
         request.HTTPMethod = "GET"
         
         // Fetch the user data
-        if let refreshToken = KeychainService.refreshToken {
-            request.setValue("Bearer " + refreshToken, forHTTPHeaderField: "Authorization")
+        if let accessToken = KeychainService.accessToken {
+            request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
             
             Logger.logRequest(request)
             
