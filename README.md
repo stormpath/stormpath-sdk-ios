@@ -16,6 +16,10 @@ https://stormpath.com/
 
 iOS 8.0+ / XCode 7.1+
 
+# Set up
+
+Stormpath iOS SDK currently works only against the [Express-Stormpath](https://github.com/stormpath/express-stormpath) integration. More to come soon!
+
 # Installation
 
 ## Cocoapods
@@ -51,7 +55,7 @@ If you wish to use the framework manually, just download it and drag'n'drop it i
 To set up the SDK, just point it towards your API endpoint (in your AppDelegate or anywhere before you start the actual usage), like so:
 
 ```Swift
-Stormpath.setUpWithURL("http://api.stormpath.com")
+Stormpath.setUpWithURL("http://api.example.com")
 ```
 
 ## 2. User registration
@@ -96,7 +100,21 @@ Stormpath.accessToken
 
 Keep this value safe if you're storing it somewhere else.
 
-## 4. Logout
+## 4. User data
+
+Fetch the user data by using me:
+
+```Swift
+Stormpath.me(completionHandler: { (userDictionary, error) -> Void in
+    if error == nil {
+        // Parse userDictionary for relevant data
+    } else {
+        // Error handling
+    }
+}
+```
+
+## 5. Logout
 
 Logging out is simple:
 
@@ -111,12 +129,12 @@ Stormpath.logout({ (error) -> Void in
 })
 ```
 
-## 5. Password reset
+## 6. Password reset
 
 To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
 
 ```Swift
-Stormpath.resetPassword(email: "user@delete.com", completion: { (error) -> Void in
+Stormpath.resetPassword(email: "user@delete.com", completionHandler: { (error) -> Void in
     if error != nil {
         // Tell the user the email is on its way!
     } else {
@@ -125,7 +143,7 @@ Stormpath.resetPassword(email: "user@delete.com", completion: { (error) -> Void 
 })
 ```
 
-## 6. Custom routes
+## 7. Custom routes
 
 If your API has custom routes, just pass the relative path as a parameter to login, register or others:
 
@@ -133,13 +151,15 @@ If your API has custom routes, just pass the relative path as a parameter to log
 Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... })
 ```
 
-## 7. Logging
+## 8. Logging
 
 At the moment, Stormpath SDK offers rudimentary logging to console for your debugging needs. To enable, do this:
 
 ```Swift
 Stormpath.setLogLevel(.Debug)
 ```
+
+There are four levels at the moment .None, .Debug., .Verbose, and .Error.
 
 *Note:* Please be considerate and turn off the logging for your production builds.
 
