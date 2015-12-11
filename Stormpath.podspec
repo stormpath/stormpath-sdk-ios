@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'Stormpath'
-  s.version = '0.9.4'
+  s.version = '0.9.5'
   s.license = 'Apache 2.0'
   s.summary = 'iOS SDK for Stormpath identity API.'
   s.homepage = 'https://github.com/stormpath/stormpath-sdk-swift'
