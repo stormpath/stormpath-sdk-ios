@@ -101,7 +101,7 @@ internal class APIService: NSObject {
     
     // MARK: Registration
     
-    internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completion: CompletionBlockWithDictionary) {
+    internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
         if customPath != nil {
             self.customRegisterPath = customPath!
@@ -124,7 +124,7 @@ internal class APIService: NSObject {
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, error)
+                        completionHandler(nil, error)
                     })
                     
                     return
@@ -135,11 +135,11 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
                     self.parseRegisterHeaderData(HTTPResponse)
-                    self.parseDictionaryResponseData(data, completion: completion)
+                    self.parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
             }
             
@@ -151,7 +151,7 @@ internal class APIService: NSObject {
     
     // MARK: Login
     
-    internal class func login(customPath: String?, username: String, password: String, completion: CompletionBlockWithString) {
+    internal class func login(customPath: String?, username: String, password: String, completionHandler: CompletionBlockWithString) {
         
         if customPath != nil {
             self.customLoginRefreshPath = customPath!
@@ -176,7 +176,7 @@ internal class APIService: NSObject {
             guard response != nil && error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completion(nil, error)
+                    completionHandler(nil, error)
                 })
                 
                 return
@@ -187,10 +187,10 @@ internal class APIService: NSObject {
             
             if HTTPResponse.statusCode != 200 {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                    completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
                 })
             } else {
-                self.parseLoginResponseData(data, completion: completion)
+                self.parseLoginResponseData(data, completionHandler: completionHandler)
             }
         }
         
@@ -200,7 +200,7 @@ internal class APIService: NSObject {
     
     // MARK: Access token refresh
     
-    internal class func refreshAccessToken(customPath: String?, completion: CompletionBlockWithString) {
+    internal class func refreshAccessToken(customPath: String?, completionHandler: CompletionBlockWithString) {
         
         if customPath != nil {
             self.customLoginRefreshPath = customPath!
@@ -226,7 +226,7 @@ internal class APIService: NSObject {
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, error)
+                        completionHandler(nil, error)
                     })
                     
                     return
@@ -237,10 +237,10 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseLoginResponseData(data, completion: completion)
+                    self.parseLoginResponseData(data, completionHandler: completionHandler)
                 }
             }
             
@@ -251,7 +251,7 @@ internal class APIService: NSObject {
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(nil, error)
+                completionHandler(nil, error)
             })
         }
         
@@ -259,7 +259,7 @@ internal class APIService: NSObject {
     
     // MARK: User data
     
-    internal class func me(customPath: String?, completion: CompletionBlockWithDictionary) {
+    internal class func me(customPath: String?, completionHandler: CompletionBlockWithDictionary) {
         
         if customPath != nil {
             self.customMePath = customPath!
@@ -281,7 +281,7 @@ internal class APIService: NSObject {
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, error)
+                        completionHandler(nil, error)
                     })
                     
                     return
@@ -292,10 +292,10 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseDictionaryResponseData(data, completion: completion)
+                    self.parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
                 
             })
@@ -307,7 +307,7 @@ internal class APIService: NSObject {
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(nil, error)
+                completionHandler(nil, error)
             })
         }
         
@@ -315,7 +315,7 @@ internal class APIService: NSObject {
     
     // MARK: Logout
     
-    internal class func logout(customPath: String?, completion: CompletionBlockWithError) {
+    internal class func logout(customPath: String?, completionHandler: CompletionBlockWithError) {
         
         if customPath != nil {
             self.customLogoutPath = customPath!
@@ -338,7 +338,7 @@ internal class APIService: NSObject {
             guard response != nil && error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completion(error)
+                    completionHandler(error)
                 })
                 
                 return
@@ -347,7 +347,7 @@ internal class APIService: NSObject {
             Logger.logResponse(response as! NSHTTPURLResponse, data: data)
             
             dispatch_async(dispatch_get_main_queue(), {
-                completion(error)
+                completionHandler(error)
             })
         }
         
@@ -357,7 +357,7 @@ internal class APIService: NSObject {
     
     // MARK: Forgot password
     
-    internal class func resetPassword(customPath: String?, email: String, completion: CompletionBlockWithError) {
+    internal class func resetPassword(customPath: String?, email: String, completionHandler: CompletionBlockWithError) {
         
         if customPath != nil {
             self.customResetPasswordPath = customPath!
@@ -382,7 +382,7 @@ internal class APIService: NSObject {
                 guard response != nil && error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(error)
+                        completionHandler(error)
                     })
                     
                     return
@@ -391,7 +391,7 @@ internal class APIService: NSObject {
                 Logger.logResponse(response as! NSHTTPURLResponse, data: data)
                 
                 dispatch_async(dispatch_get_main_queue(), {
-                    completion(error)
+                    completionHandler(error)
                 })
             }
             
@@ -426,14 +426,14 @@ internal class APIService: NSObject {
         }
     }
     
-    internal class func parseDictionaryResponseData(data: NSData?, completion: CompletionBlockWithDictionary) {
+    internal class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) {
         
         // First make sure there are no network errors
         guard data != nil else {
             Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), {
-                completion(nil, nil)
+                completionHandler(nil, nil)
             })
             
             return
@@ -443,26 +443,26 @@ internal class APIService: NSObject {
         do {
             if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
                 dispatch_async(dispatch_get_main_queue(), {
-                    completion(userResponseDictionary, nil)
+                    completionHandler(userResponseDictionary, nil)
                 })
             }
         } catch let error as NSError {
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), {
-                completion(nil, error)
+                completionHandler(nil, error)
             })
         }
 
     }
     
-    internal class func parseLoginResponseData(data: NSData?, completion: CompletionBlockWithString) {
+    internal class func parseLoginResponseData(data: NSData?, completionHandler: CompletionBlockWithString) {
         
         guard data != nil else {
             Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(nil, nil)
+                completionHandler(nil, nil)
             })
             
             return
@@ -482,22 +482,22 @@ internal class APIService: NSObject {
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completion(accessToken, nil)
+                        completionHandler(accessToken, nil)
                     })
                 } else {
                     Logger.log("There was no access_token present in the response!")
                     
                     dispatch_async(dispatch_get_main_queue(), {
-                        completion(nil, nil)
+                        completionHandler(nil, nil)
                     })
                 }
             } else {
-                completion(nil, nil)
+                completionHandler(nil, nil)
             }
         } catch let error as NSError {
             dispatch_async(dispatch_get_main_queue(), {
                 Logger.logError(error)
-                completion(nil, error)
+                completionHandler(nil, error)
             })
         }
         
