@@ -6,8 +6,6 @@
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Platform](https://img.shields.io/cocoapods/p/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 
-**WIP. Dragons be here, unusable at this point.**
-
 iOS Swift library for Stormpath identity API.
 
 https://stormpath.com/
