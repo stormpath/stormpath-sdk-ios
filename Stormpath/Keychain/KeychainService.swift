@@ -32,31 +32,31 @@ internal class KeychainService: NSObject {
     
     internal class var accessToken: String? {
         get {
-            return self.stringForKey(AccessTokenKey)
+            return stringForKey(AccessTokenKey)
         }
         
         set {
-            self.saveString(newValue, key: AccessTokenKey)
+            saveString(newValue, key: AccessTokenKey)
         }
     }
     
     internal class var refreshToken: String? {
         get {
-            return self.stringForKey(RefreshTokenKey)
+            return stringForKey(RefreshTokenKey)
         }
         
         set {
-            self.saveString(newValue, key: RefreshTokenKey)
+            saveString(newValue, key: RefreshTokenKey)
         }
     }
     
     internal class var APIURL: String? {
         get {
-            return self.stringForKey(APIURLKey)
+            return stringForKey(APIURLKey)
         }
         
         set {
-            self.saveString(newValue, key: APIURLKey)
+            saveString(newValue, key: APIURLKey)
         }
     }
     
@@ -64,11 +64,11 @@ internal class KeychainService: NSObject {
     
     internal class func saveString(value: String?, key: String) {
         guard value != nil else {
-            self.deletestringForKey(key)
+            deletestringForKey(key)
             return
         }
         
-        var keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         keychainQueryDictionary[SecValueData] = value!.dataUsingEncoding(NSUTF8StringEncoding)
         keychainQueryDictionary[SecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
@@ -77,14 +77,14 @@ internal class KeychainService: NSObject {
         
         // If the value exists, update it instead
         if status == errSecDuplicateItem {
-            self.updateValue(value!, key: key)
+            updateValue(value!, key: key)
         } else if status != errSecSuccess {
             // ADD LOG
         }
     }
     
     internal class func stringForKey(key: String) -> String? {
-        var keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         var result: AnyObject?
     
         keychainQueryDictionary[SecMatchLimit] = kSecMatchLimitOne
@@ -108,7 +108,7 @@ internal class KeychainService: NSObject {
     // MARK: Keychain access helpers
     
     internal class func updateValue(value: String, key: String) {
-        let keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         let valueData = value.dataUsingEncoding(NSUTF8StringEncoding)
         let updateDictionary: NSDictionary = [SecValueData: valueData!]
@@ -117,7 +117,7 @@ internal class KeychainService: NSObject {
     }
     
     internal class func deletestringForKey(key: String) -> Bool {
-        let keychainQueryDictionary: [String: AnyObject] = self.keychainQueryDictionaryForKey(key)
+        let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
         

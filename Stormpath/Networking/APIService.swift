@@ -14,7 +14,7 @@ internal let CustomMePath: String               = "customMePath"
 internal let CustomLogoutPath: String           = "customLogoutPath"
 internal let CustomResetPasswordPath: String    = "customResetPasswordPath"
 
-internal class APIService: NSObject {
+internal final class APIService: NSObject {
     
     // Store the custom paths so we can use them without needing to pass them around all the time
     
@@ -104,11 +104,11 @@ internal class APIService: NSObject {
     internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
         if customPath != nil {
-            self.customRegisterPath = customPath!
+            customRegisterPath = customPath!
         }
         
         let registerURL: NSURL = URLPath.Register.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(registerURL)
+        let request: NSMutableURLRequest = requestWithURL(registerURL)
         
         request.HTTPMethod = "POST"
         
@@ -134,11 +134,11 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseRegisterHeaderData(HTTPResponse)
-                    self.parseDictionaryResponseData(data, completionHandler: completionHandler)
+                    parseRegisterHeaderData(HTTPResponse)
+                    parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
             })
             
@@ -153,11 +153,11 @@ internal class APIService: NSObject {
     internal class func login(customPath: String?, username: String, password: String, completionHandler: CompletionBlockWithString) {
         
         if customPath != nil {
-            self.customLoginRefreshPath = customPath!
+            customLoginRefreshPath = customPath!
         }
         
         let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(OAuthURL)
+        let request: NSMutableURLRequest = requestWithURL(OAuthURL)
         
         // Generate the form data, the data posted MUST be a form
         let body: String = String(format: "username=%@&password=%@&grant_type=password", username, password)
@@ -185,10 +185,10 @@ internal class APIService: NSObject {
             
             if HTTPResponse.statusCode != 200 {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
+                    completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
                 })
             } else {
-                self.parseLoginResponseData(data, completionHandler: completionHandler)
+                parseLoginResponseData(data, completionHandler: completionHandler)
             }
         })
         
@@ -201,11 +201,11 @@ internal class APIService: NSObject {
     internal class func refreshAccessToken(customPath: String?, completionHandler: CompletionBlockWithString) {
         
         if customPath != nil {
-            self.customLoginRefreshPath = customPath!
+            customLoginRefreshPath = customPath!
         }
         
         let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(OAuthURL)
+        let request: NSMutableURLRequest = requestWithURL(OAuthURL)
         
         // Generate the form data, the data posted MUST be a form
         if let refreshToken = KeychainService.refreshToken {
@@ -234,10 +234,10 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseLoginResponseData(data, completionHandler: completionHandler)
+                    parseLoginResponseData(data, completionHandler: completionHandler)
                 }
             })
             
@@ -259,11 +259,11 @@ internal class APIService: NSObject {
     internal class func me(customPath: String?, completionHandler: CompletionBlockWithDictionary) {
         
         if customPath != nil {
-            self.customMePath = customPath!
+            customMePath = customPath!
         }
         
         let meURL = URLPath.UserProfile.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(meURL)
+        let request: NSMutableURLRequest = requestWithURL(meURL)
         request.HTTPMethod = "GET"
         
         // Fetch the user data
@@ -289,10 +289,10 @@ internal class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, self.errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    self.parseDictionaryResponseData(data, completionHandler: completionHandler)
+                    parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
                 
             })
@@ -315,11 +315,11 @@ internal class APIService: NSObject {
     internal class func logout(customPath: String?, completionHandler: CompletionBlockWithError) {
         
         if customPath != nil {
-            self.customLogoutPath = customPath!
+            customLogoutPath = customPath!
         }
         
         let logoutURL: NSURL = URLPath.Logout.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(logoutURL)
+        let request: NSMutableURLRequest = requestWithURL(logoutURL)
         request.HTTPMethod = "GET"
         
         Logger.logRequest(request)
@@ -356,11 +356,11 @@ internal class APIService: NSObject {
     internal class func resetPassword(customPath: String?, email: String, completionHandler: CompletionBlockWithError) {
         
         if customPath != nil {
-            self.customResetPasswordPath = customPath!
+            customResetPasswordPath = customPath!
         }
      
         let resetPasswordURL: NSURL = URLPath.ResetPassword.URL(customPath)
-        let request: NSMutableURLRequest = self.requestWithURL(resetPasswordURL)
+        let request: NSMutableURLRequest = requestWithURL(resetPasswordURL)
         request.HTTPMethod = "POST"
         
         Logger.logRequest(request)
@@ -501,7 +501,7 @@ internal class APIService: NSObject {
     
     // MARK: Helpers
     
-    private class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
+    private class func _errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
         var userInfo = [String: AnyObject]()
         
         userInfo[NSLocalizedFailureReasonErrorKey] = NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode)

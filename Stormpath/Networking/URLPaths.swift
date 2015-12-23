@@ -19,7 +19,7 @@ internal enum URLPath: String {
         let baseURL: NSURL = NSURL(string: Stormpath.APIURL!)!
         
         guard let unwrappedPath = customPath where unwrappedPath.isEmpty == false else {
-            let fullURL: NSURL = baseURL.URLByAppendingPathComponent(self.rawValue)
+            let fullURL: NSURL = baseURL.URLByAppendingPathComponent(rawValue)
             
             return fullURL
         }

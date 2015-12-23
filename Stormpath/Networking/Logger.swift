@@ -17,7 +17,7 @@ public enum LogLevel {
     case Verbose
 }
 
-internal class Logger: NSObject {
+internal final class Logger: NSObject {
     
     static var logLevel: LogLevel = .None
     
@@ -27,7 +27,7 @@ internal class Logger: NSObject {
     
     internal class func log(string: String) {
         
-        switch self.logLevel {
+        switch logLevel {
         case .None:
             break
             
@@ -40,10 +40,10 @@ internal class Logger: NSObject {
     
     internal class func logRequest(request: NSURLRequest) {
         
-        if self.logLevel == .Debug || self.logLevel == .Verbose  {
+        if logLevel == .Debug || logLevel == .Verbose  {
             print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString)")
             
-            if self.logLevel == .Verbose {
+            if logLevel == .Verbose {
                 print("\(request.allHTTPHeaderFields!)")
                 if let bodyData = request.HTTPBody, bodyString = String.init(data: bodyData, encoding: NSUTF8StringEncoding) {
                     print("\(bodyString)")
@@ -55,10 +55,10 @@ internal class Logger: NSObject {
     
     internal class func logResponse(response: NSHTTPURLResponse, data: NSData?) {
         
-        if self.logLevel == .Debug || self.logLevel == .Verbose  {
+        if logLevel == .Debug || logLevel == .Verbose  {
             print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString)")
             
-            if self.logLevel == .Verbose {
+            if logLevel == .Verbose {
                 print("\(response.allHeaderFields)")
                 if data != nil {
                     print(String(data: data!, encoding: NSUTF8StringEncoding)!)
@@ -70,7 +70,7 @@ internal class Logger: NSObject {
     
     internal class func logError(error: NSError) {
         
-        switch self.logLevel {
+        switch logLevel {
             case .None:
                 break
                 

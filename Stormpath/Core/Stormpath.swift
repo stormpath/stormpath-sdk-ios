@@ -57,7 +57,7 @@ public final class Stormpath: NSObject {
     
     public class func register(customPath: String? = nil, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.register(customPath, userDictionary: userDictionary, completionHandler: completionHandler)
         
     }
@@ -75,7 +75,7 @@ public final class Stormpath: NSObject {
     
     public class func login(customPath: String? = nil, username: String, password: String, completionHandler: CompletionBlockWithString) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.login(customPath, username: username, password: password, completionHandler: completionHandler)
         
     }
@@ -89,7 +89,7 @@ public final class Stormpath: NSObject {
     
     public class func me(customPath: String? = nil, completionHandler: CompletionBlockWithDictionary) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.me(customPath, completionHandler: completionHandler)
         
     }
@@ -106,7 +106,7 @@ public final class Stormpath: NSObject {
     
     public class func logout(customPath: String? = nil, completionHandler: CompletionBlockWithError) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.logout(customPath, completionHandler: completionHandler)
         
     }
@@ -123,7 +123,7 @@ public final class Stormpath: NSObject {
     
     public class func resetPassword(customPath: String? = nil, email: String, completionHandler: CompletionBlockWithError) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.resetPassword(customPath, email: email, completionHandler: completionHandler)
         
     }
@@ -153,7 +153,7 @@ public final class Stormpath: NSObject {
     
     public class func refreshAccesToken(customPath: String? = nil, completionHandler: CompletionBlockWithString) {
         
-        assert(self.APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
+        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
         APIService.refreshAccessToken(customPath, completionHandler: completionHandler)
         
     }
