@@ -66,13 +66,19 @@ For Objective-C projects, use the `@import` syntax:
 
 To set up the SDK, just point it towards your API endpoint (in your AppDelegate or anywhere before you start the actual usage), like so:
 
+Swift:
+
 ```Swift
 Stormpath.setUpWithURL("http://api.example.com")
 ```
 
+Objective-C:
+
 ```Objective-C
 [Stormpath setUpWithURL:@"http://api.example.com"];
 ```
+
+Further examples will be Swift only, Objective-C is the assumed equivalent.
 
 ## 2. User registration
 
