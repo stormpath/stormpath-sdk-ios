@@ -48,12 +48,30 @@ If you wish to use the framework manually, just download it and drag'n'drop it i
 
 # Usage
 
+## 0. Importing the framework
+
+For Swift projects:
+
+```Swift
+import Stormpath
+```
+
+For Objective-C projects, use the `@import` syntax:
+
+```Objective-C
+@import Stormpath;
+```
+
 ## 1. Setting up
 
 To set up the SDK, just point it towards your API endpoint (in your AppDelegate or anywhere before you start the actual usage), like so:
 
 ```Swift
 Stormpath.setUpWithURL("http://api.example.com")
+```
+
+```Objective-C
+[Stormpath setUpWithURL:@"http://api.example.com"];
 ```
 
 ## 2. User registration
