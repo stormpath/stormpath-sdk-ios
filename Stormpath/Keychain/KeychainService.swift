@@ -26,7 +26,7 @@ let SecAttrAccount: String          = kSecAttrAccount as String
 let SecMatchLimit: String           = kSecMatchLimit as String
 let SecReturnData: String           = kSecReturnData as String
 
-internal class KeychainService: NSObject {
+internal class KeychainService {
     
     // Convenience vars
     
@@ -77,9 +77,11 @@ internal class KeychainService: NSObject {
         
         // If the value exists, update it instead
         if status == errSecDuplicateItem {
-            updateValue(value!, key: key)
+            if let value = value {
+                updateValue(value, key: key)
+            }
         } else if status != errSecSuccess {
-            // ADD LOG
+            Logger.log("Couldn't store value \(value) to keychain")
         }
     }
     
@@ -121,11 +123,7 @@ internal class KeychainService: NSObject {
         
         let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
         
-        if status == errSecSuccess {
-            return true
-        } else {
-            return false
-        }
+        return status == errSecSuccess
     }
     
     // MARK: Keychain query dictionary

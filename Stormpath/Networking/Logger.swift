@@ -17,24 +17,18 @@ public enum LogLevel {
     case Verbose
 }
 
-internal final class Logger: NSObject {
+internal final class Logger {
     
     static var logLevel: LogLevel = .None
-    
-    private override init() {
-        
-    }
     
     internal class func log(string: String) {
         
         switch logLevel {
-        case .None:
-            break
-            
-        case .Debug, .Verbose, .Error:
-            print("[STORMPATH] \(string)")
-            break
-        }
+            case .None: break
+                
+            case .Debug, .Verbose, .Error:
+                print("[STORMPATH] \(string)")
+            }
         
     }
     
@@ -60,8 +54,8 @@ internal final class Logger: NSObject {
             
             if logLevel == .Verbose {
                 print("\(response.allHeaderFields)")
-                if data != nil {
-                    print(String(data: data!, encoding: NSUTF8StringEncoding)!)
+                if let data = data {
+                    print(String(data: data, encoding: NSUTF8StringEncoding)!)
                 }
             }
         }
@@ -71,14 +65,11 @@ internal final class Logger: NSObject {
     internal class func logError(error: NSError) {
         
         switch logLevel {
-            case .None:
-                break
+            case .None: break
                 
             case .Debug, .Verbose, .Error:
                 print("[STORMPATH][ERROR] \(error.code) \(error.localizedDescription)")
                 print(error.userInfo)
-                
-                break
         }
         
     }

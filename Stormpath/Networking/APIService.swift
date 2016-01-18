@@ -103,8 +103,8 @@ internal final class APIService: NSObject {
     
     internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
-        if customPath != nil {
-            customRegisterPath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
         
         let registerURL: NSURL = URLPath.Register.URL(customPath)
@@ -120,7 +120,7 @@ internal final class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard response != nil && error == nil else {
+                guard let response = response where error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completionHandler(nil, error)
@@ -152,8 +152,8 @@ internal final class APIService: NSObject {
     
     internal class func login(customPath: String?, username: String, password: String, completionHandler: CompletionBlockWithString) {
         
-        if customPath != nil {
-            customLoginRefreshPath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
         
         let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
@@ -171,7 +171,7 @@ internal final class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            guard response != nil && error == nil else {
+            guard let response = response where error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     completionHandler(nil, error)
@@ -200,8 +200,8 @@ internal final class APIService: NSObject {
     
     internal class func refreshAccessToken(customPath: String?, completionHandler: CompletionBlockWithString) {
         
-        if customPath != nil {
-            customLoginRefreshPath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
         
         let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
@@ -220,7 +220,7 @@ internal final class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard response != nil && error == nil else {
+                guard let response = response where error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completionHandler(nil, error)
@@ -258,8 +258,8 @@ internal final class APIService: NSObject {
     
     internal class func me(customPath: String?, completionHandler: CompletionBlockWithDictionary) {
         
-        if customPath != nil {
-            customMePath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
         
         let meURL = URLPath.UserProfile.URL(customPath)
@@ -275,7 +275,7 @@ internal final class APIService: NSObject {
             let session = NSURLSession.sharedSession()
             let task: NSURLSessionDataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 
-                guard response != nil && error == nil else {
+                guard let response = response where error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completionHandler(nil, error)
@@ -314,8 +314,8 @@ internal final class APIService: NSObject {
     
     internal class func logout(customPath: String?, completionHandler: CompletionBlockWithError) {
         
-        if customPath != nil {
-            customLogoutPath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
         
         let logoutURL: NSURL = URLPath.Logout.URL(customPath)
@@ -331,7 +331,7 @@ internal final class APIService: NSObject {
         let session: NSURLSession = NSURLSession.sharedSession()
         
         let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            guard response != nil && error == nil else {
+            guard let response = response where error == nil else {
                 Logger.logError(error!)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     completionHandler(error)
@@ -355,8 +355,8 @@ internal final class APIService: NSObject {
     
     internal class func resetPassword(customPath: String?, email: String, completionHandler: CompletionBlockWithError) {
         
-        if customPath != nil {
-            customResetPasswordPath = customPath!
+        if let customPath = customPath {
+            customLoginRefreshPath = customPath
         }
      
         let resetPasswordURL: NSURL = URLPath.ResetPassword.URL(customPath)
@@ -375,7 +375,7 @@ internal final class APIService: NSObject {
             let session: NSURLSession = NSURLSession.sharedSession()
             
             let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard response != nil && error == nil else {
+                guard let response = response where error == nil else {
                     Logger.logError(error!)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         completionHandler(error)
@@ -425,7 +425,7 @@ internal final class APIService: NSObject {
     internal class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) {
         
         // First make sure there are no network errors
-        guard data != nil else {
+        guard let data = data else {
             Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), {
@@ -437,7 +437,7 @@ internal final class APIService: NSObject {
         
         // Attempt to parse the response JSON
         do {
-            if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
+            if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
                 dispatch_async(dispatch_get_main_queue(), {
                     completionHandler(userResponseDictionary, nil)
                 })
@@ -454,7 +454,7 @@ internal final class APIService: NSObject {
     
     internal class func parseLoginResponseData(data: NSData?, completionHandler: CompletionBlockWithString) {
         
-        guard data != nil else {
+        guard let data = data else {
             Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -465,7 +465,7 @@ internal final class APIService: NSObject {
         }
         
         do {
-            if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
+            if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
                 // Extract the access_token
                 if let accessToken: String = tokensDictionary["access_token"] as? String {
                     KeychainService.accessToken = accessToken
