@@ -160,7 +160,9 @@ internal final class APIService: NSObject {
         let request: NSMutableURLRequest = requestWithURL(OAuthURL)
         
         // Generate the form data, the data posted MUST be a form
-        let body: String = String(format: "username=%@&password=%@&grant_type=password", username, password)
+        let body: String = String(format: "username=%@&password=%@&grant_type=password",
+            _URLEncodedString(username),
+            _URLEncodedString(password))
         
         request.HTTPMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -518,6 +520,21 @@ internal final class APIService: NSObject {
         Logger.logError(error)
         
         return error
+    }
+    
+    // There's an argument to be made for this to be a string category, but since this is the only method and only needed for this class...
+    
+    // Custom URL encode, 'cos iOS is missing one. This one is blatantly stolen from AFNetworking's implementation of percent escaping and converted to Swift
+    
+    private class func _URLEncodedString(string: String) -> String {
+        let charactersGeneralDelimitersToEncode = ":#[]@"
+        let charactersSubDelimitersToEncode     = "!$&'()*+,;="
+        
+        let allowedCharacterSet: NSMutableCharacterSet = NSCharacterSet.URLHostAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
+        
+        allowedCharacterSet.removeCharactersInString(charactersGeneralDelimitersToEncode.stringByAppendingString(charactersSubDelimitersToEncode))
+        
+        return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
     }
     
 }
