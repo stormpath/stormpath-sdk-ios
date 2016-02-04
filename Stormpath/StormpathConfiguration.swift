@@ -23,16 +23,16 @@ public class StormpathConfiguration {
     public var APIURL = NSURL(string: "http://localhost:3000")!
     
     /// Endpoint for the current user context
-    var meEndpoint = "/me"
+    public var meEndpoint = "/me"
     
     /// Endpoint to request email verification
-    var verifyEmailEndpoint = "/verify"
+    public var verifyEmailEndpoint = "/verify"
     
     /// Endpoint to request a password reset email
-    var forgotPasswordEndpoint = "/forgot"
+    public var forgotPasswordEndpoint = "/forgot"
     
     /// Endpoint to create an OAuth token
-    var oauthEndpoint = "/oauth/token"
+    public var oauthEndpoint = "/oauth/token"
     
     /**
      Endpoint to logout
@@ -40,10 +40,10 @@ public class StormpathConfiguration {
      - todo: this might not be needed, but I see it in Adis's code. I don't think hitting the /logout endpoint does anything? 
      Not in the framework spec either.
      */
-    var logoutEndpoint = "/logout"
+    public var logoutEndpoint = "/logout"
     
     /// Endpoint to register a new user
-    var registerEndpoint = "/register"
+    public var registerEndpoint = "/register"
     
     public init() {
         guard let stormpathInfo = NSBundle.mainBundle().infoDictionary?["Stormpath"] as? [String: AnyObject] else {
@@ -65,7 +65,7 @@ public class StormpathConfiguration {
     }
 }
 
-/// Helper extensions to make the initializer easier. 
+/// Helper extensions to make the initializer easier.
 private extension String {
     var withLeadingSlash: String {
         if hasPrefix("/") {
