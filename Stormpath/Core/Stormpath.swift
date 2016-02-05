@@ -13,17 +13,12 @@ public typealias CompletionBlockWithString     = ((String?, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {
+    var configuration = StormpathConfiguration.defaultConfiguration
+    var apiService: APIService!
     
-    // API vars
-    
-    internal class var APIURL: String? {
-        get {
-            return KeychainService.APIURL
-        }
-        
-        set {
-            KeychainService.APIURL = newValue
-        }
+    public override init() {
+        super.init()
+        apiService = APIService(withStormpath: self)
     }
     
     // MARK: Initial setup
@@ -33,32 +28,35 @@ public final class Stormpath: NSObject {
     
     - parameter APIURL: The base URL of your API, eg. "https://api.stormpath.com". The trailing slash is unnecessary.
     */
-    public class func setUpWithURL(APIURL: String) {
-        // TODO: Add guards
-        
+    public func setUpWithURL(APIURL url: String) {
+        var trimmedURL = ""
         // Trim the trailing slash if needed
-        if APIURL.hasSuffix("/") {
-            self.APIURL = String(APIURL.characters.dropLast())
+        if url.hasSuffix("/") {
+            trimmedURL = String(url.characters.dropLast())
         } else {
-            self.APIURL = APIURL
+            trimmedURL = url
         }
+        
+        guard let APIURL = NSURL(string: trimmedURL) else {
+            assertionFailure("API URL does not resolve to an actual URL")
+            return
+        }
+        configuration.APIURL = APIURL
     }
     
     // MARK: User registration
     
     /**
      This method registers a user from the data provided.
-     
-     - parameter customPath: Relative path for your register. Can be omitted.
+    
      - parameter userDictionary: User data in the form of a dictionary. Check the docs for more info: http://docs.stormpath.com/rest/product-guide/#create-an-account
      - parameter completionHandler: The completion block to be invoked after the API request is finished. It returns a dictionary with user data,
         or an error if one occured.
      */
     
-    public class func register(customPath: String? = nil, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
+    public func register(userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.register(customPath, userDictionary: userDictionary, completionHandler: completionHandler)
+        apiService.register(userDictionary, completionHandler: completionHandler)
         
     }
     
@@ -67,30 +65,26 @@ public final class Stormpath: NSObject {
     /**
     Logs in a user and assumes that the login path is behind the /login relative path. This method also stores the user session tokens for later use.
     
-    - parameter customPath: Relative path for your login. Pass nil or ommit if you didn't change custom routes.
     - parameter username: User username.
     - parameter password: User password.
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If the method fails, the error will be passed in the completion.
     */
     
-    public class func login(customPath: String? = nil, username: String, password: String, completionHandler: CompletionBlockWithString) {
+    public func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.login(customPath, username: username, password: password, completionHandler: completionHandler)
+        apiService.login(username, password: password, completionHandler: completionHandler)
         
     }
     
     /**
      Fetches the user data, and returns it in the form of a dictionary.
      
-     - parameter customPath: Optional parameter, use it if you remapped the /me path to something else.
      - parameter completionHandler: Completion block invoked
      */
     
-    public class func me(customPath: String? = nil, completionHandler: CompletionBlockWithDictionary) {
+    public func me(completionHandler: CompletionBlockWithDictionary) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.me(customPath, completionHandler: completionHandler)
+        apiService.me(completionHandler)
         
     }
     
@@ -99,15 +93,13 @@ public final class Stormpath: NSObject {
     /**
     Logs out the user and clears the sessions tokens.
     
-    - parameter customPath: Relative path for logout. Omit if not used.
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If the method fails, the error will be passed in the completion.
     */
 
     
-    public class func logout(customPath: String? = nil, completionHandler: CompletionBlockWithError) {
+    public func logout(completionHandler: CompletionBlockWithError) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.logout(customPath, completionHandler: completionHandler)
+        apiService.logout(completionHandler)
         
     }
     
@@ -116,15 +108,13 @@ public final class Stormpath: NSObject {
     /**
     Generates a user password reset token and sends an email to the user, if such email exists.
     
-    - parameter customPath: Custom path to your forgot password. Omit if not changed from default.
     - parameter email: User email. Usually from an input.
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If there were errors, they will be passed in the completion block.
     */
     
-    public class func resetPassword(customPath: String? = nil, email: String, completionHandler: CompletionBlockWithError) {
+    public func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.resetPassword(customPath, email: email, completionHandler: completionHandler)
+        apiService.resetPassword(email, completionHandler: completionHandler)
         
     }
     
@@ -136,7 +126,7 @@ public final class Stormpath: NSObject {
     - returns: Access token for your API calls.
     */
     
-    public class var accessToken: String? {
+    public var accessToken: String? {
         
         get {
             return KeychainService.accessToken
@@ -147,14 +137,12 @@ public final class Stormpath: NSObject {
     /**
      Refreshes the access token and stores it to be available via accessToken var. Call this function if your token expires.
      
-     - parameter customPath: Relative path to your *login* call, omit if login was not changed in the config.
      - parameter completionHandler: Block invoked on function completion. It will have either a new access token passed as a string, or an error if one occured.
      */
     
-    public class func refreshAccesToken(customPath: String? = nil, completionHandler: CompletionBlockWithString) {
+    public func refreshAccessToken(completionHandler: CompletionBlockWithString) {
         
-        assert(APIURL != nil, "Please set up the API URL with Stormpath.setUpWithURL() function")
-        APIService.refreshAccessToken(customPath, completionHandler: completionHandler)
+        apiService.refreshAccessToken(completionHandler)
         
     }
     

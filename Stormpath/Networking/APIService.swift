@@ -8,113 +8,25 @@
 
 import UIKit
 
-internal let CustomRegisterPath: String         = "customRegisterPath"
-internal let CustomLoginRefreshPath: String     = "customOAuthPath"
-internal let CustomMePath: String               = "customMePath"
-internal let CustomLogoutPath: String           = "customLogoutPath"
-internal let CustomResetPasswordPath: String    = "customResetPasswordPath"
-
 internal final class APIService: NSObject {
+    weak var stormpath: Stormpath!
     
-    // Store the custom paths so we can use them without needing to pass them around all the time
-    
-    internal class var customRegisterPath: String {
-        get {
-            if let storedValue = KeychainService.stringForKey(CustomRegisterPath) {
-                return storedValue
-            } else {
-                return ""
-            }
-        }
-        
-        set {
-            KeychainService.saveString(newValue, key: CustomRegisterPath)
-        }
-    }
-    
-    internal class var customLoginRefreshPath: String {
-        get {
-            if let storedValue = KeychainService.stringForKey(CustomLoginRefreshPath) {
-                return storedValue
-            } else {
-                return ""
-            }
-        }
-        
-        set {
-            KeychainService.saveString(newValue, key: CustomLoginRefreshPath)
-        }
-    }
-    
-    internal class var customMePath: String {
-        get {
-            if let storedValue = KeychainService.stringForKey(CustomMePath) {
-                return storedValue
-            } else {
-                return ""
-            }
-        }
-        
-        set {
-            KeychainService.saveString(newValue, key: CustomMePath)
-        }
-    }
-    
-    internal class var customLogoutPath: String {
-        get {
-            if let storedValue = KeychainService.stringForKey(CustomLogoutPath) {
-                return storedValue
-            } else {
-                return ""
-            }
-        }
-        
-        set {
-            KeychainService.saveString(newValue, key: CustomLogoutPath)
-        }
-    }
-    
-    internal class var customResetPasswordPath: String {
-        get {
-            if let storedValue = KeychainService.stringForKey(CustomResetPasswordPath) {
-                return storedValue
-            } else {
-                return ""
-            }
-        }
-        
-        set {
-            KeychainService.saveString(newValue, key: CustomResetPasswordPath)
-        }
-    }
-    
-    internal class func requestWithURL(URL: NSURL) -> NSMutableURLRequest {
-
-        let request: NSMutableURLRequest = NSMutableURLRequest.init(URL: URL)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        return request
-        
+    init(withStormpath stormpath: Stormpath) {
+        self.stormpath = stormpath
     }
     
     // MARK: Registration
     
-    internal class func register(customPath: String?, userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
+    internal func register(userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
         
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
-        
-        let registerURL: NSURL = URLPath.Register.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(registerURL)
+        let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
+        let request = APIRequest(URL: registerURL)
         
         request.HTTPMethod = "POST"
         
         Logger.logRequest(request)
         
-        if let HTTPBodyData: NSData = try! NSJSONSerialization.dataWithJSONObject(userDictionary, options: []) {
+        if let HTTPBodyData: NSData = try? NSJSONSerialization.dataWithJSONObject(userDictionary, options: []) {
             request.HTTPBody = HTTPBodyData
             
             let session: NSURLSession = NSURLSession.sharedSession()
@@ -134,11 +46,11 @@ internal final class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    parseRegisterHeaderData(HTTPResponse)
-                    parseDictionaryResponseData(data, completionHandler: completionHandler)
+                    APIService.parseRegisterHeaderData(HTTPResponse)
+                    APIService.parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
             })
             
@@ -150,19 +62,15 @@ internal final class APIService: NSObject {
     
     // MARK: Login
     
-    internal class func login(customPath: String?, username: String, password: String, completionHandler: CompletionBlockWithString) {
+    internal func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
         
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
-        
-        let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(OAuthURL)
+        let OAuthURL: NSURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let request = APIRequest(URL: OAuthURL)
         
         // Generate the form data, the data posted MUST be a form
         let body: String = String(format: "username=%@&password=%@&grant_type=password",
-            _URLEncodedString(username),
-            _URLEncodedString(password))
+            APIService._URLEncodedString(username),
+            APIService._URLEncodedString(password))
         
         request.HTTPMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -187,10 +95,10 @@ internal final class APIService: NSObject {
             
             if HTTPResponse.statusCode != 200 {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
+                    completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
                 })
             } else {
-                parseLoginResponseData(data, completionHandler: completionHandler)
+                APIService.parseLoginResponseData(data, completionHandler: completionHandler)
             }
         })
         
@@ -200,14 +108,10 @@ internal final class APIService: NSObject {
     
     // MARK: Access token refresh
     
-    internal class func refreshAccessToken(customPath: String?, completionHandler: CompletionBlockWithString) {
+    internal func refreshAccessToken(completionHandler: CompletionBlockWithString) {
         
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
-        
-        let OAuthURL: NSURL = URLPath.OAuth.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(OAuthURL)
+        let OAuthURL: NSURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let request = APIRequest(URL: OAuthURL)
         
         // Generate the form data, the data posted MUST be a form
         if let refreshToken = KeychainService.refreshToken {
@@ -236,10 +140,10 @@ internal final class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    parseLoginResponseData(data, completionHandler: completionHandler)
+                    APIService.parseLoginResponseData(data, completionHandler: completionHandler)
                 }
             })
             
@@ -258,14 +162,10 @@ internal final class APIService: NSObject {
     
     // MARK: User data
     
-    internal class func me(customPath: String?, completionHandler: CompletionBlockWithDictionary) {
+    internal func me(completionHandler: CompletionBlockWithDictionary) {
         
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
-        
-        let meURL = URLPath.UserProfile.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(meURL)
+        let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
+        let request = APIRequest(URL: meURL)
         request.HTTPMethod = "GET"
         
         // Fetch the user data
@@ -291,10 +191,10 @@ internal final class APIService: NSObject {
                 
                 if HTTPResponse.statusCode != 200 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, _errorForResponse(HTTPResponse, data: data))
+                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
                     })
                 } else {
-                    parseDictionaryResponseData(data, completionHandler: completionHandler)
+                    APIService.parseDictionaryResponseData(data, completionHandler: completionHandler)
                 }
                 
             })
@@ -314,14 +214,10 @@ internal final class APIService: NSObject {
     
     // MARK: Logout
     
-    internal class func logout(customPath: String?, completionHandler: CompletionBlockWithError) {
+    internal func logout(completionHandler: CompletionBlockWithError) {
         
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
-        
-        let logoutURL: NSURL = URLPath.Logout.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(logoutURL)
+        let logoutURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.logoutEndpoint)
+        let request = APIRequest(URL: logoutURL)
         request.HTTPMethod = "GET"
         
         Logger.logRequest(request)
@@ -355,14 +251,10 @@ internal final class APIService: NSObject {
     
     // MARK: Forgot password
     
-    internal class func resetPassword(customPath: String?, email: String, completionHandler: CompletionBlockWithError) {
-        
-        if let customPath = customPath {
-            customLoginRefreshPath = customPath
-        }
+    internal func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
      
-        let resetPasswordURL: NSURL = URLPath.ResetPassword.URL(customPath)
-        let request: NSMutableURLRequest = requestWithURL(resetPasswordURL)
+        let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
+        let request = APIRequest(URL: resetPasswordURL)
         request.HTTPMethod = "POST"
         
         Logger.logRequest(request)

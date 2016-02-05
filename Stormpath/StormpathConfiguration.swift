@@ -11,7 +11,7 @@ import UIKit
 /**
  StormpathConfiguration is the class that manages the configuration for Stormpath, its endpoints, and API providers. It auto-loads
  from the configuration in Info.plist, or uses defaults that connect to a server on http://localhost:3000, the default in many Stormpath integrations.
- You can modify its properties directly. 
+ You can modify its properties directly.
  
  - note: The endpoints refer to the endpoints in the Stormpath Framework Spec. Use leading slashes to specify the endpoints.
  */
@@ -37,7 +37,7 @@ public class StormpathConfiguration {
     /**
      Endpoint to logout
      
-     - todo: this might not be needed, but I see it in Adis's code. I don't think hitting the /logout endpoint does anything? 
+     - todo: this might not be needed, but I see it in Adis's code. I don't think hitting the /logout endpoint does anything?
      Not in the framework spec either.
      */
     public var logoutEndpoint = "/logout"
