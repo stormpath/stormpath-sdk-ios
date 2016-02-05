@@ -13,7 +13,8 @@ public typealias CompletionBlockWithString     = ((String?, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {
-    var configuration = StormpathConfiguration.defaultConfiguration
+    public static var sharedSession = Stormpath()
+    public var configuration = StormpathConfiguration.defaultConfiguration
     var apiService: APIService!
     
     public override init() {
@@ -28,7 +29,7 @@ public final class Stormpath: NSObject {
     
     - parameter APIURL: The base URL of your API, eg. "https://api.stormpath.com". The trailing slash is unnecessary.
     */
-    public func setUpWithURL(APIURL url: String) {
+    public func setUpWithURL(url: String) {
         var trimmedURL = ""
         // Trim the trailing slash if needed
         if url.hasSuffix("/") {
