@@ -35,14 +35,10 @@ class OAuthAPIRequestManager: APIRequestManager {
         self.init(withURL: url, requestBody: requestBody, callback: callback)
     }
     
-    override func prepareForRequest() -> NSMutableURLRequest {
-        let request = super.prepareForRequest()
-        
+    override func prepareForRequest() {
         request.HTTPMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        return request
     }
     
     override func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {

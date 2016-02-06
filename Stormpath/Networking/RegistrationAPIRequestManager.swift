@@ -20,15 +20,11 @@ class RegistrationAPIRequestManager: APIRequestManager {
         super.init(withURL: url)
     }
     
-    override func prepareForRequest() -> NSMutableURLRequest {
-        let request = super.prepareForRequest()
-        
+    override func prepareForRequest() {
         let registrationDictionary = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
         
         request.HTTPMethod = "POST"
         request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
-        
-        return request
     }
     
     override func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {

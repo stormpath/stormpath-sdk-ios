@@ -10,24 +10,27 @@ import UIKit
 
 class APIRequestManager: NSObject {
     var url: NSURL
+    var request = NSMutableURLRequest()
     
     init(withURL url: NSURL) {
         self.url = url
+        
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    }
+    
+    convenience init(withURL url: NSURL, accessToken: String) {
+        self.init(withURL: url)
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
     }
     
     func begin() {
-        let request = prepareForRequest()
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestDidFinish)
         task.resume()
     }
     
-    func prepareForRequest() -> NSMutableURLRequest {
-        let request = NSMutableURLRequest()
-        
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        return request
+    func prepareForRequest() {
+        preconditionFailure("Method not implemented")
     }
     
     func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
