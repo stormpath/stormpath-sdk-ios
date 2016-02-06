@@ -19,11 +19,6 @@ class APIRequestManager: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     }
     
-    convenience init(withURL url: NSURL, accessToken: String) {
-        self.init(withURL: url)
-        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
-    }
-    
     func begin() {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestDidFinish)
         task.resume()
@@ -35,5 +30,9 @@ class APIRequestManager: NSObject {
     
     func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
         preconditionFailure("Method not implemented")
+    }
+    
+    func setAccessToken(accessToken: String) {
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
     }
 }
