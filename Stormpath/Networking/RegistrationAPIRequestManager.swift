@@ -29,7 +29,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         RegistrationAPIRequestManager.parseRegisterHeaderData(response)
-        RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
+        RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback) //TODO: this returns error or user data
     }
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
@@ -45,6 +45,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
         
         var foundToken: Bool = false
         
+        //TODO: this shouldn't be hitting keychainservice directly
         for cookie in cookies {
             if cookie.name == "access_token" {
                 KeychainService.saveString(cookie.value, key: AccessTokenKey)

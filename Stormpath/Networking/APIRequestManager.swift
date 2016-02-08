@@ -19,6 +19,10 @@ class APIRequestManager: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     }
     
+    func prepareForRequest() {
+        preconditionFailure("Method not implemented")
+    }
+    
     func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         preconditionFailure("Method not implemented")
     }
@@ -30,10 +34,6 @@ class APIRequestManager: NSObject {
     func begin() {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestCompletionHandler)
         task.resume()
-    }
-    
-    func prepareForRequest() {
-        preconditionFailure("Method not implemented")
     }
     
     func setAccessToken(accessToken: String) {
@@ -56,7 +56,7 @@ class APIRequestManager: NSObject {
         }
     }
     
-    class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) {
+    class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) { //TODO: eliminiate this. 
         // First make sure there are no network errors
         guard let data = data else {
             Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
@@ -84,7 +84,7 @@ class APIRequestManager: NSObject {
         }
     }
     
-    class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
+    class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError { //TODO: figure out a unified error sort of system
         var userInfo = [String: AnyObject]()
         
         userInfo[NSLocalizedFailureReasonErrorKey] = NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode)
