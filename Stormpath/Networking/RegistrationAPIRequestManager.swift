@@ -40,11 +40,34 @@ class RegistrationAPIRequestManager: APIRequestManager {
         
         if response.statusCode != 200 {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, APIService._errorForResponse(response, data: data))
+                self.callback(nil, APIRequestManager.errorForResponse(response, data: data))
             })
         } else {
-            APIService.parseRegisterHeaderData(response)
-            APIService.parseDictionaryResponseData(data, completionHandler: callback)
+            RegistrationAPIRequestManager.parseRegisterHeaderData(response)
+            RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
+        }
+    }
+    
+    private class func parseRegisterHeaderData(response: NSHTTPURLResponse) {
+        guard let headerFields = response.allHeaderFields as? [String: String], cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!) else {
+            return
+        }
+        
+        var foundToken: Bool = false
+        
+        for cookie in cookies {
+            if cookie.name == "access_token" {
+                KeychainService.saveString(cookie.value, key: AccessTokenKey)
+                foundToken = true
+            }
+            
+            if cookie.name == "refresh_token" {
+                KeychainService.saveString(cookie.value, key: RefreshTokenKey)
+            }
+        }
+        
+        if (foundToken == false) {
+            Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
         }
     }
 }

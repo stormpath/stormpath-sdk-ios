@@ -33,10 +33,10 @@ class MeAPIRequestManager: APIRequestManager {
 
         if HTTPResponse.statusCode != 200 {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, APIService._errorForResponse(HTTPResponse, data: data))
+                self.callback(nil, APIRequestManager.errorForResponse(HTTPResponse, data: data))
             })
         } else {
-            APIService.parseDictionaryResponseData(data, completionHandler: callback)
+            MeAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
         }
     }
     

@@ -87,11 +87,7 @@
 			children = (
 				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
 				4992A5D71C086FED00676E85 /* Logger.swift */,
-				DF0544191C653F7500FF555F /* APIRequestManager.swift */,
-				DF05441B1C6545B300FF555F /* RegistrationAPIRequestManager.swift */,
-				DF0544331C6560FC00FF555F /* OAuthAPIRequestManager.swift */,
-				DF0544351C65796300FF555F /* MeAPIRequestManager.swift */,
-				DF0544B31C69178E00FF555F /* ResetPasswordAPIRequestManager.swift */,
+				DF0544B51C691C4000FF555F /* APIRequestManagers */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -168,6 +164,18 @@
 				49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */,
 			);
 			path = Keychain;
+			sourceTree = "<group>";
+		};
+		DF0544B51C691C4000FF555F /* APIRequestManagers */ = {
+			isa = PBXGroup;
+			children = (
+				DF0544191C653F7500FF555F /* APIRequestManager.swift */,
+				DF05441B1C6545B300FF555F /* RegistrationAPIRequestManager.swift */,
+				DF0544331C6560FC00FF555F /* OAuthAPIRequestManager.swift */,
+				DF0544351C65796300FF555F /* MeAPIRequestManager.swift */,
+				DF0544B31C69178E00FF555F /* ResetPasswordAPIRequestManager.swift */,
+			);
+			name = APIRequestManagers;
 			sourceTree = "<group>";
 		};
 		DF055E121C59791D0085ACA2 /* Models */ = {
