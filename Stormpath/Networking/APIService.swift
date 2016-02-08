@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class APIService: NSObject {
+final class APIService: NSObject {
     weak var stormpath: Stormpath!
     
     init(withStormpath stormpath: Stormpath) {
@@ -17,8 +17,7 @@ internal final class APIService: NSObject {
     
     // MARK: Registration
     
-    internal func register(newUser: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
-        
+    func register(newUser: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
         let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
         
         let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newUser: newUser, callback: completionHandler)
@@ -28,7 +27,7 @@ internal final class APIService: NSObject {
     
     // MARK: Login
     
-    internal func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
+    func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
         
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password, callback: completionHandler)
@@ -38,7 +37,7 @@ internal final class APIService: NSObject {
     
     // MARK: Access token refresh
     
-    internal func refreshAccessToken(completionHandler: CompletionBlockWithString) {
+    func refreshAccessToken(completionHandler: CompletionBlockWithString) {
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
         guard let refreshToken = KeychainService.refreshToken else {
@@ -59,7 +58,7 @@ internal final class APIService: NSObject {
     
     // MARK: User data
     
-    internal func me(completionHandler: CompletionBlockWithDictionary) {
+    func me(completionHandler: CompletionBlockWithDictionary) {
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
         
         guard let accessToken = KeychainService.accessToken else {
@@ -79,7 +78,7 @@ internal final class APIService: NSObject {
     
     // MARK: Logout
     
-    internal func logout(completionHandler: CompletionBlockWithError) {
+    func logout(completionHandler: CompletionBlockWithError) {
         
         let logoutURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.logoutEndpoint)
         let request = NSMutableURLRequest(URL: logoutURL)
@@ -99,8 +98,7 @@ internal final class APIService: NSObject {
     
     // MARK: Forgot password
     
-    internal func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
-     
+    func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
         let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
         let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: completionHandler)
         requestManager.begin()
