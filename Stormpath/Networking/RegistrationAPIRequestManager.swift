@@ -49,7 +49,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
 }
 
-class RegistrationModel {
+public class RegistrationModel {
     var givenName: String
     var surname: String
     var email: String

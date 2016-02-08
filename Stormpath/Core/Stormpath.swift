@@ -55,9 +55,9 @@ public final class Stormpath: NSObject {
         or an error if one occured.
      */
     
-    public func register(userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
+    public func register(userData: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
         
-        apiService.register(userDictionary, completionHandler: completionHandler)
+        apiService.register(userData, completionHandler: completionHandler)
         
     }
     

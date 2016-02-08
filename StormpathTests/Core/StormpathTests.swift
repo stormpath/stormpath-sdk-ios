@@ -20,17 +20,10 @@ class StormpathTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         
-        Stormpath.APIURL = nil
         KeychainService.accessToken = nil
         KeychainService.refreshToken = nil
     }
     
     // MARK: Tests
-    
-    func testInitialSetup() {
-        // Test that the initial setup stores the data properly
-        Stormpath.setUpWithURL(APIURL)
-        XCTAssertNotNil(Stormpath.APIURL)
-    }
     
 }

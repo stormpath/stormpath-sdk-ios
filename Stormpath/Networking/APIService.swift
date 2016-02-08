@@ -17,190 +17,52 @@ internal final class APIService: NSObject {
     
     // MARK: Registration
     
-    internal func register(userDictionary: Dictionary<String, String>, completionHandler: CompletionBlockWithDictionary) {
+    internal func register(newUser: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
         
         let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
-        let request = APIRequest(URL: registerURL)
         
-        request.HTTPMethod = "POST"
+        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newUser: newUser, callback: completionHandler)
+        requestManager.begin()
         
-        Logger.logRequest(request)
-        
-        if let HTTPBodyData: NSData = try? NSJSONSerialization.dataWithJSONObject(userDictionary, options: []) {
-            request.HTTPBody = HTTPBodyData
-            
-            let session: NSURLSession = NSURLSession.sharedSession()
-            
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard let response = response where error == nil else {
-                    Logger.logError(error!)
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, error)
-                    })
-                    
-                    return
-                }
-                
-                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
-                Logger.logResponse(HTTPResponse, data: data)
-                
-                if HTTPResponse.statusCode != 200 {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
-                    })
-                } else {
-                    APIService.parseRegisterHeaderData(HTTPResponse)
-                    APIService.parseDictionaryResponseData(data, completionHandler: completionHandler)
-                }
-            })
-            
-            task.resume()
-        } else {
-            Logger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
-        }
     }
     
     // MARK: Login
     
     internal func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
         
-        let OAuthURL: NSURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
-        let request = APIRequest(URL: OAuthURL)
-        
-        // Generate the form data, the data posted MUST be a form
-        let body: String = String(format: "username=%@&password=%@&grant_type=password",
-            APIService._URLEncodedString(username),
-            APIService._URLEncodedString(password))
-        
-        request.HTTPMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        Logger.logRequest(request)
-        
-        let session: NSURLSession = NSURLSession.sharedSession()
-        
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            guard let response = response where error == nil else {
-                Logger.logError(error!)
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completionHandler(nil, error)
-                })
-                
-                return
-            }
-            
-            let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
-            Logger.logResponse(HTTPResponse, data: data)
-            
-            if HTTPResponse.statusCode != 200 {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
-                })
-            } else {
-                APIService.parseLoginResponseData(data, completionHandler: completionHandler)
-            }
-        })
-        
-        task.resume()
+        let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password, callback: completionHandler)
+        requestManager.begin()
         
     }
     
     // MARK: Access token refresh
     
     internal func refreshAccessToken(completionHandler: CompletionBlockWithString) {
+        let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
-        let OAuthURL: NSURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
-        let request = APIRequest(URL: OAuthURL)
-        
-        // Generate the form data, the data posted MUST be a form
-        if let refreshToken = KeychainService.refreshToken {
-            let body: String = String(format: "refresh_token=%@&grant_type=refresh_token", refreshToken)
-            
-            request.HTTPMethod = "POST"
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
-            
-            Logger.logRequest(request)
-            
-            let session: NSURLSession = NSURLSession.sharedSession()
-            
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard let response = response where error == nil else {
-                    Logger.logError(error!)
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, error)
-                    })
-                    
-                    return
-                }
-                
-                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
-                Logger.logResponse(HTTPResponse, data: data)
-                
-                if HTTPResponse.statusCode != 200 {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
-                    })
-                } else {
-                    APIService.parseLoginResponseData(data, completionHandler: completionHandler)
-                }
-            })
-            
-            task.resume()
-        } else {
-            let error = NSError(domain: OAuthURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
+        guard let refreshToken = KeychainService.refreshToken else {
+            let error = NSError(domain: oauthURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completionHandler(nil, error)
             })
+            return
         }
+        
+        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, refreshToken: refreshToken, callback: completionHandler)
+        requestManager.begin()
         
     }
     
     // MARK: User data
     
     internal func me(completionHandler: CompletionBlockWithDictionary) {
-        
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
-        let request = APIRequest(URL: meURL)
-        request.HTTPMethod = "GET"
         
-        // Fetch the user data
-        if let accessToken = KeychainService.accessToken {
-            request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
-            
-            Logger.logRequest(request)
-            
-            let session = NSURLSession.sharedSession()
-            let task: NSURLSessionDataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                
-                guard let response = response where error == nil else {
-                    Logger.logError(error!)
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, error)
-                    })
-                    
-                    return
-                }
-                
-                let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
-                Logger.logResponse(HTTPResponse, data: data)
-                
-                if HTTPResponse.statusCode != 200 {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(nil, APIService._errorForResponse(HTTPResponse, data: data))
-                    })
-                } else {
-                    APIService.parseDictionaryResponseData(data, completionHandler: completionHandler)
-                }
-                
-            })
-            
-            task.resume()
-        } else {
+        guard let accessToken = KeychainService.accessToken else {
             let error = NSError(domain: meURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
@@ -208,8 +70,11 @@ internal final class APIService: NSObject {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completionHandler(nil, error)
             })
+            return
         }
         
+        let requestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken, callback: completionHandler)
+        requestManager.begin()
     }
     
     // MARK: Logout
@@ -217,7 +82,9 @@ internal final class APIService: NSObject {
     internal func logout(completionHandler: CompletionBlockWithError) {
         
         let logoutURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.logoutEndpoint)
-        let request = APIRequest(URL: logoutURL)
+        let request = NSMutableURLRequest(URL: logoutURL)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPMethod = "GET"
         
         Logger.logRequest(request)
@@ -226,26 +93,7 @@ internal final class APIService: NSObject {
         KeychainService.accessToken = nil
         KeychainService.refreshToken = nil
         
-        let session: NSURLSession = NSURLSession.sharedSession()
-        
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            guard let response = response where error == nil else {
-                Logger.logError(error!)
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completionHandler(error)
-                })
-                
-                return
-            }
-            
-            Logger.logResponse(response as! NSHTTPURLResponse, data: data)
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                completionHandler(error)
-            })
-        })
-        
-        task.resume()
+        // TODO: Hit the API to delete the access token, because this literally does nothing right now. 
         
     }
     
@@ -254,42 +102,8 @@ internal final class APIService: NSObject {
     internal func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
      
         let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
-        let request = APIRequest(URL: resetPasswordURL)
-        request.HTTPMethod = "POST"
-        
-        Logger.logRequest(request)
-        
-        let emailDictionary: Dictionary = ["email": email]
-        
-        if let HTTPBodyData: NSData = try! NSJSONSerialization.dataWithJSONObject(emailDictionary, options: []) {
-            request.HTTPBody = HTTPBodyData
-            
-            Logger.logRequest(request)
-            
-            let session: NSURLSession = NSURLSession.sharedSession()
-            
-            let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard let response = response where error == nil else {
-                    Logger.logError(error!)
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(error)
-                    })
-                    
-                    return
-                }
-                
-                Logger.logResponse(response as! NSHTTPURLResponse, data: data)
-                
-                dispatch_async(dispatch_get_main_queue(), {
-                    completionHandler(error)
-                })
-            })
-            
-            task.resume()
-        } else {
-            Logger.log("NSJSONSerialization failed to convert Dictionary to JSON Object")
-        }
-        
+        let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: completionHandler)
+        requestManager.begin()
     }
     
     // MARK: Parse response data
@@ -395,7 +209,7 @@ internal final class APIService: NSObject {
     
     // MARK: Helpers
     
-    private class func _errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
+    class func _errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError {
         var userInfo = [String: AnyObject]()
         
         userInfo[NSLocalizedFailureReasonErrorKey] = NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode)
@@ -418,7 +232,7 @@ internal final class APIService: NSObject {
     
     // Custom URL encode, 'cos iOS is missing one. This one is blatantly stolen from AFNetworking's implementation of percent escaping and converted to Swift
     
-    private class func _URLEncodedString(string: String) -> String {
+    class func _URLEncodedString(string: String) -> String {
         let charactersGeneralDelimitersToEncode = ":#[]@"
         let charactersSubDelimitersToEncode     = "!$&'()*+,;="
         
