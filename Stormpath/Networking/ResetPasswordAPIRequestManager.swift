@@ -25,21 +25,14 @@ class ResetPasswordAPIRequestManager: APIRequestManager {
         request.HTTPBody = try?NSJSONSerialization.dataWithJSONObject(["email": email], options: [])
     }
     
-    override func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        guard let response = response where error == nil else {
-            Logger.logError(error!)
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(error)
-            })
-
-            return
+    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+        self.callback(nil)
+    }
+    
+    override func executeCallback(parameters: AnyObject?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.callback(parameters as? NSError)
         }
-
-        Logger.logResponse(response as! NSHTTPURLResponse, data: data)
-
-        dispatch_async(dispatch_get_main_queue(), {
-            self.callback(error)
-        })
     }
 
 }

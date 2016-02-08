@@ -19,8 +19,16 @@ class APIRequestManager: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     }
     
+    func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+        preconditionFailure("Method not implemented")
+    }
+    
+    func executeCallback(parameters: AnyObject?, error: NSError?) {
+        preconditionFailure("Method not implemented")
+    }
+    
     func begin() {
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestDidFinish)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestCompletionHandler)
         task.resume()
     }
     
@@ -28,12 +36,24 @@ class APIRequestManager: NSObject {
         preconditionFailure("Method not implemented")
     }
     
-    func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        preconditionFailure("Method not implemented")
-    }
-    
     func setAccessToken(accessToken: String) {
         request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+    }
+    
+    private func requestCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+        guard let response = response as? NSHTTPURLResponse, data = data where error == nil else {
+            Logger.logError(error!)
+            self.executeCallback(nil, error: error)
+            return
+        }
+        
+        Logger.logResponse(response, data: data)
+        
+        if response.statusCode != 200 {
+            self.executeCallback(nil, error: APIRequestManager.errorForResponse(response, data: data))
+        } else {
+            requestDidFinish(data, response: response)
+        }
     }
     
     class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) {

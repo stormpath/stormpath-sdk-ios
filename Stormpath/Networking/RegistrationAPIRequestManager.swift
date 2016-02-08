@@ -27,24 +27,14 @@ class RegistrationAPIRequestManager: APIRequestManager {
         request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
     }
     
-    override func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        guard let response = response as? NSHTTPURLResponse where error == nil else {
-            Logger.logError(error!)
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, error)
-            })
-            return
-        }
-        
-        Logger.logResponse(response, data: data)
-        
-        if response.statusCode != 200 {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, APIRequestManager.errorForResponse(response, data: data))
-            })
-        } else {
-            RegistrationAPIRequestManager.parseRegisterHeaderData(response)
-            RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
+    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+        RegistrationAPIRequestManager.parseRegisterHeaderData(response)
+        RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
+    }
+    
+    override func executeCallback(parameters: AnyObject?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.callback(parameters as? NSDictionary, error)
         }
     }
     

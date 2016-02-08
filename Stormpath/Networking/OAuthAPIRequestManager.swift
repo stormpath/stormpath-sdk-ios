@@ -39,25 +39,13 @@ class OAuthAPIRequestManager: APIRequestManager {
         request.HTTPBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
     }
     
-    override func requestDidFinish(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        guard let response = response where error == nil else {
-            Logger.logError(error!)
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, error)
-            })
+    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+        OAuthAPIRequestManager.parseLoginResponseData(data, completionHandler: callback)
+    }
     
-            return
-        }
-    
-        let HTTPResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
-        Logger.logResponse(HTTPResponse, data: data)
-    
-        if HTTPResponse.statusCode != 200 {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.callback(nil, APIRequestManager.errorForResponse(HTTPResponse, data: data))
-            })
-        } else {
-            OAuthAPIRequestManager.parseLoginResponseData(data, completionHandler: callback)
+    override func executeCallback(parameters: AnyObject?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.callback(parameters as? String, error)
         }
     }
     
