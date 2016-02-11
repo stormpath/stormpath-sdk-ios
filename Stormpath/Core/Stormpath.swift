@@ -16,33 +16,11 @@ public final class Stormpath: NSObject {
     public static var sharedSession = Stormpath()
     public var configuration = StormpathConfiguration.defaultConfiguration
     var apiService: APIService!
+    var currentUser: User?
     
     public override init() {
         super.init()
         apiService = APIService(withStormpath: self)
-    }
-    
-    // MARK: Initial setup
-    
-    /**
-    Use this method for the initial setup for your Stormpath backend.
-    
-    - parameter APIURL: The base URL of your API, eg. "https://api.stormpath.com". The trailing slash is unnecessary.
-    */
-    public func setUpWithURL(url: String) {
-        var trimmedURL = ""
-        // Trim the trailing slash if needed
-        if url.hasSuffix("/") {
-            trimmedURL = String(url.characters.dropLast())
-        } else {
-            trimmedURL = url
-        }
-        
-        guard let APIURL = NSURL(string: trimmedURL) else {
-            assertionFailure("API URL does not resolve to an actual URL")
-            return
-        }
-        configuration.APIURL = APIURL
     }
     
     // MARK: User registration
@@ -120,20 +98,6 @@ public final class Stormpath: NSObject {
     }
     
     // MARK: Token management
-    
-    /**
-    Provides the last access token fetched by either login or refreshAccessToken functions. The validity of the token is not verified upon fetching!
-    
-    - returns: Access token for your API calls.
-    */
-    
-    public var accessToken: String? {
-        
-        get {
-            return KeychainService.accessToken
-        }
-        
-    }
     
     /**
      Refreshes the access token and stores it to be available via accessToken var. Call this function if your token expires.
