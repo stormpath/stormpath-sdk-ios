@@ -71,7 +71,7 @@ final class APIService: NSObject {
     func me(completionHandler: CompletionBlockWithDictionary) {
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
         
-        guard let accessToken = KeychainService.accessToken else {
+        guard let accessToken = stormpath.accessToken else {
             let error = NSError(domain: meURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
@@ -99,8 +99,8 @@ final class APIService: NSObject {
         Logger.logRequest(request)
         
         // Regardless of how the API calls goes, we can logout the user locally
-        KeychainService.accessToken = nil
-        KeychainService.refreshToken = nil
+        stormpath.accessToken = nil
+        stormpath.refreshToken = nil
         
         // TODO: Hit the API to delete the access token, because this literally does nothing right now. 
         

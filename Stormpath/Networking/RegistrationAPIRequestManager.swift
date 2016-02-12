@@ -39,27 +39,27 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     private class func parseRegisterHeaderData(response: NSHTTPURLResponse) {
-        guard let headerFields = response.allHeaderFields as? [String: String], cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!) else {
-            return
-        }
-        
-        var foundToken: Bool = false
-        
-        //TODO: this shouldn't be hitting keychainservice directly
-        for cookie in cookies {
-            if cookie.name == "access_token" {
-                KeychainService.saveString(cookie.value, key: AccessTokenKey)
-                foundToken = true
-            }
-            
-            if cookie.name == "refresh_token" {
-                KeychainService.saveString(cookie.value, key: RefreshTokenKey)
-            }
-        }
-        
-        if (foundToken == false) {
-            Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
-        }
+//        guard let headerFields = response.allHeaderFields as? [String: String], cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!) else {
+//            return
+//        }
+//        
+//        var foundToken: Bool = false
+//        
+//        //TODO: this shouldn't be hitting keychainservice directly
+//        for cookie in cookies {
+//            if cookie.name == "access_token" {
+//                KeychainService.saveString(cookie.value, key: AccessTokenKey)
+//                foundToken = true
+//            }
+//            
+//            if cookie.name == "refresh_token" {
+//                KeychainService.saveString(cookie.value, key: RefreshTokenKey)
+//            }
+//        }
+//        
+//        if (foundToken == false) {
+//            Logger.log("There was no access_token in the register cookies, if you want to skip the login after registration, enable the autologin in your Express app.")
+//        }
     }
 }
 

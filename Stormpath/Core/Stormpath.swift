@@ -13,13 +13,15 @@ public typealias CompletionBlockWithSuccess     = ((Bool, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {
-    public static var sharedSession = Stormpath()
+    public static var sharedSession = Stormpath(withIdentifier: "default")
     public var configuration = StormpathConfiguration.defaultConfiguration
     var apiService: APIService!
+    var keychain: KeychainService!
     
-    public override init() {
+    public init(withIdentifier identifier: String) {
         super.init()
         apiService = APIService(withStormpath: self)
+        keychain = KeychainService(withIdentifier: identifier)
     }
     
     // MARK: User registration
@@ -106,19 +108,19 @@ public final class Stormpath: NSObject {
     
     internal(set) public var accessToken: String? {
         get {
-            return KeychainService.accessToken
+            return keychain.accessToken
         }
         set {
-            KeychainService.accessToken = newValue
+            keychain.accessToken = newValue
         }
     }
     
     internal(set) public var refreshToken: String? {
         get {
-            return KeychainService.refreshToken
+            return keychain.refreshToken
         }
         set {
-            KeychainService.refreshToken = newValue
+            keychain.refreshToken = newValue
         }
     }
     

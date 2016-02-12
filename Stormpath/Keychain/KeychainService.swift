@@ -6,31 +6,34 @@
 //  Copyright © 2015 Stormpath. All rights reserved.
 //
 
-import UIKit
 import Foundation
 
-let AccessTokenKey: String      = "StormpathAccessTokenKey"
-let RefreshTokenKey: String     = "StormpathRefreshTokenKey"
-let APIURLKey: String           = "StormpathAPIURLKey"
+let AccessTokenKey      = "StormpathAccessToken"
+let RefreshTokenKey     = "StormpathRefreshToken"
 
 // Keychain constants
 
-let serviceName: String             = "StormpathKeychainService"
+let serviceName             = "StormpathKeychainService"
 
-let SecValueData: String            = kSecValueData as String
-let SecAttrAccessible: String       = kSecAttrAccessible as String
-let SecClass: String                = kSecClass as String
-let SecAttrService: String          = kSecAttrService as String
-let SecAttrGeneric: String          = kSecAttrGeneric as String
-let SecAttrAccount: String          = kSecAttrAccount as String
-let SecMatchLimit: String           = kSecMatchLimit as String
-let SecReturnData: String           = kSecReturnData as String
+let SecValueData            = kSecValueData as String
+let SecAttrAccessible       = kSecAttrAccessible as String
+let SecClass                = kSecClass as String
+let SecAttrService          = kSecAttrService as String
+let SecAttrGeneric          = kSecAttrGeneric as String
+let SecAttrAccount          = kSecAttrAccount as String
+let SecMatchLimit           = kSecMatchLimit as String
+let SecReturnData           = kSecReturnData as String
 
-internal class KeychainService {
+class KeychainService {
+    var prefix: String
+    
+    init(withIdentifier identifier: String) {
+        self.prefix = identifier
+    }
     
     // Convenience vars
     
-    internal class var accessToken: String? {
+    var accessToken: String? {
         get {
             return stringForKey(AccessTokenKey)
         }
@@ -40,7 +43,7 @@ internal class KeychainService {
         }
     }
     
-    internal class var refreshToken: String? {
+    var refreshToken: String? {
         get {
             return stringForKey(RefreshTokenKey)
         }
@@ -50,42 +53,32 @@ internal class KeychainService {
         }
     }
     
-    internal class var APIURL: String? {
-        get {
-            return stringForKey(APIURLKey)
-        }
-        
-        set {
-            saveString(newValue, key: APIURLKey)
-        }
-    }
-    
     // MARK: Core methods
     
-    internal class func saveString(value: String?, key: String) {
-        guard value != nil else {
+    func saveString(value: String?, key keyWithoutPrefix: String) {
+        let key = prefix + keyWithoutPrefix
+        guard let value = value else {
             deletestringForKey(key)
             return
         }
         
         var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
-        keychainQueryDictionary[SecValueData] = value!.dataUsingEncoding(NSUTF8StringEncoding)
+        keychainQueryDictionary[SecValueData] = value.dataUsingEncoding(NSUTF8StringEncoding)
         keychainQueryDictionary[SecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
         
         let status: OSStatus = SecItemAdd(keychainQueryDictionary, nil)
         
         // If the value exists, update it instead
         if status == errSecDuplicateItem {
-            if let value = value {
-                updateValue(value, key: key)
-            }
+            updateValue(value, key: key)
         } else if status != errSecSuccess {
             Logger.log("Couldn't store value \(value) to keychain")
         }
     }
     
-    internal class func stringForKey(key: String) -> String? {
+    func stringForKey(keyWithoutPrefix: String) -> String? {
+        let key = prefix + keyWithoutPrefix
         var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         var result: AnyObject?
     
@@ -109,7 +102,7 @@ internal class KeychainService {
     
     // MARK: Keychain access helpers
     
-    internal class func updateValue(value: String, key: String) {
+    private func updateValue(value: String, key: String) {
         let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         let valueData = value.dataUsingEncoding(NSUTF8StringEncoding)
@@ -118,7 +111,7 @@ internal class KeychainService {
         SecItemUpdate(keychainQueryDictionary, updateDictionary)
     }
     
-    internal class func deletestringForKey(key: String) -> Bool {
+    private func deletestringForKey(key: String) -> Bool {
         let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
@@ -128,7 +121,7 @@ internal class KeychainService {
     
     // MARK: Keychain query dictionary
     
-    internal class func keychainQueryDictionaryForKey(key: String) -> [String: AnyObject] {
+    private func keychainQueryDictionaryForKey(key: String) -> [String: AnyObject] {
         var keychainQueryDictionary: [String: AnyObject] = [String: AnyObject]()
         
         keychainQueryDictionary[SecClass] = kSecClassGenericPassword
