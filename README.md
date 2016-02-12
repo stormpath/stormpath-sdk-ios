@@ -1,7 +1,7 @@
 # Stormpath iOS SDK
 
 [![CI Status](http://img.shields.io/travis/Adis/Stormpath.svg?style=flat)](https://travis-ci.org/Adis/Stormpath)
-[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Platform](https://img.shields.io/cocoapods/p/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
@@ -20,9 +20,9 @@ Stormpath iOS SDK currently works only against the [Express-Stormpath](https://g
 
 # Installation
 
-## Cocoapods
+## CocoaPods
 
-Stormpath will be available through [Cocoapods](https://cocoapods.org/), add this line to your `Podfile`:
+Stormpath will be available through [CocoaPods](https://cocoapods.org/), add this line to your `Podfile`:
 
 ```ruby
 pod "Stormpath"
