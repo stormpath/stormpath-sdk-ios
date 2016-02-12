@@ -27,31 +27,41 @@ final class APIService: NSObject {
     
     // MARK: Login
     
-    func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
+    func login(username: String, password: String, completionHandler: CompletionBlockWithSuccess) {
         
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
-        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password, callback: completionHandler)
+        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password) { (accessToken, refreshToken, error) -> Void in
+            
+        }
         requestManager.begin()
         
     }
     
     // MARK: Access token refresh
     
-    func refreshAccessToken(completionHandler: CompletionBlockWithString) {
+    func refreshAccessToken(completionHandler: CompletionBlockWithSuccess) {
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
-        guard let refreshToken = KeychainService.refreshToken else {
+        guard let refreshToken = stormpath.refreshToken else {
             let error = NSError(domain: oauthURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(nil, error)
+                completionHandler(false, error)
             })
             return
         }
         
-        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, refreshToken: refreshToken, callback: completionHandler)
+        let requestManager = OAuthAPIRequestManager(withURL: oauthURL, refreshToken: refreshToken) { (accessToken, refreshToken, error) -> Void in
+            guard let accessToken = accessToken where error == nil else {
+                completionHandler(false, error)
+                return
+            }
+            self.stormpath.accessToken = accessToken
+            self.stormpath.refreshToken = refreshToken
+            completionHandler(true, nil)
+        }
         requestManager.begin()
         
     }

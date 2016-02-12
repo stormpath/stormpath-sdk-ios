@@ -21,12 +21,10 @@ public class User: NSObject {
     internal(set) public var createdAt: NSDate!
     internal(set) public var modifiedAt: NSDate!
     internal(set) public var customData: String!
-    internal(set) public var accessToken: AccessToken!
-    var refreshToken: String?
     
     init?(withBuilder builder: UserBuilder) {
         super.init()
-        guard let href = builder.href, username = builder.username, email = builder.email, givenName = builder.givenName, surname = builder.surname, createdAt = builder.createdAt, modifiedAt = builder.modifiedAt, customData = builder.customData, accessToken = builder.accessToken else {
+        guard let href = builder.href, username = builder.username, email = builder.email, givenName = builder.givenName, surname = builder.surname, createdAt = builder.createdAt, modifiedAt = builder.modifiedAt, customData = builder.customData else {
             return nil
         }
         self.href = href
@@ -38,8 +36,6 @@ public class User: NSObject {
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
         self.customData = customData
-        self.accessToken = accessToken
-        self.refreshToken = builder.refreshToken
     }
     
 //    init?(fromJSON jsonData: NSData) {
@@ -58,6 +54,4 @@ internal struct UserBuilder {
     var createdAt: NSDate?
     var modifiedAt: NSDate?
     var customData: String?
-    var accessToken: AccessToken?
-    var refreshToken: String?
 }

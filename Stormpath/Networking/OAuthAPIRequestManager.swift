@@ -8,7 +8,7 @@
 
 import UIKit
 
-typealias OAuthAPIRequestCallback = ((String?, NSError?) -> Void)
+typealias OAuthAPIRequestCallback = ((String?, refreshToken: String?, NSError?) -> Void)
 
 class OAuthAPIRequestManager: APIRequestManager {
     var requestBody: String
@@ -40,58 +40,24 @@ class OAuthAPIRequestManager: APIRequestManager {
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        OAuthAPIRequestManager.parseLoginResponseData(data, completionHandler: callback)
+        guard let json = (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? NSDictionary,
+            accessToken = json["access_token"] as? String else {
+            //Callback and return
+            executeCallback(nil, error: nil) //TODO: add error object
+            return
+        }
+        let refreshToken = json["refresh_token"] as? String
+        
+        executeCallback(accessToken, refreshToken: refreshToken, error: nil)
     }
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.callback(parameters as? String, error)
-        }
+        executeCallback(nil, refreshToken: nil, error: error)
     }
     
-    private class func parseLoginResponseData(data: NSData?, completionHandler: CompletionBlockWithString) {
-        
-        guard let data = data else {
-            Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
-            
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(nil, nil)
-            })
-            
-            return
-        }
-        
-        do {
-            if let tokensDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [NSJSONReadingOptions.MutableContainers]) as? NSDictionary {
-                // Extract the access_token
-                if let accessToken: String = tokensDictionary["access_token"] as? String {
-                    KeychainService.accessToken = accessToken
-                    
-                    // If there was an access_token, check for the refresh_token as well
-                    if let refreshToken: String = tokensDictionary["refresh_token"] as? String {
-                        KeychainService.refreshToken = refreshToken
-                    } else {
-                        Logger.log("There was no refresh_token present in the response!")
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        completionHandler(accessToken, nil)
-                    })
-                } else {
-                    Logger.log("There was no access_token present in the response!")
-                    
-                    dispatch_async(dispatch_get_main_queue(), {
-                        completionHandler(nil, nil)
-                    })
-                }
-            } else {
-                completionHandler(nil, nil)
-            }
-        } catch let error as NSError {
-            dispatch_async(dispatch_get_main_queue(), {
-                Logger.logError(error)
-                completionHandler(nil, error)
-            })
+    func executeCallback(accessToken: String?, refreshToken: String?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.callback(accessToken, refreshToken: refreshToken, error)
         }
     }
 }

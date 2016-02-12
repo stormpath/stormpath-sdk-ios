@@ -9,14 +9,13 @@
 import UIKit
 
 public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
-public typealias CompletionBlockWithString     = ((String?, NSError?) -> Void)
+public typealias CompletionBlockWithSuccess     = ((Bool, NSError?) -> Void)
 public typealias CompletionBlockWithError      = ((NSError?) -> Void)
 
 public final class Stormpath: NSObject {
     public static var sharedSession = Stormpath()
     public var configuration = StormpathConfiguration.defaultConfiguration
     var apiService: APIService!
-    var currentUser: User?
     
     public override init() {
         super.init()
@@ -49,7 +48,7 @@ public final class Stormpath: NSObject {
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If the method fails, the error will be passed in the completion.
     */
     
-    public func login(username: String, password: String, completionHandler: CompletionBlockWithString) {
+    public func login(username: String, password: String, completionHandler: CompletionBlockWithSuccess) {
         
         apiService.login(username, password: password, completionHandler: completionHandler)
         
@@ -100,12 +99,36 @@ public final class Stormpath: NSObject {
     // MARK: Token management
     
     /**
+    Provides the last access token fetched by either login or refreshAccessToken functions. The validity of the token is not verified upon fetching!
+    
+    - returns: Access token for your API calls.
+    */
+    
+    internal(set) public var accessToken: String? {
+        get {
+            return KeychainService.accessToken
+        }
+        set {
+            KeychainService.accessToken = newValue
+        }
+    }
+    
+    internal(set) public var refreshToken: String? {
+        get {
+            return KeychainService.refreshToken
+        }
+        set {
+            KeychainService.refreshToken = newValue
+        }
+    }
+    
+    /**
      Refreshes the access token and stores it to be available via accessToken var. Call this function if your token expires.
      
      - parameter completionHandler: Block invoked on function completion. It will have either a new access token passed as a string, or an error if one occured.
      */
     
-    public func refreshAccessToken(completionHandler: CompletionBlockWithString) {
+    public func refreshAccessToken(completionHandler: CompletionBlockWithSuccess) {
         
         apiService.refreshAccessToken(completionHandler)
         
