@@ -22,22 +22,6 @@ public class User: NSObject {
     internal(set) public var modifiedAt: NSDate!
     internal(set) public var customData: String!
     
-    init?(withBuilder builder: UserBuilder) {
-        super.init()
-        guard let href = builder.href, username = builder.username, email = builder.email, givenName = builder.givenName, surname = builder.surname, createdAt = builder.createdAt, modifiedAt = builder.modifiedAt, customData = builder.customData else {
-            return nil
-        }
-        self.href = href
-        self.username = username
-        self.email = email
-        self.givenName = givenName
-        self.middleName = builder.middleName
-        self.surname = surname
-        self.createdAt = createdAt
-        self.modifiedAt = modifiedAt
-        self.customData = customData
-    }
-    
     init?(fromJSON jsonData: NSData) {
         super.init()
         guard let json = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
@@ -66,18 +50,6 @@ public class User: NSObject {
         self.modifiedAt = modifiedAt
         self.customData = customDataString
     }
-}
-
-internal struct UserBuilder {
-    var href: NSURL?
-    var username: String?
-    var email: String?
-    var givenName: String?
-    var middleName: String?
-    var surname: String?
-    var createdAt: NSDate?
-    var modifiedAt: NSDate?
-    var customData: String?
 }
 
 private extension String {
