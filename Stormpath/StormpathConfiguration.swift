@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stormpath. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 /**
  StormpathConfiguration is the class that manages the configuration for Stormpath, its endpoints, and API providers. It auto-loads

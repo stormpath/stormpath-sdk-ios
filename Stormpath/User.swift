@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stormpath. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 public class User: NSObject {
     internal(set) public var href: NSURL!

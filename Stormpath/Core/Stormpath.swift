@@ -6,7 +6,7 @@
 //  Copyright © 2015 Stormpath. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
 public typealias CompletionBlockWithSuccess     = ((Bool, NSError?) -> Void)

@@ -6,7 +6,7 @@
 //  Copyright © 2015 Stormpath. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 // Simple logging class flavored for this SDK
 
