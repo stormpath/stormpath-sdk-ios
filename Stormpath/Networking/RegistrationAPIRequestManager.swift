@@ -8,13 +8,11 @@
 
 import Foundation
 
-typealias RegistrationAPIRequestCallback = ((NSDictionary?, NSError?) -> Void)
-
 class RegistrationAPIRequestManager: APIRequestManager {
     var user: RegistrationModel
-    var callback: RegistrationAPIRequestCallback
+    var callback: StormpathUserCallback
     
-    init(withURL url: NSURL, newUser user: RegistrationModel, callback: RegistrationAPIRequestCallback) {
+    init(withURL url: NSURL, newUser user: RegistrationModel, callback: StormpathUserCallback) {
         self.user = user
         self.callback = callback
         super.init(withURL: url)
@@ -29,12 +27,17 @@ class RegistrationAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         RegistrationAPIRequestManager.parseRegisterHeaderData(response)
-        RegistrationAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback) //TODO: this returns error or user data
+        
+        if let user = User(fromJSON: data) {
+            executeCallback(user, error: nil)
+        } else {
+            executeCallback(nil, error: nil) //TODO: add an appropriate error
+        }
     }
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.callback(parameters as? NSDictionary, error)
+            self.callback(parameters as? User, error)
         }
     }
     

@@ -20,11 +20,12 @@ public class User: NSObject {
     }
     internal(set) public var createdAt: NSDate!
     internal(set) public var modifiedAt: NSDate!
-    internal(set) public var customData: String!
+    internal(set) public var customData: String?
     
     init?(fromJSON jsonData: NSData) {
         super.init()
-        guard let json = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
+        guard let rootJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
+            json = rootJSON["account"] as? [String: AnyObject],
             hrefString = json["href"] as? String,
             href = NSURL(string: hrefString),
             username = json["username"] as? String,
@@ -32,11 +33,7 @@ public class User: NSObject {
             givenName = json["givenName"] as? String,
             surname = json["surname"] as? String,
             createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
-            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
-            customDataObject = json["customData"],
-            customDataObject2 = customDataObject, //For some reason we need to unwrap twice?? What?? TODO: look into why Swift does this
-            customDataData = try? NSJSONSerialization.dataWithJSONObject(customDataObject2, options: []),
-            customDataString = String(data: customDataData, encoding: NSUTF8StringEncoding) else {
+            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format else {
                 return nil
         }
         
@@ -48,7 +45,11 @@ public class User: NSObject {
         self.surname = surname
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
-        self.customData = customDataString
+        if let customDataObject = json["customData"] as? [String: AnyObject],
+            customDataData = try? NSJSONSerialization.dataWithJSONObject(customDataObject, options: []),
+            customDataString = String(data: customDataData, encoding: NSUTF8StringEncoding) {
+            self.customData = customDataString
+        }
     }
 }
 

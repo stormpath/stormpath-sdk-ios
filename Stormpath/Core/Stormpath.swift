@@ -8,12 +8,11 @@
 
 import Foundation
 
-public typealias CompletionBlockWithDictionary = ((NSDictionary?, NSError?) -> Void)
-public typealias CompletionBlockWithSuccess     = ((Bool, NSError?) -> Void)
-public typealias CompletionBlockWithError      = ((NSError?) -> Void)
+public typealias StormpathSuccessCallback       = (Bool, NSError?) -> Void
+public typealias StormpathUserCallback          = (User?, NSError?) -> Void
 
 public final class Stormpath: NSObject {
-    public static var sharedSession = Stormpath(withIdentifier: "default")
+    public static let sharedSession = Stormpath(withIdentifier: "default")
     public var configuration = StormpathConfiguration.defaultConfiguration
     var apiService: APIService!
     var keychain: KeychainService!
@@ -34,7 +33,7 @@ public final class Stormpath: NSObject {
         or an error if one occured.
      */
     
-    public func register(userData: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
+    public func register(userData: RegistrationModel, completionHandler: StormpathUserCallback) {
         
         apiService.register(userData, completionHandler: completionHandler)
         
@@ -50,7 +49,7 @@ public final class Stormpath: NSObject {
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If the method fails, the error will be passed in the completion.
     */
     
-    public func login(username: String, password: String, completionHandler: CompletionBlockWithSuccess) {
+    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback) {
         
         apiService.login(username, password: password, completionHandler: completionHandler)
         
@@ -62,7 +61,7 @@ public final class Stormpath: NSObject {
      - parameter completionHandler: Completion block invoked
      */
     
-    public func me(completionHandler: CompletionBlockWithDictionary) {
+    public func me(completionHandler: StormpathUserCallback) {
         
         apiService.me(completionHandler)
         
@@ -77,7 +76,7 @@ public final class Stormpath: NSObject {
     */
 
     
-    public func logout(completionHandler: CompletionBlockWithError) {
+    public func logout(completionHandler: StormpathSuccessCallback) {
         
         apiService.logout(completionHandler)
         
@@ -92,7 +91,7 @@ public final class Stormpath: NSObject {
     - parameter completionHandler: The completion block to be invoked after the API request is finished. If there were errors, they will be passed in the completion block.
     */
     
-    public func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
+    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {
         
         apiService.resetPassword(email, completionHandler: completionHandler)
         
@@ -130,7 +129,7 @@ public final class Stormpath: NSObject {
      - parameter completionHandler: Block invoked on function completion. It will have either a new access token passed as a string, or an error if one occured.
      */
     
-    public func refreshAccessToken(completionHandler: CompletionBlockWithSuccess) {
+    public func refreshAccessToken(completionHandler: StormpathSuccessCallback) {
         
         apiService.refreshAccessToken(completionHandler)
         

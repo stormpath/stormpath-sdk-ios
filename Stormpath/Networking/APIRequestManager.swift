@@ -59,34 +59,6 @@ class APIRequestManager: NSObject {
         }
     }
     
-    class func parseDictionaryResponseData(data: NSData?, completionHandler: CompletionBlockWithDictionary) { //TODO: eliminiate this. 
-        // First make sure there are no network errors
-        guard let data = data else {
-            Logger.log("Uh-oh. Apparently, there were no errors, or data in your API response. This shouldn't have happened.")
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                completionHandler(nil, nil)
-            })
-            
-            return
-        }
-        
-        // Attempt to parse the response JSON
-        do {
-            if let userResponseDictionary: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
-                dispatch_async(dispatch_get_main_queue(), {
-                    completionHandler(userResponseDictionary, nil)
-                })
-            }
-        } catch let error as NSError {
-            Logger.logError(error)
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                completionHandler(nil, error)
-            })
-        }
-    }
-    
     class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError { //TODO: figure out a unified error sort of system
         var userInfo = [String: AnyObject]()
         

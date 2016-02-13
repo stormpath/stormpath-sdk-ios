@@ -8,23 +8,25 @@
 
 import Foundation
 
-typealias MeAPIRequestCallback = ((NSDictionary?, NSError?) -> Void)
-
 class MeAPIRequestManager: APIRequestManager {
-    var callback: MeAPIRequestCallback
-    init(withURL url: NSURL, accessToken: String, callback: MeAPIRequestCallback) {
+    var callback: StormpathUserCallback
+    init(withURL url: NSURL, accessToken: String, callback: StormpathUserCallback) {
         self.callback = callback
         super.init(withURL: url)
         setAccessToken(accessToken)
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        MeAPIRequestManager.parseDictionaryResponseData(data, completionHandler: callback)
+        guard let user = User(fromJSON: data) else {
+            //TODO: Callback with error
+            return
+        }
+        executeCallback(user, error: nil)
     }
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.callback(parameters as? NSDictionary, error)
+            self.callback(parameters as? User, error)
         }
     }
     

@@ -17,7 +17,7 @@ final class APIService: NSObject {
     
     // MARK: Registration
     
-    func register(newUser: RegistrationModel, completionHandler: CompletionBlockWithDictionary) {
+    func register(newUser: RegistrationModel, completionHandler: StormpathUserCallback) {
         let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
         
         let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newUser: newUser, callback: completionHandler)
@@ -27,7 +27,7 @@ final class APIService: NSObject {
     
     // MARK: Login
     
-    func login(username: String, password: String, completionHandler: CompletionBlockWithSuccess) {
+    func login(username: String, password: String, completionHandler: StormpathSuccessCallback) {
         
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password) { (accessToken, refreshToken, error) -> Void in
@@ -39,7 +39,7 @@ final class APIService: NSObject {
     
     // MARK: Access token refresh
     
-    func refreshAccessToken(completionHandler: CompletionBlockWithSuccess) {
+    func refreshAccessToken(completionHandler: StormpathSuccessCallback) {
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
         guard let refreshToken = stormpath.refreshToken else {
@@ -68,7 +68,7 @@ final class APIService: NSObject {
     
     // MARK: User data
     
-    func me(completionHandler: CompletionBlockWithDictionary) {
+    func me(completionHandler: StormpathUserCallback) {
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
         
         guard let accessToken = stormpath.accessToken else {
@@ -88,7 +88,7 @@ final class APIService: NSObject {
     
     // MARK: Logout
     
-    func logout(completionHandler: CompletionBlockWithError) {
+    func logout(completionHandler: StormpathSuccessCallback) {
         
         let logoutURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.logoutEndpoint)
         let request = NSMutableURLRequest(URL: logoutURL)
@@ -108,7 +108,7 @@ final class APIService: NSObject {
     
     // MARK: Forgot password
     
-    func resetPassword(email: String, completionHandler: CompletionBlockWithError) {
+    func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {
         let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
         let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: completionHandler)
         requestManager.begin()
