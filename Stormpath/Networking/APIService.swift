@@ -110,7 +110,9 @@ final class APIService: NSObject {
     
     func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {
         let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
-        let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: completionHandler)
+        let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: { (error) -> Void in
+                completionHandler(error == nil, error)
+        })
         requestManager.begin()
     }
 }
