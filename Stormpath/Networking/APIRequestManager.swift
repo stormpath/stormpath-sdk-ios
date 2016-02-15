@@ -9,12 +9,10 @@
 import Foundation
 
 class APIRequestManager: NSObject {
-    var url: NSURL
     var request = NSMutableURLRequest()
     
     init(withURL url: NSURL) {
-        self.url = url
-        
+        request.URL = url
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String {
