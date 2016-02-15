@@ -33,6 +33,7 @@ class APIRequestManager: NSObject {
     }
     
     func begin() {
+        prepareForRequest()
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: requestCompletionHandler)
         task.resume()
     }
