@@ -19,7 +19,13 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func prepareForRequest() {
-        let registrationDictionary = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
+        var registrationDictionary: [String: AnyObject] = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
+        
+        if let customData = user.customData.dataUsingEncoding(NSUTF8StringEncoding), customDataJSON = try? NSJSONSerialization.JSONObjectWithData(customData, options: []) {
+            registrationDictionary["customData"] = customDataJSON
+        } else {
+            Logger.log("Invalid customData JSON passed into registration method")
+        }
         
         request.HTTPMethod = "POST"
         request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
@@ -40,14 +46,13 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
 }
 
-//TODO: allow customData
-
 public class RegistrationModel {
     var givenName: String
     var surname: String
     var email: String
     var password: String
     var username = ""
+    var customData = "{}"
     
     init(withGivenName givenName: String, surname: String, email: String, password: String) {
         self.givenName = givenName
