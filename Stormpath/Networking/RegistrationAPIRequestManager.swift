@@ -54,7 +54,7 @@ public class RegistrationModel {
     var username = ""
     var customData = "{}"
     
-    init(withGivenName givenName: String, surname: String, email: String, password: String) {
+    public init(withGivenName givenName: String, surname: String, email: String, password: String) {
         self.givenName = givenName
         self.surname = surname
         self.email = email
