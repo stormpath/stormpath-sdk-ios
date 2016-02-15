@@ -31,7 +31,17 @@ final class APIService: NSObject {
         
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password) { (accessToken, refreshToken, error) -> Void in
+            guard let accessToken = accessToken where error == nil else {
+                completionHandler(false, error)
+                return
+            }
+            self.stormpath.keychain.accessToken = accessToken
             
+            //TODO: double check refresh token behavior on refreshing
+            if refreshToken != nil {
+                self.stormpath.keychain.refreshToken = refreshToken
+            }
+            completionHandler(true, nil)
         }
         requestManager.begin()
         

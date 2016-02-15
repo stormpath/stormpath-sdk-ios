@@ -56,7 +56,7 @@ class OAuthAPIRequestManager: APIRequestManager {
     }
     
     func executeCallback(accessToken: String?, refreshToken: String?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+        dispatch_async(dispatch_get_main_queue()) { 
             self.callback(accessToken, refreshToken: refreshToken, error)
         }
     }

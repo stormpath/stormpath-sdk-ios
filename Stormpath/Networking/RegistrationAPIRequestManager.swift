@@ -40,7 +40,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+        dispatch_async(dispatch_get_main_queue()) { 
             self.callback(parameters as? User, error)
         }
     }
