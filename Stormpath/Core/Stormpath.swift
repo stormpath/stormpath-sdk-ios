@@ -146,8 +146,9 @@ public final class Stormpath: NSObject {
      */
      
     public class func setLogLevel(level: LogLevel) {
-        
-        Logger.logLevel = level
+        #if DEBUG
+            Logger.logLevel = level
+        #endif
         
     }
     
