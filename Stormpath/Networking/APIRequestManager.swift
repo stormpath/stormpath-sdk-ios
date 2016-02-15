@@ -20,16 +20,15 @@ class APIRequestManager: NSObject {
         }
     }
     
-    func prepareForRequest() {
-        preconditionFailure("Method not implemented")
-    }
-    
     func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         preconditionFailure("Method not implemented")
     }
     
     func executeCallback(parameters: AnyObject?, error: NSError?) {
         preconditionFailure("Method not implemented")
+    }
+    
+    func prepareForRequest() {
     }
     
     func begin() {
