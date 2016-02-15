@@ -43,7 +43,7 @@ class OAuthAPIRequestManager: APIRequestManager {
         guard let json = (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? NSDictionary,
             accessToken = json["access_token"] as? String else {
             //Callback and return
-            executeCallback(nil, error: nil) //TODO: add error object
+            executeCallback(nil, error: StormpathError.APIResponseError)
             return
         }
         let refreshToken = json["refresh_token"] as? String

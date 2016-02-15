@@ -45,36 +45,20 @@ class APIRequestManager: NSObject {
     
     private func requestCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
         guard let response = response as? NSHTTPURLResponse, data = data where error == nil else {
-            Logger.logError(error!)
+            if let error = error {
+                Logger.logError(error)
+            }
             self.executeCallback(nil, error: error)
             return
         }
         
         Logger.logResponse(response, data: data)
         
-        if response.statusCode != 200 {
-            self.executeCallback(nil, error: APIRequestManager.errorForResponse(response, data: data))
+        //If the status code isn't 2XX
+        if response.statusCode / 100 != 2 {
+            self.executeCallback(nil, error: StormpathError.errorForResponse(response, data: data))
         } else {
             requestDidFinish(data, response: response)
         }
-    }
-    
-    class func errorForResponse(response: NSHTTPURLResponse, data: NSData?) -> NSError { //TODO: figure out a unified error sort of system
-        var userInfo = [String: AnyObject]()
-        
-        userInfo[NSLocalizedFailureReasonErrorKey] = NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode)
-        
-        // If the API returned an error object, extract the reason and put it in the error description instead
-        if let data = data where data.length > 0 {
-            let errorDictionary = try! NSJSONSerialization.JSONObjectWithData(data, options: [])
-            if let errorDescription = errorDictionary["error"] {
-                userInfo[NSLocalizedDescriptionKey] = errorDescription
-            }
-        }
-        
-        let error: NSError = NSError(domain: "", code: response.statusCode, userInfo: userInfo)
-        Logger.logError(error)
-        
-        return error
     }
 }

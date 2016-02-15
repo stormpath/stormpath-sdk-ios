@@ -18,7 +18,7 @@ class MeAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         guard let user = User(fromJSON: data) else {
-            //TODO: Callback with error
+            executeCallback(nil, error: StormpathError.APIResponseError)
             return
         }
         executeCallback(user, error: nil)

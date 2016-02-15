@@ -31,7 +31,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
         if let user = User(fromJSON: data) {
             executeCallback(user, error: nil)
         } else {
-            executeCallback(nil, error: nil) //TODO: add an appropriate error
+            executeCallback(nil, error: StormpathError.APIResponseError) 
         }
     }
     
@@ -65,6 +65,8 @@ class RegistrationAPIRequestManager: APIRequestManager {
 //        }
     }
 }
+
+//TODO: allow customData
 
 public class RegistrationModel {
     var givenName: String
