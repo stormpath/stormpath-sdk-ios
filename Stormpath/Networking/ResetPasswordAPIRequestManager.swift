@@ -22,7 +22,7 @@ class ResetPasswordAPIRequestManager: APIRequestManager {
     
     override func prepareForRequest() {
         request.HTTPMethod = "POST"
-        request.HTTPBody = try?NSJSONSerialization.dataWithJSONObject(["email": email], options: [])
+        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(["email": email], options: [])
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
