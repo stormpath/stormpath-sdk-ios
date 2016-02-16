@@ -19,7 +19,13 @@ public enum LogLevel {
 
 internal final class Logger {
     
-    static var logLevel: LogLevel = .None
+    static var logLevel: LogLevel {
+        #if DEBUG
+        return .Debug
+        #else
+        return .None
+        #endif
+    }
     
     internal class func log(string: String) {
         
