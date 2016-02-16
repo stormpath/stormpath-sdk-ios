@@ -9,14 +9,21 @@
 import Foundation
 
 /**
- StormpathConfiguration is the class that manages the configuration for Stormpath, its endpoints, and API providers. It auto-loads
- from the configuration in Info.plist, or uses defaults that connect to a server on http://localhost:3000, the default in many Stormpath integrations.
- You can modify its properties directly.
+ StormpathConfiguration is the class that manages the configuration for 
+ Stormpath, its endpoints, and API providers. It auto-loads from the
+ configuration in Info.plist, or uses defaults that connect to a server on
+ http://localhost:3000, the default in many Stormpath integrations. You can
+ modify its properties directly.
  
- - note: The endpoints refer to the endpoints in the Stormpath Framework Spec. Use leading slashes to specify the endpoints.
+ - note: The endpoints refer to the endpoints in the Stormpath Framework Spec. 
+   Use leading slashes to specify the endpoints.
  */
-public class StormpathConfiguration {
-    /// Singleton object representing the default configuration loaded from the config file. Used by the main Stormpath instance.
+public class StormpathConfiguration: NSObject {
+    /**
+     Singleton object representing the default configuration loaded from the 
+     config file. Used by the main Stormpath instance. Can be modified 
+     programmatically.
+     */
     public static var defaultConfiguration = StormpathConfiguration()
     
     /// Configuration parameter for the API URL. Do not use a trailing slash in the URL.
@@ -37,15 +44,22 @@ public class StormpathConfiguration {
     /**
      Endpoint to logout
      
-     - todo: this might not be needed, but I see it in Adis's code. I don't think hitting the /logout endpoint does anything?
-     Not in the framework spec either.
+     - todo: this might not be needed, but I see it in Adis's code. I don't 
+       think hitting the /logout endpoint does anything? Not in the framework 
+       spec either.
      */
     public var logoutEndpoint = "/logout"
     
     /// Endpoint to register a new user
     public var registerEndpoint = "/register"
     
-    public init() {
+    /**
+     Initializer for StormpathConfiguration. The initializer pulls defaults from 
+     the Info.plist file, and falls back to default SDK values. Modify the 
+     values after initialization to customize this object. 
+     */
+    public override init() {
+        super.init()
         guard let stormpathInfo = NSBundle.mainBundle().infoDictionary?["Stormpath"] as? [String: AnyObject] else {
             return
         }

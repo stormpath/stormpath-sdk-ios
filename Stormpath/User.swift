@@ -8,20 +8,43 @@
 
 import Foundation
 
+/**
+ User represents a user object from the Stormpath database.
+*/
 public class User: NSObject {
+    /// Stormpath resource URL for the user
     internal(set) public var href: NSURL!
+    
+    /// Username of the user. Separate from the email, but is often set to the email address.
     internal(set) public var username: String!
+    
+    /// Email address of the user.
     internal(set) public var email: String!
+    
+    /// Given (first) name of the user.
     internal(set) public var givenName: String!
+    
+    /// Middle name of the user. Optional.
     internal(set) public var middleName: String?
+    
+    /// Sur (last) name of the user.
     internal(set) public var surname: String!
+    
+    /// Full name of the user.
     public var fullName: String {
         return middleName == nil || middleName == "" ? "\(givenName) \(surname)" : "\(givenName) \(middleName) \(surname)"
     }
+    
+    /// Date the user was created in the Stormpath database.
     internal(set) public var createdAt: NSDate!
+    
+    /// Date the user was last modified in the Stormpath database.
     internal(set) public var modifiedAt: NSDate!
+    
+    /// A string of JSON representing the custom data for the user. Cannot be updated in the current version of the SDK.
     internal(set) public var customData: String?
     
+    /// Initializer for the JSON object for the account. Expected to be wrapped in `{account: accountObject}`
     init?(fromJSON jsonData: NSData) {
         super.init()
         guard let rootJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
@@ -53,6 +76,7 @@ public class User: NSObject {
     }
 }
 
+/// Helper extension to make optional chaining easier. 
 private extension String {
     var dateFromISO8601Format: NSDate? {
         let dateFormatter = NSDateFormatter()

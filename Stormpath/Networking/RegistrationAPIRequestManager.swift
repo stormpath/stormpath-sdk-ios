@@ -46,14 +46,29 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
 }
 
+/**
+ Model for the user registration form. The fields requested in the initializer 
+ are required. The username is optional, but if not set retains the value of the 
+ email address.
+ */
 public class RegistrationModel {
-    var givenName: String
-    var surname: String
-    var email: String
-    var password: String
-    var username = ""
-    var customData = "{}"
+    public var givenName: String
+    public var surname: String
+    public var email: String
+    public var password: String
+    public var username = ""
+    public var customData = "{}"
     
+    /**
+     Initializer for Registration Model. After initialization, all fields can be 
+     modified. 
+     
+     - parameters:
+       - givenName: Given (first) name of the user.
+       - surname: Sur (last) name of the user.
+       - email: Email address of the user.
+       - password: Password for the user.
+     */
     public init(withGivenName givenName: String, surname: String, email: String, password: String) {
         self.givenName = givenName
         self.surname = surname
