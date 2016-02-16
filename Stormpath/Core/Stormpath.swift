@@ -103,17 +103,12 @@ public final class Stormpath: NSObject {
     
     /**
      Logs out the user and clears the sessions tokens.
-     
-     - parameters:
-       - completionHandler: The completion block to be invoked after the API 
-         request is finished. If the method fails, the error will be passed in 
-         the completion.
     */
 
     
-    public func logout(completionHandler: StormpathSuccessCallback) {
+    public func logout() {
         
-        apiService.logout(completionHandler)
+        apiService.logout()
         
     }
     

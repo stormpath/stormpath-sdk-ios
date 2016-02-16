@@ -98,7 +98,7 @@ final class APIService: NSObject {
     
     // MARK: Logout
     
-    func logout(completionHandler: StormpathSuccessCallback) {
+    func logout() {
         
         let logoutURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.logoutEndpoint)
         let request = NSMutableURLRequest(URL: logoutURL)
