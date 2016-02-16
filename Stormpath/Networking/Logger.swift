@@ -10,14 +10,14 @@ import Foundation
 
 // Simple logging class flavored for this SDK
 
-public enum LogLevel {
+enum LogLevel {
     case None
     case Error
     case Debug
     case Verbose
 }
 
-internal final class Logger {
+final class Logger {
     
     static var logLevel: LogLevel {
         #if DEBUG
@@ -27,7 +27,7 @@ internal final class Logger {
         #endif
     }
     
-    internal class func log(string: String) {
+    class func log(string: String) {
         
         switch logLevel {
             case .None: break
@@ -38,7 +38,7 @@ internal final class Logger {
         
     }
     
-    internal class func logRequest(request: NSURLRequest) {
+    class func logRequest(request: NSURLRequest) {
         
         if logLevel == .Debug || logLevel == .Verbose  {
             print("[STORMPATH] \(request.HTTPMethod!) \(request.URL!.absoluteString)")
@@ -53,7 +53,7 @@ internal final class Logger {
         
     }
     
-    internal class func logResponse(response: NSHTTPURLResponse, data: NSData?) {
+    class func logResponse(response: NSHTTPURLResponse, data: NSData?) {
         
         if logLevel == .Debug || logLevel == .Verbose  {
             print("[STORMPATH] \(response.statusCode) \(response.URL!.absoluteString)")
@@ -68,7 +68,7 @@ internal final class Logger {
         
     }
     
-    internal class func logError(error: NSError) {
+    class func logError(error: NSError) {
         
         switch logLevel {
             case .None: break
