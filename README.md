@@ -12,7 +12,7 @@ https://stormpath.com/
 
 # Requirements
 
-iOS 8.0+ / XCode 7.1+
+iOS 8.0+ / Xcode 7.1+
 
 # Set up
 
@@ -44,7 +44,7 @@ github "stormpath/stormpath-sdk-swift"
 
 ## Manually
 
-If you wish to use the framework manually, just download it and drag'n'drop it in your XCode project or workspace.
+If you wish to use the framework manually, just download it and drag'n'drop it in your Xcode project or workspace.
 
 # Usage
 
