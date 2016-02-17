@@ -120,9 +120,9 @@ public final class Stormpath: NSObject {
      
      - parameters:
        - email: User email. Usually from an input.
-       - completionHandler: The completion block to be invoked after the API 
-         request is finished. If there were errors, they will be passed in the 
-         completion block.
+       - completionHandler: The completion block to be invoked after the API
+         request is finished. This will always succeed if the API call is 
+         successful.
     */
     
     public func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {

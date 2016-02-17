@@ -21,13 +21,18 @@ public class User: NSObject {
     /// Email address of the user.
     internal(set) public var email: String!
     
-    /// Given (first) name of the user.
+    /**
+     Given (first) name of the user. Will appear as "UNKNOWN" on platforms
+     that do not require `givenName`
+     */
     internal(set) public var givenName: String!
     
     /// Middle name of the user. Optional.
     internal(set) public var middleName: String?
     
-    /// Sur (last) name of the user.
+    /**
+    Sur (last) name of the user. Will appear as "UNKNOWN" on platforms that do not require `surname`
+    */
     internal(set) public var surname: String!
     
     /// Full name of the user.

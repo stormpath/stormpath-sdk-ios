@@ -1,14 +1,12 @@
 # Stormpath iOS SDK
 
-[![CI Status](http://img.shields.io/travis/Adis/Stormpath.svg?style=flat)](https://travis-ci.org/Adis/Stormpath)
+[![CI Status](http://img.shields.io/travis/stormpath/stormpath-sdk-swift.svg?style=flat)](https://travis-ci.org/stormpath/stormpath-sdk-swift)
 [![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Platform](https://img.shields.io/cocoapods/p/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 
-iOS Swift library for Stormpath identity API.
-
-https://stormpath.com/
+The iOS Library for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
 
 # Requirements
 
@@ -44,7 +42,7 @@ github "stormpath/stormpath-sdk-swift"
 
 ## Manually
 
-If you wish to use the framework manually, just download it and drag'n'drop it in your XCode project or workspace.
+If you wish to use the framework manually, just download it and drag and drop it in your XCode project or workspace.
 
 # Usage
 
@@ -64,75 +62,77 @@ For Objective-C projects, use the `@import` syntax:
 
 ## 1. Setting up
 
-To set up the SDK, just point it towards your API endpoint (in your AppDelegate or anywhere before you start the actual usage), like so:
+Stormpath's default configuration will attempt to connect to `http://localhost:3000/` as its API server. This is the default configuration for the `express-stormpath` integration and is useful when you're testing against the iOS simulator, but you'll need to set this for any other configurations. Stormpath can read your Info.plist for configuration, but it's easier to modify the `defaultConfiguration` object when making small changes. 
 
 Swift:
 
 ```Swift
-Stormpath.setUpWithURL("http://api.example.com")
+StormpathConfiguration.defaultConfiguration.APIURL = NSURL(string: "http://localhost:3000")!
 ```
 
 Objective-C:
 
 ```Objective-C
-[Stormpath setUpWithURL:@"http://api.example.com"];
+[StormpathConfiguration defaultConfiguration].APIURL = [[NSURL alloc] initWithString:@"http://localhost:3000"];
 ```
 
 Further examples will be Swift only, Objective-C is the assumed equivalent.
 
 ## 2. User registration
 
-In order to register a user, first collect some user data, and put it in a `Dictionary`:
+In order to register a user, instantiate a `RegistrationModel`. By default, Stormpath Framework integrations will require an `email`, `password`, `givenName`, and `surname`, but this is configurable in the framework integration. Registering a user will not automatically log them in. 
 
 ```Swift
-let userDictionary = ["username": "User", "email": "user@delete.com", "password": "Password1"]
+let account = RegistrationModel(withEmail: "user@example.com", password: "ExamplePassword")
+account.givenName = "Example"
+account.surname = "McExample"
 ```
 
 Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
-Stormpath.register(userDictionary: userDictionary) { (createdUserDictionary, error) -> Void in
-    if error == nil {
-        // Registration succeeded, createdUserDictionary holds your new user's data
-    } else {
-        // Something went wrong, check the error to see what
-    }
+Stormpath.sharedSession.register(account) { (account, error) -> Void in
+guard error == nil else {
+//The account registration failed
+return
+}
+// Do something with the returned account object, such as save its `href` if needed. 
 }
 ```
 
 ## 3. Logging in
 
-To log in, collect the username and password from the user, and then pass them to login method:
+To log in, collect the login and password from the user, and then pass them to login method:
 
 ```Swift
-Stormpath.login(username: self.usernameTextField.text!, password: self.passwordTextField.text!) { (accessToken, error) -> Void in
-    if error == nil {
-        // accessToken contains the token used for your other API calls
-    } else {
-        // Error handling goes here
-    }
+Stormpath.sharedSession.login(login, password: password) { (success, error) -> Void in
+guard error == nil else {
+// We could not authenticate the user with the given credentials. Handle the error. 
+return
+}
+// The user is now logged in, and the Stormpath access token will now be set!
 }
 ```
 
 There's no need to save the `acceessToken` anywhere, the SDK automatically stores it into the Keychain and it's accessible as a property on the `Stormpath` class:
 
 ```Swift
-Stormpath.accessToken
+Stormpath.sharedSession.accessToken
 ```
 
 Keep this value safe if you're storing it somewhere else.
 
-## 4. User data
+## 4. Account data
 
-Fetch the user data by using me:
+Fetch the account data by using me:
 
 ```Swift
-Stormpath.me(completionHandler: { (userDictionary, error) -> Void in
-    if error == nil {
-        // Parse userDictionary for relevant data
-    } else {
-        // Error handling
-    }
+Stormpath.sharedSession.me { (account, error) -> Void in
+guard let account = account where error == nil else {
+// We might not be logged in, the API is misconfigured, the API is down, etc
+return
+}
+// Success! We have the account object.
 }
 ```
 
@@ -141,14 +141,7 @@ Stormpath.me(completionHandler: { (userDictionary, error) -> Void in
 Logging out is simple:
 
 ```Swift
-Stormpath.logout({ (error) -> Void in
-    SVProgressHUD.dismiss()
-    if error == nil {
-        // All done
-    } else {
-        // Something went wrong, but the user is still locally logged out and the tokens are cleared
-    }
-})
+Stormpath.sharedSession.logout()
 ```
 
 ## 6. Password reset
@@ -156,34 +149,22 @@ Stormpath.logout({ (error) -> Void in
 To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
 
 ```Swift
-Stormpath.resetPassword(email: "user@delete.com", completionHandler: { (error) -> Void in
-    if error != nil {
-        // Tell the user the email is on its way!
-    } else {
-        // Something went awry
-    }
-})
+Stormpath.sharedSession.resetPassword("user@example.com") { (success, error) -> Void in
+guard error == nil else {
+// A network or API problem occurred. 
+return
+}
+// We succeeded in making the API request. 
+}
 ```
 
-## 7. Custom routes
+## 7. Custom configuration
 
-If your API has custom routes, just pass the relative path as a parameter to login, register or others:
+To be written
 
-```Swift
-Stormpath.register("/my/custom/route/to/register", userDictionary: userDictionary) { ... })
-```
+## 8. Error handling
 
-## 8. Logging
-
-At the moment, Stormpath SDK offers rudimentary logging to console for your debugging needs. To enable, do this:
-
-```Swift
-Stormpath.setLogLevel(.Debug)
-```
-
-There are four levels at the moment .None, .Debug., .Verbose, and .Error.
-
-*Note:* Please be considerate and turn off the logging for your production builds.
+To be written
 
 # License
 
