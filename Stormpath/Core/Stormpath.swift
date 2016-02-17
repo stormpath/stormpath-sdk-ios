@@ -73,7 +73,7 @@ public final class Stormpath: NSObject {
      use.
      
      - parameters:
-       - username: Account username.
+       - username: Account's email or username.
        - password: Account password.
        - completionHandler: The completion block to be invoked after the API 
          request is finished. If the method fails, the error will be passed in 

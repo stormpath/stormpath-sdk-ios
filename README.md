@@ -92,25 +92,25 @@ Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
 Stormpath.sharedSession.register(account) { (account, error) -> Void in
-guard error == nil else {
-//The account registration failed
-return
-}
-// Do something with the returned account object, such as save its `href` if needed. 
+    guard error == nil else {
+        //The account registration failed
+        return
+    }
+    // Do something with the returned account object, such as save its `href` if needed. 
 }
 ```
 
 ## 3. Logging in
 
-To log in, collect the login and password from the user, and then pass them to login method:
+To log in, collect the email (or username) and password from the user, and then pass them to login method:
 
 ```Swift
-Stormpath.sharedSession.login(login, password: password) { (success, error) -> Void in
-guard error == nil else {
-// We could not authenticate the user with the given credentials. Handle the error. 
-return
-}
-// The user is now logged in, and the Stormpath access token will now be set!
+Stormpath.sharedSession.login(email, password: password) { (success, error) -> Void in
+    guard error == nil else {
+        // We could not authenticate the user with the given credentials. Handle the error. 
+        return
+    }
+    // The user is now logged in, and the Stormpath access token will now be set!
 }
 ```
 
@@ -128,11 +128,11 @@ Fetch the account data by using me:
 
 ```Swift
 Stormpath.sharedSession.me { (account, error) -> Void in
-guard let account = account where error == nil else {
-// We might not be logged in, the API is misconfigured, the API is down, etc
-return
-}
-// Success! We have the account object.
+	guard let account = account where error == nil else {
+	    // We might not be logged in, the API is misconfigured, the API is down, etc
+	    return
+	}
+	// Success! We have the account object.
 }
 ```
 
@@ -150,11 +150,11 @@ To reset a user's password, you'll need to collect their email first. Then simpl
 
 ```Swift
 Stormpath.sharedSession.resetPassword("user@example.com") { (success, error) -> Void in
-guard error == nil else {
-// A network or API problem occurred. 
-return
-}
-// We succeeded in making the API request. 
+    guard error == nil else {
+    	// A network or API problem occurred. 
+        return
+    }
+    // We succeeded in making the API request. 
 }
 ```
 
