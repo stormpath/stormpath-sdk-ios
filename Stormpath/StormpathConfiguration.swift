@@ -26,20 +26,40 @@ public class StormpathConfiguration: NSObject {
      */
     public static var defaultConfiguration = StormpathConfiguration()
     
-    /// Configuration parameter for the API URL. Do not use a trailing slash in the URL.
-    public var APIURL = NSURL(string: "http://localhost:3000")!
+    /// Configuration parameter for the API URL.
+    public var APIURL = NSURL(string: "http://localhost:3000")! {
+        didSet {
+            APIURL = APIURL.absoluteString.withoutTrailingSlash.asURL ?? APIURL
+        }
+    }
     
     /// Endpoint for the current user context
-    public var meEndpoint = "/me"
+    public var meEndpoint = "/me" {
+        didSet {
+            meEndpoint = meEndpoint.withLeadingSlash
+        }
+    }
     
     /// Endpoint to request email verification
-    public var verifyEmailEndpoint = "/verify"
+    public var verifyEmailEndpoint = "/verify" {
+        didSet {
+            verifyEmailEndpoint = verifyEmailEndpoint.withLeadingSlash
+        }
+    }
     
     /// Endpoint to request a password reset email
-    public var forgotPasswordEndpoint = "/forgot"
+    public var forgotPasswordEndpoint = "/forgot" {
+        didSet {
+            forgotPasswordEndpoint = forgotPasswordEndpoint.withLeadingSlash
+        }
+    }
     
     /// Endpoint to create an OAuth token
-    public var oauthEndpoint = "/oauth/token"
+    public var oauthEndpoint = "/oauth/token" {
+        didSet {
+            oauthEndpoint = oauthEndpoint.withLeadingSlash
+        }
+    }
     
     /**
      Endpoint to logout
@@ -48,10 +68,18 @@ public class StormpathConfiguration: NSObject {
        think hitting the /logout endpoint does anything? Not in the framework 
        spec either.
      */
-    public var logoutEndpoint = "/logout"
+    public var logoutEndpoint = "/logout" {
+        didSet {
+            logoutEndpoint = logoutEndpoint.withLeadingSlash
+        }
+    }
     
     /// Endpoint to register a new account
-    public var registerEndpoint = "/register"
+    public var registerEndpoint = "/register" {
+        didSet {
+            registerEndpoint = registerEndpoint.withLeadingSlash
+        }
+    }
     
     /**
      Initializer for StormpathConfiguration. The initializer pulls defaults from 
@@ -64,18 +92,18 @@ public class StormpathConfiguration: NSObject {
             return
         }
         
-        APIURL = (stormpathInfo["APIURL"] as? String)?.withoutTrailingSlash.asURL ?? APIURL
+        APIURL = (stormpathInfo["APIURL"] as? String)?.asURL ?? APIURL
         
         guard let customEndpoints = stormpathInfo["customEndpoints"] as? [String: AnyObject] else {
             return
         }
         
-        meEndpoint = (customEndpoints["me"] as? String)?.withLeadingSlash ?? meEndpoint
-        verifyEmailEndpoint = (customEndpoints["verifyEmail"] as? String)?.withLeadingSlash ?? verifyEmailEndpoint
-        forgotPasswordEndpoint = (customEndpoints["forgotPassword"] as? String)?.withLeadingSlash ?? forgotPasswordEndpoint
-        oauthEndpoint = (customEndpoints["oauth"] as? String)?.withLeadingSlash ?? oauthEndpoint
-        logoutEndpoint = (customEndpoints["logout"] as? String)?.withLeadingSlash ?? logoutEndpoint
-        registerEndpoint = (customEndpoints["register"] as? String)?.withLeadingSlash ?? registerEndpoint
+        meEndpoint = (customEndpoints["me"] as? String) ?? meEndpoint
+        verifyEmailEndpoint = (customEndpoints["verifyEmail"] as? String) ?? verifyEmailEndpoint
+        forgotPasswordEndpoint = (customEndpoints["forgotPassword"] as? String) ?? forgotPasswordEndpoint
+        oauthEndpoint = (customEndpoints["oauth"] as? String) ?? oauthEndpoint
+        logoutEndpoint = (customEndpoints["logout"] as? String) ?? logoutEndpoint
+        registerEndpoint = (customEndpoints["register"] as? String) ?? registerEndpoint
     }
 }
 
