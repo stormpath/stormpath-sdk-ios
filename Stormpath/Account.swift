@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  Account.swift
 //  Stormpath
 //
 //  Created by Edward Jiang on 2/11/16.
@@ -9,16 +9,17 @@
 import Foundation
 
 /**
- User represents a user object from the Stormpath database.
+ Account represents an account object from the Stormpath database.
 */
-public class User: NSObject {
-    /// Stormpath resource URL for the user
+public class Account: NSObject {
+    /// Stormpath resource URL for the account
     internal(set) public var href: NSURL!
     
-    /// Username of the user. Separate from the email, but is often set to the email address.
+    /// Username of the user. Separate from the email, but is often set to the email
+    /// address.
     internal(set) public var username: String!
     
-    /// Email address of the user.
+    /// Email address of the account.
     internal(set) public var email: String!
     
     /**
@@ -40,13 +41,13 @@ public class User: NSObject {
         return middleName == nil || middleName == "" ? "\(givenName) \(surname)" : "\(givenName) \(middleName) \(surname)"
     }
     
-    /// Date the user was created in the Stormpath database.
+    /// Date the account was created in the Stormpath database.
     internal(set) public var createdAt: NSDate!
     
-    /// Date the user was last modified in the Stormpath database.
+    /// Date the account was last modified in the Stormpath database.
     internal(set) public var modifiedAt: NSDate!
     
-    /// A string of JSON representing the custom data for the user. Cannot be updated in the current version of the SDK.
+    /// A string of JSON representing the custom data for the account. Cannot be updated in the current version of the SDK.
     internal(set) public var customData: String?
     
     /// Initializer for the JSON object for the account. Expected to be wrapped in `{account: accountObject}`

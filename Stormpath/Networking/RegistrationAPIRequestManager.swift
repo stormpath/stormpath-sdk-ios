@@ -9,20 +9,20 @@
 import Foundation
 
 class RegistrationAPIRequestManager: APIRequestManager {
-    var user: RegistrationModel
-    var callback: StormpathUserCallback
+    var account: RegistrationModel
+    var callback: StormpathAccountCallback
     
-    init(withURL url: NSURL, newUser user: RegistrationModel, callback: StormpathUserCallback) {
-        self.user = user
+    init(withURL url: NSURL, newAccount account: RegistrationModel, callback: StormpathAccountCallback) {
+        self.account = account
         self.callback = callback
         super.init(withURL: url)
     }
     
     override func prepareForRequest() {
-        var registrationDictionary: [String: AnyObject] = user.customFields
-        let userDictionary = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
+        var registrationDictionary: [String: AnyObject] = account.customFields
+        let accountDictionary = ["username": account.username, "email": account.email, "password": account.password, "givenName": account.givenName, "surname": account.surname]
         
-        for (key, value) in userDictionary {
+        for (key, value) in accountDictionary {
             registrationDictionary[key] = value
         }
         
@@ -31,7 +31,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        if let user = User(fromJSON: data) {
+        if let user = Account(fromJSON: data) {
             executeCallback(user, error: nil)
         } else {
             executeCallback(nil, error: StormpathError.APIResponseError) 
@@ -40,13 +40,13 @@ class RegistrationAPIRequestManager: APIRequestManager {
     
     override func executeCallback(parameters: AnyObject?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue()) { 
-            self.callback(parameters as? User, error)
+            self.callback(parameters as? Account, error)
         }
     }
 }
 
 /**
- Model for the user registration form. The fields requested in the initializer 
+ Model for the account registration form. The fields requested in the initializer 
  are required.
  */
 public class RegistrationModel {

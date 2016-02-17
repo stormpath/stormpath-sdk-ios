@@ -11,13 +11,13 @@ import Foundation
 /// Callback for Stormpath API responses that respond with a success/fail.
 public typealias StormpathSuccessCallback       = (Bool, NSError?) -> Void
 
-/// Callback for Stormpath API responses that respond with a user object.
-public typealias StormpathUserCallback          = (User?, NSError?) -> Void
+/// Callback for Stormpath API responses that respond with an account object.
+public typealias StormpathAccountCallback          = (Account?, NSError?) -> Void
 
 /**
  Stormpath represents the state of the application's connection to the Stormpath 
  Framework server. It allows you to connect to the Stormpath Framework 
- Integration API, register, login, and stores the current user's access and 
+ Integration API, register, login, and stores the current account's access and
  refresh tokens securely. All callbacks to the application are handled on the 
  main thread.
  */
@@ -47,34 +47,34 @@ public final class Stormpath: NSObject {
         keychain = KeychainService(withIdentifier: identifier)
     }
     
-    // MARK: User registration
+    // MARK: Account registration
     
     /**
-     This method registers a user from the data provided.
+     This method registers an account from the data provided.
      
      - parameters:
-       - userData: A Registration Model object with the user data you want to 
+       - account: A Registration Model object with the account data you want to
          register.
        - completionHandler: The completion block to be invoked after the API 
-         request is finished. It returns a user object.
+         request is finished. It returns an account object.
     */
     
-    public func register(userData: RegistrationModel, completionHandler: StormpathUserCallback) {
+    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback) {
         
-        apiService.register(userData, completionHandler: completionHandler)
+        apiService.register(newAccount: account, completionHandler: completionHandler)
         
     }
     
-    // MARK: User login
+    // MARK: Account login
     
     /**
-     Logs in a user and assumes that the login path is behind the /login 
-     relative path. This method also stores the user session tokens for later 
+     Logs in an account and assumes that the login path is behind the /login
+     relative path. This method also stores the account session tokens for later
      use.
      
      - parameters:
-       - username: User username.
-       - password: User password.
+       - username: Account username.
+       - password: Account password.
        - completionHandler: The completion block to be invoked after the API 
          request is finished. If the method fails, the error will be passed in 
          the completion.
@@ -87,22 +87,22 @@ public final class Stormpath: NSObject {
     }
     
     /**
-     Fetches the user data, and returns it in the form of a dictionary.
+     Fetches the account data, and returns it in the form of a dictionary.
      
      - parameters:
        - completionHandler: Completion block invoked
      */
     
-    public func me(completionHandler: StormpathUserCallback) {
+    public func me(completionHandler: StormpathAccountCallback) {
         
         apiService.me(completionHandler)
         
     }
     
-    // MARK: User logout
+    // MARK: Account logout
     
     /**
-     Logs out the user and clears the sessions tokens.
+     Logs out the account and clears the sessions tokens.
     */
 
     
@@ -112,14 +112,13 @@ public final class Stormpath: NSObject {
         
     }
     
-    // MARK: User password reset
+    // MARK: Account password reset
     
     /**
-     Generates a user password reset token and sends an email to the user, if 
-     such email exists.
-     
-     - parameters:
-       - email: User email. Usually from an input.
+     Generates an account password reset token and sends an email to the user,
+     if such email exists.
+    - parameters:
+       - email: Account email. Usually from an input.
        - completionHandler: The completion block to be invoked after the API
          request is finished. This will always succeed if the API call is 
          successful.
@@ -150,7 +149,7 @@ public final class Stormpath: NSObject {
         }
     }
     
-    /// Refresh token for the current user. 
+    /// Refresh token for the current account. 
     internal(set) public var refreshToken: String? {
         get {
             return keychain.refreshToken

@@ -17,10 +17,10 @@ final class APIService: NSObject {
     
     // MARK: Registration
     
-    func register(newUser: RegistrationModel, completionHandler: StormpathUserCallback) {
+    func register(newAccount account: RegistrationModel, completionHandler: StormpathAccountCallback) {
         let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
         
-        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newUser: newUser, callback: completionHandler)
+        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newAccount: account, callback: completionHandler)
         requestManager.begin()
         
     }
@@ -76,9 +76,9 @@ final class APIService: NSObject {
         
     }
     
-    // MARK: User data
+    // MARK: Account data
     
-    func me(completionHandler: StormpathUserCallback) {
+    func me(completionHandler: StormpathAccountCallback) {
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
         
         guard let accessToken = stormpath.accessToken else {
