@@ -50,7 +50,7 @@ public class StormpathConfiguration: NSObject {
      */
     public var logoutEndpoint = "/logout"
     
-    /// Endpoint to register a new user
+    /// Endpoint to register a new account
     public var registerEndpoint = "/register"
     
     /**
