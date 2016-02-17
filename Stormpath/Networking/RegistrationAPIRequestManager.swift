@@ -19,12 +19,11 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func prepareForRequest() {
-        var registrationDictionary: [String: AnyObject] = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
+        var registrationDictionary: [String: AnyObject] = user.customFields
+        let userDictionary = ["username": user.username, "email": user.email, "password": user.password, "givenName": user.givenName, "surname": user.surname]
         
-        if let customData = user.customData.dataUsingEncoding(NSUTF8StringEncoding), customDataJSON = try? NSJSONSerialization.JSONObjectWithData(customData, options: []) {
-            registrationDictionary["customData"] = customDataJSON
-        } else {
-            Logger.log("Invalid customData JSON passed into registration method")
+        for (key, value) in userDictionary {
+            registrationDictionary[key] = value
         }
         
         request.HTTPMethod = "POST"
@@ -48,16 +47,38 @@ class RegistrationAPIRequestManager: APIRequestManager {
 
 /**
  Model for the user registration form. The fields requested in the initializer 
- are required. The username is optional, but if not set retains the value of the 
- email address.
+ are required.
  */
 public class RegistrationModel {
-    public var givenName: String
-    public var surname: String
+    
+    /**
+     Given (first) name of the user. Required by default, but can be turned off 
+     in the Framework configuration.
+     */
+    public var givenName = ""
+    
+    /**
+     Sur (last) name of the user. Required by default, but can be turned off in 
+     the Framework configuration.
+     */
+    public var surname = ""
+    
+    /// Email address of the user. Only validated server-side at the moment.
     public var email: String
+    
+    /// Password for the user. Only validated server-side at the moment.
     public var password: String
+    
+    /**
+     Username. Optional, but if not set retains the value of the email address.
+     */
     public var username = ""
-    public var customData = "{}"
+    
+    /**
+     Custom fields may be configured in the server-side API. Include them in 
+     this
+     */
+    public var customFields = [String: String]()
     
     /**
      Initializer for Registration Model. After initialization, all fields can be 
@@ -69,9 +90,7 @@ public class RegistrationModel {
        - email: Email address of the user.
        - password: Password for the user.
      */
-    public init(withGivenName givenName: String, surname: String, email: String, password: String) {
-        self.givenName = givenName
-        self.surname = surname
+    public init(withEmail email: String, password: String) {
         self.email = email
         self.password = password
     }
