@@ -42,8 +42,10 @@ public class StormpathError: NSError {
      */
     class func errorForResponse(response: NSHTTPURLResponse, data: NSData) -> StormpathError {
         var description = ""
-        if let json = try? NSJSONSerialization.JSONObjectWithData(data, options: []), errorDescription = json["error"] as? String {
+        if let json = try? NSJSONSerialization.JSONObjectWithData(data, options: []), errorDescription = json["message"] as? String {
             description = errorDescription
+        } else if response.statusCode == 401 {
+            description = "Unauthorized"
         } else {
             return StormpathError.APIResponseError
         }
