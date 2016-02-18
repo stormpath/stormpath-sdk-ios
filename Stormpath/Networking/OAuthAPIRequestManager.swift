@@ -62,9 +62,6 @@ class OAuthAPIRequestManager: APIRequestManager {
     }
 }
 
-
-// There's an argument to be made for this to be a string category, but since this is the only method and only needed for this class...
-
 // Custom URL encode, 'cos iOS is missing one. This one is blatantly stolen from AFNetworking's implementation of percent escaping and converted to Swift
 
 private extension String {
