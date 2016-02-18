@@ -47,6 +47,9 @@ public class Account: NSObject {
     /// Date the account was last modified in the Stormpath database.
     internal(set) public var modifiedAt: NSDate!
     
+    /// Status of the account. Useful if email verification is needed.
+    internal(set) public var status: AccountStatus!
+    
     /// A string of JSON representing the custom data for the account. Cannot be updated in the current version of the SDK.
     internal(set) public var customData: String?
     
@@ -62,7 +65,8 @@ public class Account: NSObject {
             givenName = json["givenName"] as? String,
             surname = json["surname"] as? String,
             createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
-            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format else {
+            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
+            status = json["status"] as? String else {
                 return nil
         }
         
@@ -74,12 +78,29 @@ public class Account: NSObject {
         self.surname = surname
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
+        
+        switch status {
+        case "ENABLED":
+            self.status = AccountStatus.Enabled
+        case "UNVERIFIED":
+            self.status = AccountStatus.Unverified
+        case "DISABLED":
+            self.status = AccountStatus.Disabled
+        default:
+            return nil
+        }
+        
         if let customDataObject = json["customData"] as? [String: AnyObject],
             customDataData = try? NSJSONSerialization.dataWithJSONObject(customDataObject, options: []),
             customDataString = String(data: customDataData, encoding: NSUTF8StringEncoding) {
             self.customData = customDataString
         }
     }
+}
+
+/// Stormpath Account Status
+@objc public enum AccountStatus: Int { //It's an int for Obj-C compatibility
+    case Enabled, Unverified, Disabled
 }
 
 /// Helper extension to make optional chaining easier. 
