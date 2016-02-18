@@ -59,7 +59,7 @@ public final class Stormpath: NSObject {
          request is finished. It returns an account object.
     */
     
-    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback) {
+    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback?) {
         
         apiService.register(newAccount: account, completionHandler: completionHandler)
         
@@ -80,7 +80,7 @@ public final class Stormpath: NSObject {
          the completion.
     */
     
-    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback) {
+    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback?) {
         
         apiService.login(username, password: password, completionHandler: completionHandler)
         
@@ -93,7 +93,7 @@ public final class Stormpath: NSObject {
        - completionHandler: Completion block invoked
      */
     
-    public func me(completionHandler: StormpathAccountCallback) {
+    public func me(completionHandler: StormpathAccountCallback?) {
         
         apiService.me(completionHandler)
         
@@ -124,7 +124,7 @@ public final class Stormpath: NSObject {
          successful.
     */
     
-    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {
+    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback?) {
         
         apiService.resetPassword(email, completionHandler: completionHandler)
         
@@ -169,7 +169,7 @@ public final class Stormpath: NSObject {
          occurred.
      */
     
-    public func refreshAccessToken(completionHandler: StormpathSuccessCallback) {
+    public func refreshAccessToken(completionHandler: StormpathSuccessCallback?) {
         
         apiService.refreshAccessToken(completionHandler)
         

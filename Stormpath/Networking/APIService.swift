@@ -17,22 +17,24 @@ final class APIService: NSObject {
     
     // MARK: Registration
     
-    func register(newAccount account: RegistrationModel, completionHandler: StormpathAccountCallback) {
+    func register(newAccount account: RegistrationModel, completionHandler: StormpathAccountCallback?) {
         let registerURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.registerEndpoint)
         
-        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newAccount: account, callback: completionHandler)
+        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newAccount: account) { (account, error) -> Void in
+            completionHandler?(account, error)
+        }
         requestManager.begin()
         
     }
     
     // MARK: Login
     
-    func login(username: String, password: String, completionHandler: StormpathSuccessCallback) {
+    func login(username: String, password: String, completionHandler: StormpathSuccessCallback?) {
         
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password) { (accessToken, refreshToken, error) -> Void in
             guard let accessToken = accessToken where error == nil else {
-                completionHandler(false, error)
+                completionHandler?(false, error)
                 return
             }
             self.stormpath.keychain.accessToken = accessToken
@@ -41,7 +43,7 @@ final class APIService: NSObject {
             if refreshToken != nil {
                 self.stormpath.keychain.refreshToken = refreshToken
             }
-            completionHandler(true, nil)
+            completionHandler?(true, nil)
         }
         requestManager.begin()
         
@@ -49,7 +51,7 @@ final class APIService: NSObject {
     
     // MARK: Access token refresh
     
-    func refreshAccessToken(completionHandler: StormpathSuccessCallback) {
+    func refreshAccessToken(completionHandler: StormpathSuccessCallback?) {
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
         guard let refreshToken = stormpath.refreshToken else {
@@ -58,19 +60,19 @@ final class APIService: NSObject {
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(false, error)
+                completionHandler?(false, error)
             })
             return
         }
         
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, refreshToken: refreshToken) { (accessToken, refreshToken, error) -> Void in
             guard let accessToken = accessToken where error == nil else {
-                completionHandler(false, error)
+                completionHandler?(false, error)
                 return
             }
             self.stormpath.accessToken = accessToken
             self.stormpath.refreshToken = refreshToken
-            completionHandler(true, nil)
+            completionHandler?(true, nil)
         }
         requestManager.begin()
         
@@ -78,7 +80,7 @@ final class APIService: NSObject {
     
     // MARK: Account data
     
-    func me(completionHandler: StormpathAccountCallback) {
+    func me(completionHandler: StormpathAccountCallback?) {
         let meURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.meEndpoint)
         
         guard let accessToken = stormpath.accessToken else {
@@ -87,12 +89,24 @@ final class APIService: NSObject {
             Logger.logError(error)
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(nil, error)
+                completionHandler?(nil, error)
             })
             return
         }
-        
-        let requestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken, callback: completionHandler)
+        let requestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken) { (account, error) -> Void in
+            if error?.code == 401 {
+                //Refresh access token & retry
+                self.stormpath.refreshAccessToken({ (success, error) -> Void in
+                    guard error == nil else {
+                        completionHandler?(nil, error)
+                        return
+                    }
+                    self.stormpath.me(completionHandler)
+                })
+            } else {
+                completionHandler?(account, error)
+            }
+        }
         requestManager.begin()
     }
     
@@ -118,10 +132,10 @@ final class APIService: NSObject {
     
     // MARK: Forgot password
     
-    func resetPassword(email: String, completionHandler: StormpathSuccessCallback) {
+    func resetPassword(email: String, completionHandler: StormpathSuccessCallback?) {
         let resetPasswordURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
         let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: { (error) -> Void in
-                completionHandler(error == nil, error)
+                completionHandler?(error == nil, error)
         })
         requestManager.begin()
     }
