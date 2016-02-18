@@ -40,14 +40,11 @@ public final class Stormpath: NSObject {
      future loads we can find the saved credentials from the right location. The 
      default identifier is "default".
      */
-    
     public init(withIdentifier identifier: String) {
         super.init()
         apiService = APIService(withStormpath: self)
         keychain = KeychainService(withIdentifier: identifier)
     }
-    
-    // MARK: Account registration
     
     /**
      This method registers an account from the data provided.
@@ -58,14 +55,9 @@ public final class Stormpath: NSObject {
        - completionHandler: The completion block to be invoked after the API 
          request is finished. It returns an account object.
     */
-    
-    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback?) {
-        
+    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback? = nil) {
         apiService.register(newAccount: account, completionHandler: completionHandler)
-        
     }
-    
-    // MARK: Account login
     
     /**
      Logs in an account and assumes that the login path is behind the /login
@@ -79,11 +71,8 @@ public final class Stormpath: NSObject {
          request is finished. If the method fails, the error will be passed in 
          the completion.
     */
-    
-    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback?) {
-        
+    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.login(username, password: password, completionHandler: completionHandler)
-        
     }
     
     /**
@@ -92,24 +81,15 @@ public final class Stormpath: NSObject {
      - parameters:
        - completionHandler: Completion block invoked
      */
-    
-    public func me(completionHandler: StormpathAccountCallback?) {
-        
+    public func me(completionHandler: StormpathAccountCallback? = nil) {
         apiService.me(completionHandler)
-        
     }
-    
-    // MARK: Account logout
     
     /**
      Logs out the account and clears the sessions tokens.
     */
-
-    
     public func logout() {
-        
         apiService.logout()
-        
     }
     
     // MARK: Account password reset
@@ -123,14 +103,9 @@ public final class Stormpath: NSObject {
          request is finished. This will always succeed if the API call is 
          successful.
     */
-    
-    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback?) {
-        
+    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.resetPassword(email, completionHandler: completionHandler)
-        
     }
-    
-    // MARK: Token management
     
     /**
      Provides the last access token fetched by either login or 
@@ -139,7 +114,6 @@ public final class Stormpath: NSObject {
      
      - returns: Access token for your API calls.
     */
-    
     internal(set) public var accessToken: String? {
         get {
             return keychain.accessToken
@@ -169,10 +143,7 @@ public final class Stormpath: NSObject {
          occurred.
      */
     
-    public func refreshAccessToken(completionHandler: StormpathSuccessCallback?) {
-        
+    public func refreshAccessToken(completionHandler: StormpathSuccessCallback? = nil) {
         apiService.refreshAccessToken(completionHandler)
-        
     }
-    
 }
