@@ -39,7 +39,6 @@ final class APIService: NSObject {
             }
             self.stormpath.keychain.accessToken = accessToken
             
-            //TODO: double check refresh token behavior on refreshing
             if refreshToken != nil {
                 self.stormpath.keychain.refreshToken = refreshToken
             }
