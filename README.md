@@ -54,10 +54,10 @@ For Swift projects:
 import Stormpath
 ```
 
-For Objective-C projects, use the `@import` syntax:
+For Objective-C projects: 
 
 ```Objective-C
-@import Stormpath;
+#import "Stormpath-Swift.h"
 ```
 
 ## 1. Setting up
