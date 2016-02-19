@@ -54,7 +54,7 @@ final class APIService: NSObject {
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         
         guard let refreshToken = stormpath.refreshToken else {
-            let error = NSError(domain: oauthURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
+            let error = NSError(domain: oauthURL.absoluteString, code: 400, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
             
