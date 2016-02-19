@@ -3,3 +3,6 @@ osx_image: xcode7.1
 xcode_project: Stormpath.xcodeproj
 xcode_scheme: Stormpath
 xcode_sdk: iphonesimulator9.1
+env:
+ - APIURL=https://sp-iostest-node.herokuapp.com
+ - APIURL=https://sp-iostest-laravel.herokuapp.com
