@@ -8,3 +8,5 @@ env:
  - XCTOOL_TEST_ENV_APIURL=https://sp-iostest-laravel.herokuapp.com
 before_install:
  - curl -s $XCTOOL_TEST_ENV_APIURL > /dev/null
+ - brew update
+ - brew outdated xctool || brew upgrade xctool
