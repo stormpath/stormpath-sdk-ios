@@ -4,8 +4,8 @@ xcode_project: Stormpath.xcodeproj
 xcode_scheme: Stormpath
 xcode_sdk: iphonesimulator9.1
 env:
- - XCTOOL_TEST_ENV_APIURL=https://sp-iostest-node.herokuapp.com
- - XCTOOL_TEST_ENV_APIURL=https://sp-iostest-laravel.herokuapp.com
+ - XCTOOL_TEST_ENV_APIURL=http://sp-iostest-node.herokuapp.com
+ - XCTOOL_TEST_ENV_APIURL=http://sp-iostest-laravel.herokuapp.com
 before_install:
  - curl -s $XCTOOL_TEST_ENV_APIURL > /dev/null
  - brew update
