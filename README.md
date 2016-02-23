@@ -1,32 +1,41 @@
 # Stormpath iOS SDK
 
-[![CI Status](http://img.shields.io/travis/stormpath/stormpath-sdk-swift.svg?style=flat)](https://travis-ci.org/stormpath/stormpath-sdk-swift)
-[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
-[![Platform](https://img.shields.io/cocoapods/p/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
+[![codebeat badge](https://codebeat.co/badges/0038aa1f-d481-4ad0-a244-3a6d803c3dbe)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-swift)
 
 The iOS Library for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
 
 # Requirements
 
-iOS 8.0+ / XCode 7.1+
+iOS 8.0+ / Xcode 7.1+
 
 # Set up
 
-Stormpath iOS SDK currently works only against the [Express-Stormpath](https://github.com/stormpath/express-stormpath) integration. More to come soon!
+Stormpath's iOS SDK allows developers utilizing Stormpath to quickly integrate authentication and token management into their app. 
+
+This SDK will not send direct requests to Stormpath, and instead assumes that you'll have a backend that conforms to the [Stormpath Framework Spec](https://github.com/stormpath/stormpath-framework-spec). With one of these backends, you'll be able to configure Stormpath so it fits your needs. 
+
+We're constantly iterating and improving the SDK, so please don't hesitate to send us your feedback! You can reach us via support@stormpath.com, or on the issue tracker for feature requests. 
+
+## Setting up a Compatible Backend
+
+Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. The two backends that are currently compatible with the iOS SDK are: [express-stormpath](https://github.com/stormpath/express-stormpath) (v3.0) and [stormpath-laravel](https://github.com/stormpath/stormpath-laravel) (v0.3).
+
+If you're just testing, it's pretty quick to set up a server using the [express sample project](https://github.com/stormpath/express-stormpath-sample-project). 
 
 # Installation
 
-## Cocoapods
+## CocoaPods
 
-Stormpath will be available through [Cocoapods](https://cocoapods.org/), add this line to your `Podfile`:
+Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod "Stormpath"
+pod "Stormpath" ~> 1.1
 ```
 
-Don't forget to add the use_frameworks! as well:
+Don't forget to uncomment use_frameworks! as well:
 
 ```ruby
 use_frameworks!
@@ -34,19 +43,19 @@ use_frameworks!
 
 ## Carthage
 
-To use Stormpath iOS SDK with [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
+To use Stormpath with [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
 
 ```ogdl
-github "stormpath/stormpath-sdk-swift"
+github "stormpath/stormpath-sdk-swift" ~> 1.1
 ```
 
 ## Manually
 
-If you wish to use the framework manually, just download it and drag and drop it in your XCode project or workspace.
+If you wish to use the framework manually, just download it and drag and drop it in your Xcode project or workspace.
 
 # Usage
 
-## 0. Importing the framework
+## Importing the framework
 
 For Swift projects:
 
@@ -60,9 +69,9 @@ For Objective-C projects:
 #import "Stormpath-Swift.h"
 ```
 
-## 1. Setting up
+## Setting up the API Endpoints
 
-Stormpath's default configuration will attempt to connect to `http://localhost:3000/` as its API server. This is the default configuration for the `express-stormpath` integration and is useful when you're testing against the iOS simulator, but you'll need to set this for any other configurations. Stormpath can read your Info.plist for configuration, but it's easier to modify the `defaultConfiguration` object when making small changes. 
+Stormpath's default configuration will attempt to connect to `http://localhost:3000/`. This is the default configuration for the `express-stormpath` integration and is useful when you're testing in the iOS simulator. However, you'll need to modify this for any other configurations. 
 
 Swift:
 
@@ -76,9 +85,9 @@ Objective-C:
 [StormpathConfiguration defaultConfiguration].APIURL = [[NSURL alloc] initWithString:@"http://localhost:3000"];
 ```
 
-Further examples will be Swift only, Objective-C is the assumed equivalent.
+Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should *always* be using `https` for your API endpoints. 
 
-## 2. User registration
+## User registration
 
 In order to register a user, instantiate a `RegistrationModel`. By default, Stormpath Framework integrations will require an `email`, `password`, `givenName`, and `surname`, but this is configurable in the framework integration. Registering a user will not automatically log them in. 
 
@@ -92,7 +101,7 @@ Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
 Stormpath.sharedSession.register(account) { (account, error) -> Void in
-    guard error == nil else {
+    guard let account = account where error == nil else {
         //The account registration failed
         return
     }
@@ -100,12 +109,12 @@ Stormpath.sharedSession.register(account) { (account, error) -> Void in
 }
 ```
 
-## 3. Logging in
+## Logging in
 
-To log in, collect the email (or username) and password from the user, and then pass them to login method:
+To log in, collect the email (or username) and password from the user, and then pass them to the login method:
 
 ```Swift
-Stormpath.sharedSession.login(email, password: password) { (success, error) -> Void in
+Stormpath.sharedSession.login("user@example.com", password: "ExamplePassword") { (success, error) -> Void in
     guard error == nil else {
         // We could not authenticate the user with the given credentials. Handle the error. 
         return
@@ -114,17 +123,27 @@ Stormpath.sharedSession.login(email, password: password) { (success, error) -> V
 }
 ```
 
-There's no need to save the `acceessToken` anywhere, the SDK automatically stores it into the Keychain and it's accessible as a property on the `Stormpath` class:
+## Using the Access Token
+
+You can utilize the access token to access any of your API endpoints that require authentication. It's stored as a property on the Stormpath object as `Stormpath.sharedSession.accessToken`. If you need to refresh it, use `Stormpath.sharedSession.refreshAccessToken()`. Depending on the networking library you're using, here's how you'd use the access token:
+
+### NSURLSession
 
 ```Swift
-Stormpath.sharedSession.accessToken
+let request = NSMutableURLRequest(URL: url)
+request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
 ```
 
-Keep this value safe if you're storing it somewhere else.
+### Alamofire
 
-## 4. Account data
+```Swift
+let headers = ["Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="]
+Alamofire.request(.GET, url, headers: headers)
+```
 
-Fetch the account data by using me:
+## Account data
+
+Stormpath's framework integrations provide a default endpoint for retrieving profile information. Fetch the account data by using me:
 
 ```Swift
 Stormpath.sharedSession.me { (account, error) -> Void in
@@ -136,15 +155,15 @@ Stormpath.sharedSession.me { (account, error) -> Void in
 }
 ```
 
-## 5. Logout
+## Logout
 
-Logging out is simple:
+Logging out is simple. This will delete the access token and refresh token from the user's device, and make an API request to delete from the server. 
 
 ```Swift
 Stormpath.sharedSession.logout()
 ```
 
-## 6. Password reset
+## Password reset
 
 To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
 
@@ -158,11 +177,11 @@ Stormpath.sharedSession.resetPassword("user@example.com") { (success, error) -> 
 }
 ```
 
-## 7. Custom configuration
+## Custom configuration
 
 To be written
 
-## 8. Error handling
+## Error handling
 
 To be written
 
