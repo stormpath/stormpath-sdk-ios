@@ -90,7 +90,7 @@ public class RegistrationModel {
        - email: Email address of the user.
        - password: Password for the user.
      */
-    public init(withEmail email: String, password: String) {
+    public init(email: String, password: String) {
         self.email = email
         self.password = password
     }
