@@ -48,13 +48,15 @@ public class Account: NSObject {
     internal(set) public var modifiedAt: NSDate!
     
     /// Status of the account. Useful if email verification is needed.
-    internal(set) public var status: AccountStatus!
+    internal(set) public var status: AccountStatus
     
     /// A string of JSON representing the custom data for the account. Cannot be updated in the current version of the SDK.
     internal(set) public var customData: String?
     
     /// Initializer for the JSON object for the account. Expected to be wrapped in `{account: accountObject}`
     init?(fromJSON jsonData: NSData) {
+        self.status = .Enabled //will be overridden below; hack to allow obj-c to access property since primitive types can't be optional
+        
         super.init()
         guard let rootJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
             json = rootJSON["account"] as? [String: AnyObject],
