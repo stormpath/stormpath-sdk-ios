@@ -100,7 +100,10 @@ final class APIService: NSObject {
                         completionHandler?(nil, error)
                         return
                     }
-                    self.stormpath.me(completionHandler)
+                    let retryRequestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken, callback: { (account, error) -> Void in
+                        completionHandler?(account, error)
+                    })
+                    retryRequestManager.begin()
                 })
             } else {
                 completionHandler?(account, error)
