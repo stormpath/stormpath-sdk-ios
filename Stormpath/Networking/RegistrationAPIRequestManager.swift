@@ -49,7 +49,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
  Model for the account registration form. The fields requested in the initializer 
  are required.
  */
-public class RegistrationModel {
+public class RegistrationModel: NSObject {
     
     /**
      Given (first) name of the user. Required by default, but can be turned off 

@@ -240,4 +240,4 @@ This identifier can be used in your app to identify a user session contained in 
 
 # License
 
-This project is open-source via [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). See LICENSE file for details.
+This project is open-source via [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). See the LICENSE file for details.
