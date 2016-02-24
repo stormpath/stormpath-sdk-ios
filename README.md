@@ -85,14 +85,14 @@ Objective-C:
 [StormpathConfiguration defaultConfiguration].APIURL = [[NSURL alloc] initWithString:@"http://localhost:3000"];
 ```
 
-Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should *always* be using `https` for your API endpoints. 
+*Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should *always* be using `https` for your API endpoints.*
 
 ## User registration
 
 In order to register a user, instantiate a `RegistrationModel`. By default, Stormpath Framework integrations will require an `email`, `password`, `givenName`, and `surname`, but this is configurable in the framework integration. Registering a user will not automatically log them in. 
 
 ```Swift
-let account = RegistrationModel(withEmail: "user@example.com", password: "ExamplePassword")
+let account = RegistrationModel(email: "user@example.com", password: "ExamplePassword")
 account.givenName = "Example"
 account.surname = "McExample"
 ```
@@ -108,6 +108,8 @@ Stormpath.sharedSession.register(account) { (account, error) -> Void in
     // Do something with the returned account object, such as save its `href` if needed. 
 }
 ```
+
+*Note: Stormpath callbacks always happen on the main thread, so you can make UI changes directly in the callback.*
 
 ## Logging in
 
@@ -137,7 +139,7 @@ request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
 ### Alamofire
 
 ```Swift
-let headers = ["Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="]
+let headers = ["Authorization": "Bearer " + accessToken]
 Alamofire.request(.GET, url, headers: headers)
 ```
 
@@ -177,13 +179,57 @@ Stormpath.sharedSession.resetPassword("user@example.com") { (success, error) -> 
 }
 ```
 
-## Custom configuration
-
-To be written
-
 ## Error handling
 
-To be written
+When using Stormpath, you can encounter errors for several reasons: 
+
+1. Network errors - the network request failed for some reason. 
+2. User errors - errors because of user input, ex: "invalid username or password".
+3. API errors - the API is misconfigured, or returning an unrecognized response. 
+
+If there's a network error, Stormpath will return the `NSError` associated with `NSURLSession` to your code. Otherwise, Stormpath will return `StormpathError`, a `NSError` subclass. 
+
+For user errors, `StormpathError` will have the HTTP error code of the API response (usually 400), and `localizedDescription` set to a user-readable error message which is safe to display to the user. 
+
+In special cases, StormpathError will have code 0 or 1. These are developer errors that should not be displayed to the user. 0 stands for "Stormpath SDK Error", and most likely indicates a bug with the Stormpath SDK that should be reported to us. 1 stands for "API Response Error", and means that the API responded with something unexpected. This most likely means that you have your backend integration misconfigured. 
+
+## Custom configuration
+
+`StormpathConfiguration` can be used to point Stormpath to a specific API URL, as well as custom endpoints. While you can modify the object directly, you can also put your configuration in Info.plist. To add the Stormpath configuration, right click on Info.plist, and click "open as source code". Before the last `</plist>` tag, paste: 
+
+```xml
+<key>Stormpath</key>
+<dict>
+	<key>APIURL</key>
+	<string>http://localhost:3000</string>
+	<key>customEndpoints</key>
+	<dict>
+		<key>me</key>
+		<string>/me</string>
+		<key>verifyEmail</key>
+		<string>/verify</string>
+		<key>forgotPassword</key>
+		<string>/forgot</string>
+		<key>oauth</key>
+		<string>/oauth/token</string>
+		<key>logout</key>
+		<string>/logout</string>
+		<key>register</key>
+		<string>/register</string>
+	</dict>
+</dict>
+```
+
+You can modify any of these values, and StormpathConfiguration will load these on first initialization. 
+
+## Handling Multiple Sessions
+
+Stormpath can be used to store multiple user accounts, even against multiple API servers using Stormpath. This is useful if you're making a multi-tenant application that allows the user to be logged in under different accounts at the same time. 
+
+To use this feature, instead of using `Stormpath.sharedSession`, initialize Stormpath with a custom identifier:
+
+```Swift
+Stormpath(withIdentifier: "newSession")
 
 # License
 

@@ -23,7 +23,7 @@ public typealias StormpathAccountCallback          = (Account?, NSError?) -> Voi
  */
 public final class Stormpath: NSObject {
     /// Singleton representing the primary Stormpath instance using the default configuration.
-    public static let sharedSession = Stormpath(withIdentifier: "default")
+    public static let sharedSession = Stormpath(identifier: "default")
     
     /// Configuration parameter for the Stormpath object. Can be changed.
     public var configuration = StormpathConfiguration.defaultConfiguration
@@ -40,7 +40,7 @@ public final class Stormpath: NSObject {
      future loads we can find the saved credentials from the right location. The 
      default identifier is "default".
      */
-    public init(withIdentifier identifier: String) {
+    public init(identifier: String) {
         super.init()
         apiService = APIService(withStormpath: self)
         keychain = KeychainService(withIdentifier: identifier)
