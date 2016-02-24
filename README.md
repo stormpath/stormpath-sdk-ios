@@ -220,7 +220,7 @@ In special cases, StormpathError will have code 0 or 1. These are developer erro
 </dict>
 ```
 
-You can modify any of these values, and StormpathConfiguration will load these on first initialization. 
+You can modify any of these values, and `StormpathConfiguration` will load these on first initialization. 
 
 ## Handling Multiple Sessions
 
@@ -229,7 +229,14 @@ Stormpath can be used to store multiple user accounts, even against multiple API
 To use this feature, instead of using `Stormpath.sharedSession`, initialize Stormpath with a custom identifier:
 
 ```Swift
-Stormpath(withIdentifier: "newSession")
+Stormpath(identifier: "newSession")
+```
+
+This will create an instance of Stormpath with the default configuration (shared with the rest of the app) that will store `accessTokens` and `refreshTokens` in its own partition in the iOS Keychain. 
+
+This identifier can be used in your app to identify a user session contained in Stormpath, and properly restore it in between app opens. 
+
+*Note: the identifier for `Stormpath.sharedSession` is "default", so do not use this as an identifier for another instance of Stormpath.*
 
 # License
 
