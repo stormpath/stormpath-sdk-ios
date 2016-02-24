@@ -63,10 +63,6 @@ public class StormpathConfiguration: NSObject {
     
     /**
      Endpoint to logout
-     
-     - todo: this might not be needed, but I see it in Adis's code. I don't 
-       think hitting the /logout endpoint does anything? Not in the framework 
-       spec either.
      */
     public var logoutEndpoint = "/logout" {
         didSet {

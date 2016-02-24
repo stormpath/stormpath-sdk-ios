@@ -128,8 +128,7 @@ final class APIService: NSObject {
         stormpath.accessToken = nil
         stormpath.refreshToken = nil
         
-        // TODO: Hit the API to delete the access token, because this literally does nothing right now. 
-        
+        // The API response is not defined, so we won't call the API for now.
     }
     
     // MARK: Forgot password
