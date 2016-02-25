@@ -18,7 +18,7 @@ class StormpathRegistrationTests: XCTestCase {
         super.setUp()
         randomId = arc4random_uniform(10000000)
         
-        accountInfo = RegistrationModel(withEmail: "sp_\(randomId)@example.com", password: "TestTest1")
+        accountInfo = RegistrationModel(email: "sp_\(randomId)@example.com", password: "TestTest1")
         accountInfo.givenName = "FN\(randomId)"
         accountInfo.surname = "Stormtrooper"
         

@@ -21,7 +21,7 @@ We're constantly iterating and improving the SDK, so please don't hesitate to se
 
 ## Setting up a Compatible Backend
 
-Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. The two backends that are currently compatible with the iOS SDK are: [express-stormpath](https://github.com/stormpath/express-stormpath) (v3.0) and [stormpath-laravel](https://github.com/stormpath/stormpath-laravel) (v0.3).
+Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. The two backends that are currently compatible with the iOS SDK are: [express-stormpath](https://github.com/stormpath/express-stormpath) (v3.0) and [stormpath-laravel](https://github.com/stormpath/stormpath-laravel) (v0.3). 
 
 If you're just testing, it's pretty quick to set up a server using the [express sample project](https://github.com/stormpath/express-stormpath-sample-project). 
 
@@ -49,11 +49,9 @@ To use Stormpath with [Carthage](https://github.com/Carthage/Carthage), specify 
 github "stormpath/stormpath-sdk-swift" ~> 1.1
 ```
 
-## Manually
-
-If you wish to use the framework manually, just download it and drag and drop it in your Xcode project or workspace.
-
 # Usage
+
+To see the SDK in action, you can try downloading the [Stormpath iOS Example](https://github.com/stormpath/stormpath-ios-example) project. We've built the same app twice, once in Objective-C and another time in Swift so you can see how to use the SDK. 
 
 ## Importing the framework
 
@@ -71,7 +69,7 @@ For Objective-C projects:
 
 ## Setting up the API Endpoints
 
-Stormpath's default configuration will attempt to connect to `http://localhost:3000/`. This is the default configuration for the `express-stormpath` integration and is useful when you're testing in the iOS simulator. However, you'll need to modify this for any other configurations. 
+Stormpath's default configuration will attempt to connect to `http://localhost:3000/`. This is the default configuration for the `express-stormpath` integration and is useful when you're testing in the iOS simulator. However, you'll need to modify this for any other setups. 
 
 Swift:
 
@@ -85,11 +83,11 @@ Objective-C:
 [StormpathConfiguration defaultConfiguration].APIURL = [[NSURL alloc] initWithString:@"http://localhost:3000"];
 ```
 
-*Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should *always* be using `https` for your API endpoints.*
+*Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should always be using `https` for your API endpoints.*
 
 ## User registration
 
-In order to register a user, instantiate a `RegistrationModel`. By default, Stormpath Framework integrations will require an `email`, `password`, `givenName`, and `surname`, but this is configurable in the framework integration. Registering a user will not automatically log them in. 
+In order to register a user, instantiate a `RegistrationModel` object. By default, Stormpath framework integrations require an `email`, `password`, `givenName`, and `surname`. 
 
 ```Swift
 let account = RegistrationModel(email: "user@example.com", password: "ExamplePassword")
@@ -106,8 +104,10 @@ Stormpath.sharedSession.register(account) { (account, error) -> Void in
         return
     }
     // Do something with the returned account object, such as save its `href` if needed. 
+    // Registering a user will not automatically log them in. 
 }
 ```
+
 
 *Note: Stormpath callbacks always happen on the main thread, so you can make UI changes directly in the callback.*
 
