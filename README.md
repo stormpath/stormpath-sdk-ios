@@ -32,7 +32,7 @@ If you're just testing, it's pretty quick to set up a server using the [express 
 Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod "Stormpath" ~> 1.1
+pod 'Stormpath', '~> 1.1'
 ```
 
 Don't forget to uncomment use_frameworks! as well:
