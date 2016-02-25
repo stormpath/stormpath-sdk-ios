@@ -22,7 +22,6 @@ class KeychainServiceTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         
-        Stormpath.APIURL = nil
         KeychainService.accessToken = nil
         KeychainService.refreshToken = nil
     }
