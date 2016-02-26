@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>StormpathConfiguration Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/StormpathConfiguration" class="dashAnchor"></a>
+    <a title="StormpathConfiguration Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">Stormpath Docs</a> (94% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">Stormpath Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        StormpathConfiguration Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Account.html">Account</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RegistrationModel.html">RegistrationModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Stormpath.html">Stormpath</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StormpathConfiguration.html">StormpathConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StormpathError.html">StormpathError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AccountStatus.html">AccountStatus</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Typealiases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:9Stormpath24StormpathAccountCallback">StormpathAccountCallback</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:9Stormpath24StormpathSuccessCallback">StormpathSuccessCallback</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>StormpathConfiguration</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StormpathConfiguration</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>StormpathConfiguration is the class that manages the configuration for 
+Stormpath, its endpoints, and API providers. It auto-loads from the
+configuration in Info.plist, or uses defaults that connect to a server on
+<a href="http://localhost:3000">http://localhost:3000</a>, the default in many Stormpath integrations. You can
+modify its properties directly.</p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The endpoints refer to the endpoints in the Stormpath Framework Spec. 
+Use leading slashes to specify the endpoints.
+
+</div>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZvC9Stormpath22StormpathConfiguration20defaultConfigurationS0_"></a>
+                    <a name="//apple_ref/swift/Variable/defaultConfiguration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZvC9Stormpath22StormpathConfiguration20defaultConfigurationS0_">defaultConfiguration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Singleton object representing the default configuration loaded from the 
+config file. Used by the main Stormpath instance. Can be modified 
+programmatically.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">defaultConfiguration</span> <span class="o">=</span> <span class="kt">StormpathConfiguration</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration6APIURLCSo5NSURL"></a>
+                    <a name="//apple_ref/swift/Property/APIURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration6APIURLCSo5NSURL">APIURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configuration parameter for the API URL.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">APIURL</span> <span class="o">=</span> <span class="kt">NSURL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"http://localhost:3000"</span><span class="p">)</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration10meEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/meEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration10meEndpointSS">meEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint for the current user context</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">meEndpoint</span> <span class="o">=</span> <span class="s">"/me"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration19verifyEmailEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/verifyEmailEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration19verifyEmailEndpointSS">verifyEmailEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to request email verification</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">verifyEmailEndpoint</span> <span class="o">=</span> <span class="s">"/verify"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration22forgotPasswordEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/forgotPasswordEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration22forgotPasswordEndpointSS">forgotPasswordEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to request a password reset email</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">forgotPasswordEndpoint</span> <span class="o">=</span> <span class="s">"/forgot"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration13oauthEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/oauthEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration13oauthEndpointSS">oauthEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to create an OAuth token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">oauthEndpoint</span> <span class="o">=</span> <span class="s">"/oauth/token"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration14logoutEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/logoutEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration14logoutEndpointSS">logoutEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to logout</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">logoutEndpoint</span> <span class="o">=</span> <span class="s">"/logout"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration16registerEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/registerEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration16registerEndpointSS">registerEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to register a new account</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">registerEndpoint</span> <span class="o">=</span> <span class="s">"/register"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC9Stormpath22StormpathConfigurationcFMS0_FT_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC9Stormpath22StormpathConfigurationcFMS0_FT_S0_">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializer for StormpathConfiguration. The initializer pulls defaults from 
+the Info.plist file, and falls back to default SDK values. Modify the 
+values after initialization to customize this object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://github.com/stormpath/stormpath-sdk-swift" target="_blank" rel="external">Stormpath</a>. All rights reserved. (Last updated: 2016-02-24)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
