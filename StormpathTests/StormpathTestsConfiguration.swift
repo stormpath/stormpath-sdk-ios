@@ -8,8 +8,8 @@
 
 import Foundation
 
-private let env_APIURL = NSProcessInfo.processInfo().environment["APIURL"] ?? ""
-let APIURL = NSURL(string: env_APIURL) ?? NSURL(string: "http://localhost:3000")!
+private let env_APIURL = NSProcessInfo.processInfo().environment["APIURL"] ?? "http://localhost:3000"
+let APIURL = NSURL(string: env_APIURL)!
 let timeout = 5.0
 let testUsername = "test@example.com"
 let testPassword = "TestTest1"
