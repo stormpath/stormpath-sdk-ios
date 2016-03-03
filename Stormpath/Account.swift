@@ -101,8 +101,18 @@ public class Account: NSObject {
 }
 
 /// Stormpath Account Status
-@objc public enum AccountStatus: Int { //It's an int for Obj-C compatibility
-    case Enabled, Unverified, Disabled
+@objc public enum AccountStatus: Int {
+    //It's an int for Obj-C compatibility
+    
+    /// Enabled means that we can login to this account
+    case Enabled
+    
+    /// Unverified is the same as disabled, but a user can enable it by
+    /// clicking on the activation email.
+    
+    case Unverified
+    /// Disabled means that users cannot log in to the account.
+    case Disabled
 }
 
 /// Helper extension to make optional chaining easier. 
