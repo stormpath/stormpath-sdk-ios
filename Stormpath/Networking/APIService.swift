@@ -32,22 +32,41 @@ final class APIService: NSObject {
     // MARK: Login
     
     func login(username: String, password: String, completionHandler: StormpathSuccessCallback?) {
-        
         let oauthURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.oauthEndpoint)
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, username: username, password: password) { (accessToken, refreshToken, error) -> Void in
-            guard let accessToken = accessToken where error == nil else {
-                completionHandler?(false, error)
-                return
-            }
-            self.stormpath.keychain.accessToken = accessToken
-            
-            if refreshToken != nil {
-                self.stormpath.keychain.refreshToken = refreshToken
-            }
-            completionHandler?(true, nil)
+            self.loginCompletionHandler(accessToken, refreshToken: refreshToken, error: error, completionHandler: completionHandler)
         }
         requestManager.begin()
         
+    }
+    
+    func login(socialProvider provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback?) {
+        let socialLoginURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.loginEndpoint)
+        let requestManager = SocialLoginAPIRequestManager(withURL: socialLoginURL, accessToken: accessToken, socialProvider: provider) { (accessToken, refreshToken, error) -> Void in
+            self.loginCompletionHandler(accessToken, refreshToken: refreshToken, error: error, completionHandler: completionHandler)
+        }
+        requestManager.begin()
+    }
+    
+    func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback?) {
+        let socialLoginURL = stormpath.configuration.APIURL.URLByAppendingPathComponent(stormpath.configuration.loginEndpoint)
+        let requestManager = SocialLoginAPIRequestManager(withURL: socialLoginURL, authorizationCode: authorizationCode, socialProvider: provider) { (accessToken, refreshToken, error) -> Void in
+            self.loginCompletionHandler(accessToken, refreshToken: refreshToken, error: error, completionHandler: completionHandler)
+        }
+        requestManager.begin()
+    }
+    
+    func loginCompletionHandler(accessToken: String?, refreshToken: String?, error: NSError?, completionHandler: StormpathSuccessCallback?) {
+        guard let accessToken = accessToken where error == nil else {
+            completionHandler?(false, error)
+            return
+        }
+        self.stormpath.keychain.accessToken = accessToken
+        
+        if refreshToken != nil {
+            self.stormpath.keychain.refreshToken = refreshToken
+        }
+        completionHandler?(true, nil)
     }
     
     // MARK: Access token refresh

@@ -10,38 +10,26 @@ import Foundation
 
 class SocialLoginAPIRequestManager: APIRequestManager {
     var socialProvider: StormpathSocialProvider
-    var authorizationData: String // Auth code or access token
-    var authorizationDataType: AuthorizationDataType
     var callback: AccessTokenCallback
+    var postDictionary: [String: AnyObject]
     
     init(withURL url: NSURL, accessToken: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
         self.socialProvider = socialProvider
-        self.authorizationData = accessToken
-        self.authorizationDataType = .AccessToken
         self.callback = callback
+        postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "accessToken": accessToken]]
         
         super.init(withURL: url)
     }
     
     init(withURL url: NSURL, authorizationCode: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
         self.socialProvider = socialProvider
-        self.authorizationData = authorizationCode
-        self.authorizationDataType = .AuthorizationCode
         self.callback = callback
+        postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "code": authorizationCode]]
         
         super.init(withURL: url)
     }
     
     override func prepareForRequest() {
-        var postDictionary = ["providerData": ["providerId": socialProvider.stringValue()]]
-        
-        switch authorizationDataType {
-        case .AuthorizationCode:
-            postDictionary["providerData"]?["code"] = authorizationData
-        case .AccessToken:
-            postDictionary["providerData"]?["accessToken"] = authorizationData
-        }
-        
         request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(postDictionary, options: [])
         request.HTTPMethod = "POST"
     }
@@ -85,8 +73,4 @@ class SocialLoginAPIRequestManager: APIRequestManager {
             self.callback(accessToken: accessToken, refreshToken: refreshToken, error: error)
         }
     }
-}
-
-enum AuthorizationDataType {
-    case AccessToken, AuthorizationCode
 }

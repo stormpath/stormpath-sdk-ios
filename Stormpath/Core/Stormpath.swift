@@ -76,10 +76,32 @@ public final class Stormpath: NSObject {
     }
     
     /**
-     Logs in an account if you have an access token or code from Facebook / 
-     Google
+     Logs in an account if you have an access token from a social provider.
+     
+     - parameters:
+       - socialProvider: the provider (Facebook, Google, etc) from which you 
+         have an access token
+       - accessToken: String containing the access token
+       - completionHandler: A block of code that is called back on success or 
+         failure.
      */
-    //public func login(provider: StormpathSocialProvider, with
+    public func login(provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback? = nil) {
+        apiService.login(socialProvider: provider, accessToken: accessToken, completionHandler: completionHandler)
+    }
+    
+    /**
+    Logs in an account if you have an authorization code from a social provider.
+    
+    - parameters:
+      - socialProvider: the provider (Facebook, Google, etc) from which you have 
+        an access token
+      - authorizationCode: String containing the authorization code
+      - completionHandler: A block of code that is called back on success or 
+        failure.
+     */
+    public func login(provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
+        apiService.login(socialProvider: provider, authorizationCode: authorizationCode, completionHandler: completionHandler)
+    }
     
     /**
      Fetches the account data, and returns it in the form of a dictionary.

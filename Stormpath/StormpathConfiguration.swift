@@ -62,6 +62,15 @@ public class StormpathConfiguration: NSObject {
     }
     
     /**
+     Endpoint to login
+     */
+    public var loginEndpoint = "/login" {
+        didSet {
+            loginEndpoint = loginEndpoint.withLeadingSlash
+        }
+    }
+    
+    /**
      Endpoint to logout
      */
     public var logoutEndpoint = "/logout" {
@@ -98,6 +107,7 @@ public class StormpathConfiguration: NSObject {
         verifyEmailEndpoint = (customEndpoints["verifyEmail"] as? String) ?? verifyEmailEndpoint
         forgotPasswordEndpoint = (customEndpoints["forgotPassword"] as? String) ?? forgotPasswordEndpoint
         oauthEndpoint = (customEndpoints["oauth"] as? String) ?? oauthEndpoint
+        loginEndpoint = (customEndpoints["login"] as? String) ?? loginEndpoint
         logoutEndpoint = (customEndpoints["logout"] as? String) ?? logoutEndpoint
         registerEndpoint = (customEndpoints["register"] as? String) ?? registerEndpoint
     }
