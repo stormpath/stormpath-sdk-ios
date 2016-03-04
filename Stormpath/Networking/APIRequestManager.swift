@@ -17,7 +17,7 @@ class APIRequestManager: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String {
+        if let version = NSBundle(forClass: APIRequestManager.self).infoDictionary?["CFBundleShortVersionString"] as? String {
             request.setValue("stormpath-sdk-swift/" + version + " iOS/" + UIDevice.currentDevice().systemVersion, forHTTPHeaderField: "X-Stormpath-Agent")
         }
     }
