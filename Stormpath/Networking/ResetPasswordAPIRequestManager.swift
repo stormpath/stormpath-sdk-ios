@@ -26,10 +26,10 @@ class ResetPasswordAPIRequestManager: APIRequestManager {
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        executeCallback(nil, error: nil)
+        performCallback(error: nil)
     }
     
-    override func executeCallback(parameters: AnyObject?, error: NSError?) {
+    override func performCallback(error error: NSError?) {
         dispatch_async(dispatch_get_main_queue()) { 
             self.callback(error)
         }

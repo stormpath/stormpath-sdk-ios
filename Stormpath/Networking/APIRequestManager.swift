@@ -9,6 +9,7 @@
 import Foundation
 
 class APIRequestManager: NSObject {
+    let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
     var request = NSMutableURLRequest()
     
     init(withURL url: NSURL) {
@@ -24,7 +25,7 @@ class APIRequestManager: NSObject {
         preconditionFailure("Method not implemented")
     }
     
-    func executeCallback(parameters: AnyObject?, error: NSError?) {
+    func performCallback(error error: NSError?) {
         preconditionFailure("Method not implemented")
     }
     
@@ -33,7 +34,6 @@ class APIRequestManager: NSObject {
     
     func begin() {
         prepareForRequest()
-        let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
         let task = urlSession.dataTaskWithRequest(request, completionHandler : requestCompletionHandler)
         task.resume()
     }
@@ -47,7 +47,7 @@ class APIRequestManager: NSObject {
             if let error = error {
                 Logger.logError(error)
             }
-            self.executeCallback(nil, error: error)
+            self.performCallback(error: error)
             return
         }
         
@@ -55,7 +55,7 @@ class APIRequestManager: NSObject {
         
         //If the status code isn't 2XX
         if response.statusCode / 100 != 2 {
-            self.executeCallback(nil, error: StormpathError.errorForResponse(response, data: data))
+            self.performCallback(error: StormpathError.errorForResponse(response, data: data))
         } else {
             requestDidFinish(data, response: response)
         }

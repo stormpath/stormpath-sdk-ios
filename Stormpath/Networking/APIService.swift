@@ -8,6 +8,8 @@
 
 import Foundation
 
+typealias AccessTokenCallback = ((accessToken: String?, refreshToken: String?, error: NSError?) -> Void)
+
 final class APIService: NSObject {
     weak var stormpath: Stormpath!
     

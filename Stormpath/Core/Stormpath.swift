@@ -76,6 +76,12 @@ public final class Stormpath: NSObject {
     }
     
     /**
+     Logs in an account if you have an access token or code from Facebook / 
+     Google
+     */
+    //public func login(provider: StormpathSocialProvider, with
+    
+    /**
      Fetches the account data, and returns it in the form of a dictionary.
      
      - parameters:
