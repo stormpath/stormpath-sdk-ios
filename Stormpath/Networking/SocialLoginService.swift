@@ -10,7 +10,13 @@ import Foundation
 import SafariServices
 
 class SocialLoginService: NSObject {
+    static let socialURLSchemePrefixes: [String: StormpathSocialProvider] =
+        ["fb": .Facebook,
+        "com.googleusercontent.apps.": .Google]
+    private static let socialProviderHandlers: [StormpathSocialProvider: LoginProvider] = [.Facebook: FacebookLoginProvider()] // TODO: These two are the same thing, refactor this out
+    
     weak var stormpath: Stormpath!
+    var queuedCompletionHandler: StormpathSuccessCallback?
     
     init(withStormpath stormpath: Stormpath) {
         super.init()
@@ -20,14 +26,29 @@ class SocialLoginService: NSObject {
     func beginLoginFlow(socialProvider: StormpathSocialProvider, scopes: [String], completionHandler: StormpathSuccessCallback?) {
         guard socialProvider == .Facebook else {
             preconditionFailure("Other social providers not supported yet")
-            return
         }
         
-        guard let socialId = stormpath.configuration.socialProviderIds[.Facebook] else {
+        guard let urlScheme = stormpath.configuration.socialProviderURLSchemes[.Facebook] else {
             preconditionFailure("Facebook Login not setup correctly")
         }
-        let facebookOAuthURL = NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(socialId)&redirect_uri=fb\(socialId)://authorize&response_type=token&scope=email")!
-        presentOAuthSafariView(facebookOAuthURL)
+        presentOAuthSafariView(FacebookLoginProvider().authenticationRequestURL(scopes, urlScheme: urlScheme))
+    }
+    
+    func handleCallbackURL(url: NSURL) -> Bool {
+        for (prefix, socialProvider) in SocialLoginService.socialURLSchemePrefixes {
+            if url.scheme.hasPrefix(prefix) {
+                if let socialLoginResponseWrapped = try? SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url), socialLoginResponse = socialLoginResponseWrapped {
+                    switch socialLoginResponse.type {
+                    case .AuthorizationCode:
+                        stormpath.login(socialProvider: socialProvider, authorizationCode: socialLoginResponse.data, completionHandler: queuedCompletionHandler)
+                    case .AccessToken:
+                        stormpath.login(socialProvider: socialProvider, accessToken: socialLoginResponse.data, completionHandler: queuedCompletionHandler)
+                    }
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     func presentOAuthSafariView(url: NSURL) {
