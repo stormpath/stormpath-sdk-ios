@@ -86,6 +86,9 @@ public class StormpathConfiguration: NSObject {
         }
     }
     
+    /// App IDs for social providers
+    public var socialProviderIds = [StormpathSocialProvider: String]()
+    
     /**
      Initializer for StormpathConfiguration. The initializer pulls defaults from 
      the Info.plist file, and falls back to default SDK values. Modify the 
@@ -93,6 +96,12 @@ public class StormpathConfiguration: NSObject {
      */
     public override init() {
         super.init()
+        
+        loadSocialProviderAppIds()
+        loadStormpathConfigurationFromInfoPlist()
+    }
+    
+    private func loadStormpathConfigurationFromInfoPlist() {
         guard let stormpathInfo = NSBundle.mainBundle().infoDictionary?["Stormpath"] as? [String: AnyObject] else {
             return
         }
@@ -110,6 +119,44 @@ public class StormpathConfiguration: NSObject {
         loginEndpoint = (customEndpoints["login"] as? String) ?? loginEndpoint
         logoutEndpoint = (customEndpoints["logout"] as? String) ?? logoutEndpoint
         registerEndpoint = (customEndpoints["register"] as? String) ?? registerEndpoint
+    }
+    
+    private func loadSocialProviderAppIds() {
+        let socialURLSchemePrefixes: [String: StormpathSocialProvider] =
+            ["fb": .Facebook,
+            "com.googleusercontent.apps.": .Google]
+        
+        guard let urlTypes = NSBundle.mainBundle().infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
+            return
+        }
+        
+        // Convert the complex dictionary into an array of URL schemes
+        let urlSchemes = urlTypes.flatMap({ ($0["CFBundleURLSchemes"] as? [String])?.first })
+        
+        // If there's a match, add it to the list of App IDs.
+        for (prefix, socialProvider) in socialURLSchemePrefixes {
+            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(prefix) ? $0 : nil}).first {
+                socialProviderIds[socialProvider] = appIdFrom(urlScheme, socialProvider: socialProvider)
+            }
+        }
+    }
+    
+    private func appIdFrom(urlScheme: String, socialProvider: StormpathSocialProvider) -> String? {
+        switch socialProvider {
+        case .Facebook:
+            // Turn fb12345 to 12345
+            if let range = urlScheme.rangeOfString("\\d+", options: .RegularExpressionSearch) {
+                return urlScheme.substringWithRange(range)
+            }
+        case .Google:
+            // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into [ID]. Same code as FB right now, but can change
+            if let range = urlScheme.rangeOfString("\\d+", options: .RegularExpressionSearch) {
+                return urlScheme.substringWithRange(range)
+            }
+        }
+        
+        // Fallback if all else fails
+        return nil
     }
 }
 

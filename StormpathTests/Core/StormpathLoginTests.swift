@@ -111,7 +111,7 @@ class StormpathLoginTests: XCTestCase {
         let expectation = expectationWithDescription("We should not be able to login with an invalid Facebook access token")
         let token = "GarbageToken"
         
-        stormpath.login(.Facebook, accessToken: token) { (success, error) -> Void in
+        stormpath.login(socialProvider: .Facebook, accessToken: token) { (success, error) -> Void in
             XCTAssertFalse(success, "Login should not be successful")
             XCTAssertNotNil(error, "Error should not be empty")
             XCTAssertEqual(error?.code, 400, "Error should be 400 Bad Request with a json message. Error is \(error?.localizedDescription)")

@@ -9,10 +9,10 @@
 import Foundation
 
 /// Callback for Stormpath API responses that respond with a success/fail.
-public typealias StormpathSuccessCallback       = (Bool, NSError?) -> Void
+public typealias StormpathSuccessCallback = (Bool, NSError?) -> Void
 
 /// Callback for Stormpath API responses that respond with an account object.
-public typealias StormpathAccountCallback          = (Account?, NSError?) -> Void
+public typealias StormpathAccountCallback = (Account?, NSError?) -> Void
 
 /**
  Stormpath represents the state of the application's connection to the Stormpath 
@@ -31,6 +31,9 @@ public final class Stormpath: NSObject {
     /// Reference to the API Service.
     var apiService: APIService!
     
+    /// Reference to the Social Login Service.
+    var socialLoginService: SocialLoginService!
+    
     /// Reference to the Keychain Service.
     var keychain: KeychainService!
     
@@ -44,6 +47,7 @@ public final class Stormpath: NSObject {
         super.init()
         apiService = APIService(withStormpath: self)
         keychain = KeychainService(withIdentifier: identifier)
+        socialLoginService = SocialLoginService(withStormpath: self)
     }
     
     /**
@@ -76,16 +80,32 @@ public final class Stormpath: NSObject {
     }
     
     /**
-     Logs in an account if you have an access token from a social provider.
+     Begins a login flow with a social provider, presenting or opening up Safari 
+     (iOS8) to handle login.
      
      - parameters:
        - socialProvider: the provider (Facebook, Google, etc) from which you 
+         have an access token
+       - scopes: the scopes to request from the provider. Look at the social 
+         provider documentation for more info.
+       - completionHandler: Callback on success or failure
+     */
+    public func login(socialProvider provider: StormpathSocialProvider, scopes: [String] = [], completionHandler: StormpathSuccessCallback? = nil) {
+        socialLoginService.beginLoginFlow(provider, scopes: scopes, completionHandler: completionHandler)
+    }
+    
+    
+    /**
+     Logs in an account if you have an access token from a social provider.
+     
+     - parameters:
+       - socialProvider: the provider (Facebook, Google, etc) from which you
          have an access token
        - accessToken: String containing the access token
        - completionHandler: A block of code that is called back on success or 
          failure.
      */
-    public func login(provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback? = nil) {
+    public func login(socialProvider provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.login(socialProvider: provider, accessToken: accessToken, completionHandler: completionHandler)
     }
     
@@ -99,7 +119,7 @@ public final class Stormpath: NSObject {
       - completionHandler: A block of code that is called back on success or 
         failure.
      */
-    public func login(provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
+    public func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.login(socialProvider: provider, authorizationCode: authorizationCode, completionHandler: completionHandler)
     }
     
@@ -133,6 +153,19 @@ public final class Stormpath: NSObject {
     */
     public func resetPassword(email: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.resetPassword(email, completionHandler: completionHandler)
+    }
+    
+    /// Deep link handler (iOS9)
+    public func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        //TODO: handle the URL
+        print(url.description)
+        return false
+    }
+    
+    
+    /// Deep link handler (<iOS9)
+    public func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        return self.application(application, openURL: url, options: [String: AnyObject]())
     }
     
     /**

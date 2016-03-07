@@ -23,6 +23,7 @@
 		DF0544BB1C6CFA4500FF555F /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544BA1C6CFA4500FF555F /* Account.swift */; };
 		DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */; };
 		DF064AE41C8902EB00E8AB42 /* StormpathSocialProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */; };
+		DF064AE61C8A518900E8AB42 /* SocialLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */; };
 		DF904C7F1C7690FA00BE53E5 /* StormpathLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */; };
 		DF904C811C76A56100BE53E5 /* StormpathTestsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */; };
 		DFC84D631C77AADA00481F57 /* StormpathMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */; };
@@ -61,6 +62,7 @@
 		DF0544BA1C6CFA4500FF555F /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialLoginAPIRequestManager.swift; sourceTree = "<group>"; };
 		DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathSocialProvider.swift; sourceTree = "<group>"; };
+		DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialLoginService.swift; sourceTree = "<group>"; };
 		DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathLoginTests.swift; sourceTree = "<group>"; };
 		DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTestsConfiguration.swift; sourceTree = "<group>"; };
 		DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathMeTests.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				4992A5D71C086FED00676E85 /* Logger.swift */,
 				DF0544B51C691C4000FF555F /* APIRequestManagers */,
 				DF0544B81C6A7BDE00FF555F /* StormpathError.swift */,
+				DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */,
 			);
 			name = API;
 			path = Networking;
@@ -315,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF064AE41C8902EB00E8AB42 /* StormpathSocialProvider.swift in Sources */,
+				DF064AE61C8A518900E8AB42 /* SocialLoginService.swift in Sources */,
 				4992A5D81C086FED00676E85 /* Logger.swift in Sources */,
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
 				DF0544361C65796300FF555F /* MeAPIRequestManager.swift in Sources */,
