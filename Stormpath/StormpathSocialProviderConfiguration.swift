@@ -1,5 +1,5 @@
 //
-//  StormpathLoginProviderApplication.swift
+//  StormpathSocialProviderConfiguration.swift
 //  Stormpath
 //
 //  Created by Edward Jiang on 3/8/16.
@@ -8,9 +8,10 @@
 
 import Foundation
 
-public class StormpathLoginProviderApplication: NSObject {
+public class StormpathSocialProviderConfiguration: NSObject {
     public let urlScheme: String
     public let appId: String
+    public var scopes: String?
     
     init(appId: String, urlScheme: String) {
         self.urlScheme = urlScheme

@@ -15,7 +15,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         preconditionFailure() // TODO
     }
     
-    func authenticationRequestURL(application: StormpathLoginProviderApplication) -> NSURL {
+    func authenticationRequestURL(application: StormpathSocialProviderConfiguration) -> NSURL {
         preconditionFailure() // TODO
     }
 }

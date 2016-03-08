@@ -27,7 +27,7 @@
 		DF064AF41C8E26C000E8AB42 /* LoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */; };
 		DF064AF61C8E2A8600E8AB42 /* FacebookLoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AF51C8E2A8600E8AB42 /* FacebookLoginProvider.swift */; };
 		DF1E20D71C8F47970092232E /* GoogleLoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D61C8F47970092232E /* GoogleLoginProvider.swift */; };
-		DF1E20D91C8F4B1F0092232E /* StormpathLoginProviderApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D81C8F4B1F0092232E /* StormpathLoginProviderApplication.swift */; };
+		DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */; };
 		DF904C7F1C7690FA00BE53E5 /* StormpathLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */; };
 		DF904C811C76A56100BE53E5 /* StormpathTestsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */; };
 		DFC84D631C77AADA00481F57 /* StormpathMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */; };
@@ -70,7 +70,7 @@
 		DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginProvider.swift; path = "Social Login/LoginProvider.swift"; sourceTree = "<group>"; };
 		DF064AF51C8E2A8600E8AB42 /* FacebookLoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FacebookLoginProvider.swift; path = "Social Login/FacebookLoginProvider.swift"; sourceTree = "<group>"; };
 		DF1E20D61C8F47970092232E /* GoogleLoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GoogleLoginProvider.swift; path = "Social Login/GoogleLoginProvider.swift"; sourceTree = "<group>"; };
-		DF1E20D81C8F4B1F0092232E /* StormpathLoginProviderApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathLoginProviderApplication.swift; sourceTree = "<group>"; };
+		DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathSocialProviderConfiguration.swift; sourceTree = "<group>"; };
 		DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathLoginTests.swift; sourceTree = "<group>"; };
 		DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTestsConfiguration.swift; sourceTree = "<group>"; };
 		DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathMeTests.swift; sourceTree = "<group>"; };
@@ -212,7 +212,7 @@
 			children = (
 				DFD1229F1C5C233E0038B95E /* StormpathConfiguration.swift */,
 				DF0544BA1C6CFA4500FF555F /* Account.swift */,
-				DF1E20D81C8F4B1F0092232E /* StormpathLoginProviderApplication.swift */,
+				DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */,
 				DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */,
 			);
 			name = Models;
@@ -354,7 +354,7 @@
 				DF0544B41C69178F00FF555F /* ResetPasswordAPIRequestManager.swift in Sources */,
 				DF0544341C6560FC00FF555F /* OAuthAPIRequestManager.swift in Sources */,
 				DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */,
-				DF1E20D91C8F4B1F0092232E /* StormpathLoginProviderApplication.swift in Sources */,
+				DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */,
 				4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

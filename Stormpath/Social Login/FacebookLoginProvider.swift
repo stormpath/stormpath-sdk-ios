@@ -11,8 +11,9 @@ import Foundation
 class FacebookLoginProvider: NSObject, LoginProvider {
     var urlSchemePrefix = "fb"
     
-    func authenticationRequestURL(application: StormpathLoginProviderApplication) -> NSURL {
-        return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=email")!
+    func authenticationRequestURL(application: StormpathSocialProviderConfiguration) -> NSURL {
+        let scopes = application.scopes ?? "email"
+        return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=\(scopes)")!
     }
     
     func getResponseFromCallbackURL(url: NSURL) throws -> LoginProviderResponse {
