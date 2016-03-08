@@ -11,8 +11,7 @@ import Foundation
 class FacebookLoginProvider: NSObject, LoginProvider {
     var urlSchemePrefix = "fb"
     
-    func authenticationRequestURL(scopes: [String], application: StormpathLoginProviderApplication) -> NSURL {
-        // TODO: add scopes
+    func authenticationRequestURL(application: StormpathLoginProviderApplication) -> NSURL {
         return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=email")!
     }
     
@@ -24,5 +23,4 @@ class FacebookLoginProvider: NSObject, LoginProvider {
         }
         throw StormpathError.InternalSDKError
     }
-    
 }

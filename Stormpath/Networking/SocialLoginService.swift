@@ -25,12 +25,12 @@ class SocialLoginService: NSObject {
         self.stormpath = stormpath
     }
     
-    func beginLoginFlow(socialProvider: StormpathSocialProvider, scopes: [String], completionHandler: StormpathSuccessCallback?) {
+    func beginLoginFlow(socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
         guard let socialAppInfo = stormpath.configuration.socialProviderURLSchemes[socialProvider] else {
             preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
         }
         queuedCompletionHandler = completionHandler
-        let authenticationRequestURL = SocialLoginService.socialProviderHandlers[socialProvider]!.authenticationRequestURL(scopes, application: socialAppInfo)
+        let authenticationRequestURL = SocialLoginService.socialProviderHandlers[socialProvider]!.authenticationRequestURL(socialAppInfo)
         presentOAuthSafariView(authenticationRequestURL)
     }
     

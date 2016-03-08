@@ -86,12 +86,10 @@ public final class Stormpath: NSObject {
      - parameters:
        - socialProvider: the provider (Facebook, Google, etc) from which you 
          have an access token
-       - scopes: the scopes to request from the provider. Look at the social 
-         provider documentation for more info.
        - completionHandler: Callback on success or failure
      */
-    public func login(socialProvider provider: StormpathSocialProvider, scopes: [String] = [], completionHandler: StormpathSuccessCallback? = nil) {
-        socialLoginService.beginLoginFlow(provider, scopes: scopes, completionHandler: completionHandler)
+    public func login(socialProvider provider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback? = nil) {
+        socialLoginService.beginLoginFlow(provider, completionHandler: completionHandler)
     }
     
     

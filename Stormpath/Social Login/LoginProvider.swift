@@ -12,7 +12,7 @@ import Foundation
 protocol LoginProvider {
     var urlSchemePrefix: String { get }
     func getResponseFromCallbackURL(url: NSURL) throws -> LoginProviderResponse
-    func authenticationRequestURL(scopes: [String], application: StormpathLoginProviderApplication) -> NSURL
+    func authenticationRequestURL(application: StormpathLoginProviderApplication) -> NSURL
 }
 
 /// Contains the access token or auth code
