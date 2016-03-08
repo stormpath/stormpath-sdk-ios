@@ -87,7 +87,7 @@ public class StormpathConfiguration: NSObject {
     }
     
     /// App IDs for social providers
-    public var socialProviderURLSchemes = [StormpathSocialProvider: StormpathLoginProviderURLScheme]()
+    public var socialProviderURLSchemes = [StormpathSocialProvider: StormpathLoginProviderApplication]()
     
     /**
      Initializer for StormpathConfiguration. The initializer pulls defaults from 
@@ -122,7 +122,6 @@ public class StormpathConfiguration: NSObject {
     }
     
     private func loadSocialProviderAppIds() {
-        let socialURLSchemePrefixes = SocialLoginService.socialURLSchemePrefixes
         
         guard let urlTypes = NSBundle.mainBundle().infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
             return
@@ -132,9 +131,9 @@ public class StormpathConfiguration: NSObject {
         let urlSchemes = urlTypes.flatMap({ ($0["CFBundleURLSchemes"] as? [String])?.first })
         
         // If there's a match, add it to the list of App IDs.
-        for (prefix, socialProvider) in socialURLSchemePrefixes {
-            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(prefix) ? $0 : nil}).first, appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
-                socialProviderURLSchemes[socialProvider] = StormpathLoginProviderURLScheme(urlScheme: urlScheme, appId: appId)
+        for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
+            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(handler.urlSchemePrefix) ? $0 : nil}).first, appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
+                socialProviderURLSchemes[socialProvider] = StormpathLoginProviderApplication(appId: appId, urlScheme: urlScheme)
             }
         }
     }

@@ -8,11 +8,14 @@
 
 import Foundation
 
+/// Protocol for external OAuth handlers
 protocol LoginProvider {
+    var urlSchemePrefix: String { get }
     func getResponseFromCallbackURL(url: NSURL) throws -> LoginProviderResponse
-    func authenticationRequestURL(scopes: [String], urlScheme: StormpathLoginProviderURLScheme) -> NSURL
+    func authenticationRequestURL(scopes: [String], application: StormpathLoginProviderApplication) -> NSURL
 }
 
+/// Contains the access token or auth code
 struct LoginProviderResponse {
     var data: String
     var type: LoginProviderResponseType
@@ -22,26 +25,26 @@ enum LoginProviderResponseType {
     case AccessToken, AuthorizationCode
 }
 
-public class StormpathLoginProviderURLScheme: NSObject {
-    public let urlScheme: String
-    public let appId: String
-    
-    init(urlScheme: String, appId: String) {
-        self.urlScheme = urlScheme
-        self.appId = appId
-    }
-}
-
 extension NSURL {
+    /// Dictionary with key/value pairs from the URL fragment
     var fragmentDictionary: [String: String] {
+        return dictionaryFromFormEncodedString(fragment)
+    }
+    
+    /// Dictionary with key/value pairs from the URL query string
+    var queryDictionary: [String: String] {
+        return dictionaryFromFormEncodedString(query)
+    }
+    
+    private func dictionaryFromFormEncodedString(input: String?) -> [String: String] {
         var result = [String: String]()
         
-        guard let fragment = fragment else {
+        guard let input = input else {
             return result
         }
-        let fragmentPairs = fragment.componentsSeparatedByString("&")
+        let inputPairs = input.componentsSeparatedByString("&")
         
-        for pair in fragmentPairs {
+        for pair in inputPairs {
             let split = pair.componentsSeparatedByString("=")
             if let key = split[0].stringByRemovingPercentEncoding, value = split[1].stringByRemovingPercentEncoding {
                 result[key] = value
