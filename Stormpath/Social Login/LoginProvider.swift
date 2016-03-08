@@ -8,10 +8,12 @@
 
 import Foundation
 
+typealias LoginProviderCallback = (LoginProviderResponse?, NSError?) -> Void
+
 /// Protocol for external OAuth handlers
 protocol LoginProvider {
     var urlSchemePrefix: String { get }
-    func getResponseFromCallbackURL(url: NSURL) throws -> LoginProviderResponse
+    func getResponseFromCallbackURL(url: NSURL, callback: LoginProviderCallback)
     func authenticationRequestURL(application: StormpathSocialProviderConfiguration) -> NSURL
 }
 
@@ -46,8 +48,10 @@ extension NSURL {
         
         for pair in inputPairs {
             let split = pair.componentsSeparatedByString("=")
-            if let key = split[0].stringByRemovingPercentEncoding, value = split[1].stringByRemovingPercentEncoding {
-                result[key] = value
+            if split.count == 2 {
+                if let key = split[0].stringByRemovingPercentEncoding, value = split[1].stringByRemovingPercentEncoding {
+                    result[key] = value
+                }
             }
         }
         return result

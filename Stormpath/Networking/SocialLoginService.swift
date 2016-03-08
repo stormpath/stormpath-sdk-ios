@@ -41,15 +41,17 @@ class SocialLoginService: NSObject {
         // Check each prefix, and if there's one that matches, parse the response & login with the appropriate Stormpath social method
         for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
             if url.scheme.hasPrefix(handler.urlSchemePrefix) {
-                guard let socialLoginResponse = (try? SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url)) ?? nil else {
-                    preconditionFailure("TODO: figure out error handling for rejected social login / malformed callback URLs")
-                }
-                
-                switch socialLoginResponse.type {
-                case .AuthorizationCode:
-                    stormpath.login(socialProvider: socialProvider, authorizationCode: socialLoginResponse.data, completionHandler: queuedCompletionHandler)
-                case .AccessToken:
-                    stormpath.login(socialProvider: socialProvider, accessToken: socialLoginResponse.data, completionHandler: queuedCompletionHandler)
+                SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
+                    guard let response = response where error == nil else {
+                        preconditionFailure("TODO: figure out error handling for rejected social login / malformed callback URLs")
+                    }
+                    
+                    switch response.type {
+                    case .AuthorizationCode:
+                        self.stormpath.login(socialProvider: socialProvider, authorizationCode: response.data, completionHandler: self.queuedCompletionHandler)
+                    case .AccessToken:
+                        self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, completionHandler: self.queuedCompletionHandler)
+                    }
                 }
                 
                 return true

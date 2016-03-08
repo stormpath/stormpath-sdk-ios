@@ -10,18 +10,21 @@ import Foundation
 
 class FacebookLoginProvider: NSObject, LoginProvider {
     var urlSchemePrefix = "fb"
+    var state = arc4random_uniform(10000000)
     
     func authenticationRequestURL(application: StormpathSocialProviderConfiguration) -> NSURL {
         let scopes = application.scopes ?? "email"
-        return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=\(scopes)")!
+        return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=\(scopes)&state=\(state)")!
     }
     
-    func getResponseFromCallbackURL(url: NSURL) throws -> LoginProviderResponse {
-        //TODO: handle error conditions
+    func getResponseFromCallbackURL(url: NSURL, callback: LoginProviderCallback) {
+        //TODO: handle error conditions, verify state
         
         if let accessToken = url.fragmentDictionary["access_token"] {
-            return LoginProviderResponse(data: accessToken, type: .AccessToken)
+            callback(LoginProviderResponse(data: accessToken, type: .AccessToken), nil)
         }
-        throw StormpathError.InternalSDKError
+        else {
+            callback(nil, StormpathError.InternalSDKError)
+        }
     }
 }

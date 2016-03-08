@@ -146,10 +146,11 @@ public class StormpathConfiguration: NSObject {
                 return urlScheme.substringWithRange(range)
             }
         case .Google:
-            // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into [ID]. Same code as FB right now, but can change
-            if let range = urlScheme.rangeOfString("\\d+", options: .RegularExpressionSearch) {
-                return urlScheme.substringWithRange(range)
-            }
+            // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into 
+            // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes 
+            // reversing things.
+            
+            return urlScheme.componentsSeparatedByString(".").reverse().joinWithSeparator(".")
         }
         
         // Fallback if all else fails
