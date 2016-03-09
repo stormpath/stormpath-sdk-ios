@@ -61,10 +61,12 @@ final class APIService: NSObject {
             completionHandler?(false, error)
             return
         }
-        self.stormpath.keychain.accessToken = accessToken
+        stormpath.accessToken = accessToken
         
         if refreshToken != nil {
-            self.stormpath.keychain.refreshToken = refreshToken
+            stormpath.refreshToken = refreshToken
+        } else {
+            stormpath.refreshToken = nil
         }
         completionHandler?(true, nil)
     }
