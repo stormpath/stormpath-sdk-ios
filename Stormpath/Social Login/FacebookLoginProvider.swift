@@ -18,7 +18,9 @@ class FacebookLoginProvider: NSObject, LoginProvider {
         // Auth_type is re-request since we need to ask for email scope again if 
         // people decline the email permission. If it gets annoying because
         // people keep asking for more scopes, we can change this.
-        return NSURL(string: "https://www.facebook.com/dialog/oauth?client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=\(scopes)&state=\(state)&auth_type=rerequest")!
+        let queryString = "client_id=\(application.appId)&redirect_uri=\(application.urlScheme)://authorize&response_type=token&scope=\(scopes)&state=\(state)&auth_type=rerequest".stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
+        return NSURL(string: "https://www.facebook.com/dialog/oauth?\(queryString)")!
     }
     
     func getResponseFromCallbackURL(url: NSURL, callback: LoginProviderCallback) {

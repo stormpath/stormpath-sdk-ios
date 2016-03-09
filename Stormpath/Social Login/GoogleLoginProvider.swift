@@ -22,13 +22,24 @@ class GoogleLoginProvider: NSObject, LoginProvider {
     }
     
     func getResponseFromCallbackURL(callbackUrl: NSURL, callback: LoginProviderCallback) {
+        // If the application is not set, we can't continue because we can't 
+        // consume the auth code. This should not happen.
         guard let application = application else {
-            preconditionFailure("login provider not initialized")
+            callback(nil, StormpathError.InternalSDKError)
+            return
         }
-        //TODO: handle error conditions
         
+        if(callbackUrl.queryDictionary["error"] != nil) {
+            // We are not even going to callback, because the user never started
+            // the login process in the first place. Error is always because
+            // people cancelled the login. (or a SDK error)
+            return
+        }
+        
+        // If we don't have an error or an auth code, something went wrong with 
+        // the SDK implementation.
         guard let authorizationCode = callbackUrl.queryDictionary["code"] else {
-            callback(nil, StormpathError.InternalSDKError) // TODO: figure out response here
+            callback(nil, StormpathError.InternalSDKError)
             return
         }
         
@@ -43,7 +54,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             guard let data = data, json = try? NSJSONSerialization.JSONObjectWithData(data, options: []), accessToken = json["access_token"] as? String else {
-                callback(nil, StormpathError.InternalSDKError) // TODO: figure out response here
+                callback(nil, StormpathError.InternalSDKError) // This request should not fail.
                 return
             }
             callback(LoginProviderResponse(data: accessToken, type: .AccessToken), nil)
