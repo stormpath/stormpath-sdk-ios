@@ -53,8 +53,8 @@ class SocialLoginService: NSObject {
                     case .AccessToken:
                         self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, completionHandler: self.queuedCompletionHandler)
                     }
+                    self.queuedCompletionHandler = nil
                 }
-                queuedCompletionHandler = nil
                 return true
             }
         }
