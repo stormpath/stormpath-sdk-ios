@@ -26,7 +26,7 @@ class SocialLoginService: NSObject {
     }
     
     func beginLoginFlow(socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
-        guard let socialAppInfo = stormpath.configuration.socialProviderURLSchemes[socialProvider] else {
+        guard let socialAppInfo = stormpath.configuration.socialProviders[socialProvider] else {
             preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
         }
         queuedCompletionHandler = completionHandler
@@ -43,7 +43,8 @@ class SocialLoginService: NSObject {
             if url.scheme.hasPrefix(handler.urlSchemePrefix) {
                 SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
                     guard let response = response where error == nil else {
-                        preconditionFailure("TODO: figure out error handling for rejected social login / malformed callback URLs")
+                        self.queuedCompletionHandler?(false, error)
+                        return
                     }
                     
                     switch response.type {
@@ -53,10 +54,11 @@ class SocialLoginService: NSObject {
                         self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, completionHandler: self.queuedCompletionHandler)
                     }
                 }
-                
+                queuedCompletionHandler = nil
                 return true
             }
         }
+        queuedCompletionHandler = nil
         return false
     }
     

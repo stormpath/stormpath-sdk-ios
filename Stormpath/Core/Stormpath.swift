@@ -81,7 +81,9 @@ public final class Stormpath: NSObject {
     
     /**
      Begins a login flow with a social provider, presenting or opening up Safari 
-     (iOS8) to handle login.
+     (iOS8) to handle login. This WILL NOT call back if the user clicks "cancel" 
+     on the login screen, as they never began the login process in the first 
+     place. 
      
      - parameters:
        - socialProvider: the provider (Facebook, Google, etc) from which you 

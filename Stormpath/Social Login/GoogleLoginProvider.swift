@@ -25,8 +25,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         guard let application = application else {
             preconditionFailure("login provider not initialized")
         }
-        //TODO: handle error conditions, verify state
-        // 
+        //TODO: handle error conditions
         
         guard let authorizationCode = callbackUrl.queryDictionary["code"] else {
             callback(nil, StormpathError.InternalSDKError) // TODO: figure out response here
