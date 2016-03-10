@@ -38,30 +38,23 @@ class SocialLoginAPIRequestManager: APIRequestManager {
         // Grab access token from cookies
         // Callback
         
-        guard let cookies = urlSession.configuration.HTTPCookieStorage?.cookiesForURL(request.URL!) else {
+        let accessTokenRegex = "(?<=access_token=)[^;]*"
+        let refreshTokenRegex = "(?<=refresh_token=)[^;]*"
+        
+        guard let setCookieHeaders = response.allHeaderFields["Set-Cookie"] as? String, accessTokenRange = setCookieHeaders.rangeOfString(accessTokenRegex, options: .RegularExpressionSearch) else {
             performCallback(error: StormpathError.APIResponseError)
             return
         }
         
-        var accessToken: String?
+        let accessToken = setCookieHeaders.substringWithRange(accessTokenRange)
+        
         var refreshToken: String?
         
-        for cookie in cookies {
-            switch cookie.name {
-            case "access_token":
-                accessToken = cookie.value
-            case "refresh_token":
-                refreshToken = cookie.value
-            default:
-                break
-            }
+        if let refreshTokenRange = setCookieHeaders.rangeOfString(refreshTokenRegex, options: .RegularExpressionSearch) {
+            refreshToken = setCookieHeaders.substringWithRange(refreshTokenRange)
         }
         
-        if accessToken != nil {
-            performCallback(accessToken, refreshToken: refreshToken, error: nil)
-        } else {
-            performCallback(error: StormpathError.APIResponseError)
-        }
+        performCallback(accessToken, refreshToken: refreshToken, error: nil)
     }
     
     override func performCallback(error error: NSError?) {
