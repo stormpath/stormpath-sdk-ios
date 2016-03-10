@@ -20,11 +20,11 @@ enum LogLevel {
 final class Logger {
     
     static var logLevel: LogLevel {
-        #if DEBUG
-        return .Debug
-        #else
-        return .None
-        #endif
+        if _isDebugAssertConfiguration() {
+            return .Debug
+        } else {
+            return .None
+        }
     }
     
     class func log(string: String) {

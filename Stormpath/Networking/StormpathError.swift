@@ -35,7 +35,7 @@ public class StormpathError: NSError {
      version.
      */
     static let APIResponseError = StormpathError(code: 1, description: "Unrecognized API Response")
-    
+     
     /**
      Converts a Framework Integration error response into a StormpathError 
      object.

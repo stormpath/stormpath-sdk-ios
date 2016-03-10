@@ -18,16 +18,19 @@ class MeAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         guard let account = Account(fromJSON: data) else {
-            executeCallback(nil, error: StormpathError.APIResponseError)
+            performCallback(error: StormpathError.APIResponseError)
             return
         }
-        executeCallback(account, error: nil)
+        performCallback(account, error: nil)
     }
     
-    override func executeCallback(parameters: AnyObject?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.callback(parameters as? Account, error)
+    override func performCallback(error error: NSError?) {
+        performCallback(nil, error: error)
+    }
+    
+    func performCallback(account: Account?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.callback(account, error)
         }
     }
-    
 }
