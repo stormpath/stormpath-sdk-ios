@@ -109,8 +109,8 @@ public class Account: NSObject {
     
     /// Unverified is the same as disabled, but a user can enable it by
     /// clicking on the activation email.
-    
     case Unverified
+    
     /// Disabled means that users cannot log in to the account.
     case Disabled
 }

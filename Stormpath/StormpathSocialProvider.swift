@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Social Login Providers
 @objc public enum StormpathSocialProvider: Int {
     /// Facebook Login
     case Facebook

@@ -8,9 +8,15 @@
 
 import Foundation
 
+/// Configuration for a social provider (eg. Facebook, Google)
 public class StormpathSocialProviderConfiguration: NSObject {
+    /// URL Scheme the social provider will callback to
     public let urlScheme: String
+    
+    /// App ID for the social provider
     public let appId: String
+    
+    /// Scopes string formatted in the provider's format
     public var scopes: String?
     
     init(appId: String, urlScheme: String) {
