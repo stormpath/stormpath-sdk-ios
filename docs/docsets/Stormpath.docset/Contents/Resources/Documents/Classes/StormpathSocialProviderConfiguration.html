@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>StormpathError Class Reference</title>
+    <title>StormpathSocialProviderConfiguration Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -20,8 +20,8 @@
     </script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/StormpathError" class="dashAnchor"></a>
-    <a title="StormpathError Class Reference"></a>
+    <a name="//apple_ref/swift/Class/StormpathSocialProviderConfiguration" class="dashAnchor"></a>
+    <a title="StormpathSocialProviderConfiguration Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">Stormpath Docs</a> (100% documented)</p>
@@ -31,7 +31,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">Stormpath Reference</a>
         <img id="carat" src="../img/carat.png" />
-        StormpathError Class Reference
+        StormpathSocialProviderConfiguration Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -87,14 +87,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>StormpathError</h1>
+            <h1>StormpathSocialProviderConfiguration</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StormpathError</span><span class="p">:</span> <span class="kt">NSError</span></code></pre>
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StormpathSocialProviderConfiguration</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                 </div>
               </div>
-            
+            <p>Configuration for a social provider (eg. Facebook, Google)</p>
+
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -102,9 +103,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC9Stormpath14StormpathErrorcFMS0_FT5coderCSo7NSCoder_GSqS0__"></a>
-                    <a name="//apple_ref/swift/Method/init(coder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC9Stormpath14StormpathErrorcFMS0_FT5coderCSo7NSCoder_GSqS0__">init(coder:)</a>
+                    <a name="/s:vC9Stormpath36StormpathSocialProviderConfiguration9urlSchemeSS"></a>
+                    <a name="//apple_ref/swift/Property/urlScheme" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath36StormpathSocialProviderConfiguration9urlSchemeSS">urlScheme</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -112,14 +113,68 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Not implemented, do not use.</p>
+                        <p>URL Scheme the social provider will callback to</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">required</span> <span class="kd">public</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">urlScheme</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath36StormpathSocialProviderConfiguration5appIdSS"></a>
+                    <a name="//apple_ref/swift/Property/appId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath36StormpathSocialProviderConfiguration5appIdSS">appId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>App ID for the social provider</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC9Stormpath36StormpathSocialProviderConfiguration6scopesGSqSS_"></a>
+                    <a name="//apple_ref/swift/Property/scopes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath36StormpathSocialProviderConfiguration6scopesGSqSS_">scopes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Scopes string formatted in the provider&rsquo;s format</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">scopes</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>

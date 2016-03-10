@@ -8,13 +8,23 @@
     <script src="../js/jquery.min.js" defer></script>
     <script src="../js/jazzy.js" defer></script>
     
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-29159574-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
   </head>
   <body>
     <a name="//apple_ref/swift/Class/StormpathConfiguration" class="dashAnchor"></a>
     <a title="StormpathConfiguration Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">Stormpath Docs</a> (94% documented)</p>
+        <p><a href="../index.html">Stormpath Docs</a> (100% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -45,6 +55,9 @@
               <li class="nav-group-task">
                 <a href="../Classes/StormpathError.html">StormpathError</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StormpathSocialProviderConfiguration.html">StormpathSocialProviderConfiguration</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -52,6 +65,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Enums/AccountStatus.html">AccountStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/StormpathSocialProvider.html">StormpathSocialProvider</a>
               </li>
             </ul>
           </li>
@@ -262,6 +278,33 @@ programmatically.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration13loginEndpointSS"></a>
+                    <a name="//apple_ref/swift/Property/loginEndpoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration13loginEndpointSS">loginEndpoint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Endpoint to login</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">loginEndpoint</span> <span class="o">=</span> <span class="s">"/login"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:vC9Stormpath22StormpathConfiguration14logoutEndpointSS"></a>
                     <a name="//apple_ref/swift/Property/logoutEndpoint" class="dashAnchor"></a>
                     <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration14logoutEndpointSS">logoutEndpoint</a>
@@ -316,6 +359,33 @@ programmatically.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:vC9Stormpath22StormpathConfiguration15socialProvidersGVSs10DictionaryOS_23StormpathSocialProviderCS_36StormpathSocialProviderConfiguration_"></a>
+                    <a name="//apple_ref/swift/Property/socialProviders" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC9Stormpath22StormpathConfiguration15socialProvidersGVSs10DictionaryOS_23StormpathSocialProviderCS_36StormpathSocialProviderConfiguration_">socialProviders</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>App IDs for social providers</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">socialProviders</span> <span class="o">=</span> <span class="p">[</span><span class="kt">StormpathSocialProvider</span><span class="p">:</span> <span class="kt">StormpathSocialProviderConfiguration</span><span class="p">]()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:FC9Stormpath22StormpathConfigurationcFMS0_FT_S0_"></a>
                     <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
                     <a class="token" href="#/s:FC9Stormpath22StormpathConfigurationcFMS0_FT_S0_">init()</a>
@@ -347,7 +417,7 @@ values after initialization to customize this object.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/stormpath/stormpath-sdk-swift" target="_blank" rel="external">Stormpath</a>. All rights reserved. (Last updated: 2016-02-24)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/stormpath/stormpath-sdk-ios" target="_blank" rel="external">Stormpath</a>. All rights reserved. (Last updated: 2016-03-10)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

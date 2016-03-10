@@ -8,12 +8,22 @@
     <script src="js/jquery.min.js" defer></script>
     <script src="js/jazzy.js" defer></script>
     
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-29159574-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
   </head>
   <body>
     <a title="Stormpath  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">Stormpath Docs</a> (94% documented)</p>
+        <p><a href="index.html">Stormpath Docs</a> (100% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -44,6 +54,9 @@
               <li class="nav-group-task">
                 <a href="Classes/StormpathError.html">StormpathError</a>
               </li>
+              <li class="nav-group-task">
+                <a href="Classes/StormpathSocialProviderConfiguration.html">StormpathSocialProviderConfiguration</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -51,6 +64,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="Enums/AccountStatus.html">AccountStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/StormpathSocialProvider.html">StormpathSocialProvider</a>
               </li>
             </ul>
           </li>
@@ -98,7 +114,7 @@
 <a href='#cocoapods' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='cocoapods'>CocoaPods</h2>
 
 <p>Stormpath is available through <a href="https://cocoapods.org/">CocoaPods</a>. Add this line to your <code>Podfile</code> to begin:</p>
-<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'Stormpath'</span><span class="p">,</span> <span class="s1">'~&gt; 1.1'</span>
+<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'Stormpath'</span><span class="p">,</span> <span class="s1">'~&gt; 1.2'</span>
 </code></pre>
 
 <p>Don&rsquo;t forget to uncomment use_frameworks! as well:</p>
@@ -107,7 +123,7 @@
 <a href='#carthage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='carthage'>Carthage</h2>
 
 <p>To use Stormpath with <a href="https://github.com/Carthage/Carthage">Carthage</a>, specify it in your <code>Cartfile</code>:</p>
-<pre class="highlight plaintext"><code>github "stormpath/stormpath-sdk-swift" ~&gt; 1.1
+<pre class="highlight plaintext"><code>github "stormpath/stormpath-sdk-swift" ~&gt; 1.2
 </code></pre>
 <a href='#usage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='usage'>Usage</h1>
 
@@ -162,7 +178,68 @@ account.surname = "McExample"
         // We could not authenticate the user with the given credentials. Handle the error. 
         return
     }
-    // The user is now logged in, and the Stormpath access token will now be set!
+    // The user is now logged in, and you can use the Stormpath access token to make API requests!
+}
+</code></pre>
+<a href='#logging_in_with_facebook_or_google' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='logging_in_with_facebook_or_google'>Logging in with Facebook or Google</h2>
+
+<p>Stormpath also supports logging in with Facebook or Google. There are two flows for enabling this:</p>
+
+<ol>
+<li>Let Stormpath handle the Facebook / Google Login.</li>
+<li>Use the Facebook / Google iOS SDK to get an access token, and pass it to Stormpath to log in.</li>
+</ol>
+
+<p>We&rsquo;ve made it extremely easy to set up social login without using the Facebook / Google SDK, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to <q>Advanced ____ Login</q>). </p>
+<a href='#setting_up_your_appdelegate' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='setting_up_your_appdelegate'>Setting up your AppDelegate</h3>
+
+<p>In your Xcode project, add the following methods to your <code>AppDelegate</code>:</p>
+<pre class="highlight plaintext"><code>// Only needed for iOS 9
+func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -&gt; Bool {
+    return Stormpath.sharedSession.application(app, openURL: url, options: options)
+}
+
+func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -&gt; Bool {
+    return Stormpath.sharedSession.application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+}
+</code></pre>
+<a href='#setting_up_facebook_login' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='setting_up_facebook_login'>Setting up Facebook Login</h3>
+
+<p>To get started, you first need to <a href="https://developers.facebook.com/?advanced_app_create=true">register an application</a> with Facebook. After registering your app, go into your app dashboard&rsquo;s settings page. Click <q>Add Platform</q>, and fill in your Bundle ID, and turn <q>Single Sign On</q> on. </p>
+
+<p>Then, <a href="https://api.stormpath.com/login">sign into Stormpath</a> and add a Facebook directory to your account. Fill the App ID and Secret with the values given to you in the Facebook app dashboard. Then, add the directory to your Stormpath application. </p>
+
+<p>Finally, open up your App&rsquo;s Xcode project and go to the project&rsquo;s info tab. Under <q>URL Types</q>, add a new entry, and in the URL schemes form field, type in <code>fb[APP_ID_HERE]</code>, replacing <code>[APP_ID_HERE]</code> with your Facebook App ID. </p>
+
+<p>Then, you can initiate the login screen by calling: </p>
+<pre class="highlight plaintext"><code>Stormpath.sharedSession.login(socialProvider: .Facebook) { (success, error) -&gt; Void in
+    // This callback is the same as the regular Stormpath.login callback. 
+    // If the user cancels the login, the login was never started, and
+    // this callback will not be called.
+}
+</code></pre>
+<a href='#setting_up_google_login' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='setting_up_google_login'>Setting up Google Login</h3>
+
+<p>To get started, you first need to <a href="https://console.developers.google.com/project">register an application</a> with Google. Click <q>Enable and Manage APIs</q>, and then the credentials tab. Create two sets of OAuth Client IDs, one as <q>Web Application</q>, and one as <q>iOS</q>. </p>
+
+<p>Then, <a href="https://api.stormpath.com/login">sign into Stormpath</a> and add a Google directory to your account. Fill in the Client ID and Secret with the values given to you for the web client. (You can fill in <q>Google Authorized Redirect URI</q> with <code>http://YOURSERVER/callbacks/google</code>. Then, add the directory to your Stormpath application. </p>
+
+<p>Finally, open up your App&rsquo;s Xcode project and go to the project&rsquo;s info tab. Under <q>URL Types</q>, add a new entry, and in the URL schemes form field, type in your Google iOS Client&rsquo;s <code>iOS URL scheme</code> from the Google Developer Console. </p>
+
+<p>Then, you can initiate the login screen by calling: </p>
+<pre class="highlight plaintext"><code>Stormpath.sharedSession.login(socialProvider: .Google) { (success, error) -&gt; Void in
+    // Same callback as above
+}
+</code></pre>
+<a href='#using_the_google_or_facebook_sdk' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='using_the_google_or_facebook_sdk'>Using the Google or Facebook SDK</h3>
+
+<p>If you&rsquo;re using the <a href="https://developers.facebook.com/docs/facebook-login/ios">Facebook SDK</a> or <a href="https://developers.google.com/identity/sign-in/ios/">Google SDK</a> for your app, follow their setup instructions instead. Once you successfully sign in with their SDK, utilize the following methods to send your access token to Stormpath, and log in your user: </p>
+<pre class="highlight plaintext"><code>Stormpath.sharedSession.login(socialProvider: .Facebook, accessToken: FBSDKAccessToken.currentAccessToken().tokenString) { (success, error) -&gt; Void in
+    // Same callback as above
+}
+
+Stormpath.sharedSession.login(socialProvider: .Google, accessToken: GIDSignIn.sharedInstance().currentUser.authentication.accessToken) { (success, error) -&gt; Void in
+    // Same callback as above
 }
 </code></pre>
 <a href='#using_the_access_token' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='using_the_access_token'>Using the Access Token</h2>
@@ -264,7 +341,7 @@ Alamofire.request(.GET, url, headers: headers)
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/stormpath/stormpath-sdk-swift" target="_blank" rel="external">Stormpath</a>. All rights reserved. (Last updated: 2016-02-24)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/stormpath/stormpath-sdk-ios" target="_blank" rel="external">Stormpath</a>. All rights reserved. (Last updated: 2016-03-10)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
