@@ -119,7 +119,9 @@ public final class Stormpath: NSObject {
       - completionHandler: A block of code that is called back on success or 
         failure.
      */
-    public func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
+    // Making this internal for now, since we don't support auth codes for FB / 
+    // Google
+    func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.login(socialProvider: provider, authorizationCode: authorizationCode, completionHandler: completionHandler)
     }
     
