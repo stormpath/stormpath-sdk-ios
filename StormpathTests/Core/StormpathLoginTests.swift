@@ -24,6 +24,7 @@ class StormpathLoginTests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
+        
     }
     
     func testThatWeCanLoginWithAValidUser() {
@@ -87,6 +88,37 @@ class StormpathLoginTests: XCTestCase {
             
             expectation.fulfill()
         }
+        waitForExpectationsWithTimeout(timeout, handler: nil)
+    }
+    
+//    func testThatWeCanLoginWithFacebook() {
+//        let expectation = expectationWithDescription("We should be able to login with a valid Facebook access token")
+//        let token = "INSERTTOKENHER"
+//        
+//        stormpath.login(.Facebook, accessToken: token) { (success, error) -> Void in
+//            XCTAssertTrue(success, "Login should be successful.")
+//            XCTAssertNil(error, "Error should be nil, not \(error?.localizedDescription)")
+//            XCTAssertNotNil(self.stormpath.accessToken, "Access token should not be nil")
+//            XCTAssertNotNil(self.stormpath.refreshToken, "Refresh token should not be nil")
+//            
+//            expectation.fulfill()
+//        }
+//        
+//        waitForExpectationsWithTimeout(timeout, handler: nil)
+//    }
+    
+    func testThatWeCannotLoginWithInvalidFacebookToken() {
+        let expectation = expectationWithDescription("We should not be able to login with an invalid Facebook access token")
+        let token = "GarbageToken"
+        
+        stormpath.login(socialProvider: .Facebook, accessToken: token) { (success, error) -> Void in
+            XCTAssertFalse(success, "Login should not be successful")
+            XCTAssertNotNil(error, "Error should not be empty")
+            XCTAssertEqual(error?.code, 400, "Error should be 400 Bad Request with a json message. Error is \(error?.localizedDescription)")
+            
+            expectation.fulfill()
+        }
+        
         waitForExpectationsWithTimeout(timeout, handler: nil)
     }
 }

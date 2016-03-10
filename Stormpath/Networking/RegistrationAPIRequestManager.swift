@@ -32,15 +32,19 @@ class RegistrationAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
         if let user = Account(fromJSON: data) {
-            executeCallback(user, error: nil)
+            performCallback(user, error: nil)
         } else {
-            executeCallback(nil, error: StormpathError.APIResponseError) 
+            performCallback(error: StormpathError.APIResponseError)
         }
     }
     
-    override func executeCallback(parameters: AnyObject?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.callback(parameters as? Account, error)
+    override func performCallback(error error: NSError?) {
+        performCallback(nil, error: error)
+    }
+    
+    func performCallback(account: Account?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.callback(account, error)
         }
     }
 }

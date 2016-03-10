@@ -62,6 +62,15 @@ public class StormpathConfiguration: NSObject {
     }
     
     /**
+     Endpoint to login
+     */
+    public var loginEndpoint = "/login" {
+        didSet {
+            loginEndpoint = loginEndpoint.withLeadingSlash
+        }
+    }
+    
+    /**
      Endpoint to logout
      */
     public var logoutEndpoint = "/logout" {
@@ -77,6 +86,9 @@ public class StormpathConfiguration: NSObject {
         }
     }
     
+    /// App IDs for social providers
+    public var socialProviders = [StormpathSocialProvider: StormpathSocialProviderConfiguration]()
+    
     /**
      Initializer for StormpathConfiguration. The initializer pulls defaults from 
      the Info.plist file, and falls back to default SDK values. Modify the 
@@ -84,6 +96,12 @@ public class StormpathConfiguration: NSObject {
      */
     public override init() {
         super.init()
+        
+        loadSocialProviderAppIds()
+        loadStormpathConfigurationFromInfoPlist()
+    }
+    
+    private func loadStormpathConfigurationFromInfoPlist() {
         guard let stormpathInfo = NSBundle.mainBundle().infoDictionary?["Stormpath"] as? [String: AnyObject] else {
             return
         }
@@ -98,8 +116,45 @@ public class StormpathConfiguration: NSObject {
         verifyEmailEndpoint = (customEndpoints["verifyEmail"] as? String) ?? verifyEmailEndpoint
         forgotPasswordEndpoint = (customEndpoints["forgotPassword"] as? String) ?? forgotPasswordEndpoint
         oauthEndpoint = (customEndpoints["oauth"] as? String) ?? oauthEndpoint
+        loginEndpoint = (customEndpoints["login"] as? String) ?? loginEndpoint
         logoutEndpoint = (customEndpoints["logout"] as? String) ?? logoutEndpoint
         registerEndpoint = (customEndpoints["register"] as? String) ?? registerEndpoint
+    }
+    
+    private func loadSocialProviderAppIds() {
+        
+        guard let urlTypes = NSBundle.mainBundle().infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
+            return
+        }
+        
+        // Convert the complex dictionary into an array of URL schemes
+        let urlSchemes = urlTypes.flatMap({ ($0["CFBundleURLSchemes"] as? [String])?.first })
+        
+        // If there's a match, add it to the list of App IDs.
+        for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
+            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(handler.urlSchemePrefix) ? $0 : nil}).first, appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
+                socialProviders[socialProvider] = StormpathSocialProviderConfiguration(appId: appId, urlScheme: urlScheme)
+            }
+        }
+    }
+    
+    private func appIdFrom(urlScheme: String, socialProvider: StormpathSocialProvider) -> String? {
+        switch socialProvider {
+        case .Facebook:
+            // Turn fb12345 to 12345
+            if let range = urlScheme.rangeOfString("\\d+", options: .RegularExpressionSearch) {
+                return urlScheme.substringWithRange(range)
+            }
+        case .Google:
+            // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into 
+            // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes 
+            // reversing things.
+            
+            return urlScheme.componentsSeparatedByString(".").reverse().joinWithSeparator(".")
+        }
+        
+        // Fallback if all else fails
+        return nil
     }
 }
 

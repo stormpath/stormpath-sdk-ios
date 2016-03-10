@@ -1,9 +1,9 @@
 # Stormpath iOS SDK
 
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-swift)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-ios)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
-[![codebeat badge](https://codebeat.co/badges/0038aa1f-d481-4ad0-a244-3a6d803c3dbe)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-swift)
+[![codebeat badge](https://codebeat.co/badges/0038aa1f-d481-4ad0-a244-3a6d803c3dbe)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-ios)
 
 The iOS Library for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
 
@@ -32,7 +32,7 @@ If you're just testing, it's pretty quick to set up a server using the [express 
 Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod "Stormpath" ~> 1.1
+pod 'Stormpath', '~> 1.2'
 ```
 
 Don't forget to uncomment use_frameworks! as well:
@@ -46,7 +46,7 @@ use_frameworks!
 To use Stormpath with [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
 
 ```ogdl
-github "stormpath/stormpath-sdk-swift" ~> 1.1
+github "stormpath/stormpath-sdk-ios" ~> 1.2
 ```
 
 # Usage
@@ -121,7 +121,79 @@ Stormpath.sharedSession.login("user@example.com", password: "ExamplePassword") {
         // We could not authenticate the user with the given credentials. Handle the error. 
         return
     }
-    // The user is now logged in, and the Stormpath access token will now be set!
+    // The user is now logged in, and you can use the Stormpath access token to make API requests!
+}
+```
+
+## Logging in with Facebook or Google
+
+Stormpath also supports logging in with Facebook or Google. There are two flows for enabling this:
+
+1. Let Stormpath handle the Facebook / Google Login.
+2. Use the Facebook / Google iOS SDK to get an access token, and pass it to Stormpath to log in.
+
+We've made it extremely easy to set up social login without using the Facebook / Google SDK, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to "Advanced ____ Login"). 
+
+### Setting up your AppDelegate
+
+In your Xcode project, add the following methods to your `AppDelegate`:
+
+```Swift
+// Only needed for iOS 9
+func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+    return Stormpath.sharedSession.application(app, openURL: url, options: options)
+}
+    
+func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+    return Stormpath.sharedSession.application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+}
+```
+
+### Setting up Facebook Login
+
+To get started, you first need to [register an application](https://developers.facebook.com/?advanced_app_create=true) with Facebook. After registering your app, go into your app dashboard's settings page. Click "Add Platform", and fill in your Bundle ID, and turn "Single Sign On" on. 
+
+Then, [sign into Stormpath](https://api.stormpath.com/login) and add a Facebook directory to your account. Fill the App ID and Secret with the values given to you in the Facebook app dashboard. Then, add the directory to your Stormpath application. 
+
+Finally, open up your App's Xcode project and go to the project's info tab. Under "URL Types", add a new entry, and in the URL schemes form field, type in `fb[APP_ID_HERE]`, replacing `[APP_ID_HERE]` with your Facebook App ID. 
+
+Then, you can initiate the login screen by calling: 
+
+```Swift
+Stormpath.sharedSession.login(socialProvider: .Facebook) { (success, error) -> Void in
+    // This callback is the same as the regular Stormpath.login callback. 
+    // If the user cancels the login, the login was never started, and
+    // this callback will not be called.
+}
+```
+
+### Setting up Google Login
+
+To get started, you first need to [register an application](https://console.developers.google.com/project) with Google. Click "Enable and Manage APIs", and then the credentials tab. Create two sets of OAuth Client IDs, one as "Web Application", and one as "iOS". 
+
+Then, [sign into Stormpath](https://api.stormpath.com/login) and add a Google directory to your account. Fill in the Client ID and Secret with the values given to you for the web client. (You can fill in "Google Authorized Redirect URI" with `http://YOURSERVER/callbacks/google`. Then, add the directory to your Stormpath application. 
+
+Finally, open up your App's Xcode project and go to the project's info tab. Under "URL Types", add a new entry, and in the URL schemes form field, type in your Google iOS Client's `iOS URL scheme` from the Google Developer Console. 
+
+Then, you can initiate the login screen by calling: 
+
+```Swift
+Stormpath.sharedSession.login(socialProvider: .Google) { (success, error) -> Void in
+	// Same callback as above
+}
+```
+
+### Using the Google or Facebook SDK
+
+If you're using the [Facebook SDK](https://developers.facebook.com/docs/facebook-login/ios) or [Google SDK](https://developers.google.com/identity/sign-in/ios/) for your app, follow their setup instructions instead. Once you successfully sign in with their SDK, utilize the following methods to send your access token to Stormpath, and log in your user: 
+
+```Swift
+Stormpath.sharedSession.login(socialProvider: .Facebook, accessToken: FBSDKAccessToken.currentAccessToken().tokenString) { (success, error) -> Void in
+	// Same callback as above
+}
+
+Stormpath.sharedSession.login(socialProvider: .Google, accessToken: GIDSignIn.sharedInstance().currentUser.authentication.accessToken) { (success, error) -> Void in
+	// Same callback as above
 }
 ```
 
