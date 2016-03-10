@@ -32,7 +32,7 @@ If you're just testing, it's pretty quick to set up a server using the [express 
 Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod 'Stormpath', '~> 1.1'
+pod 'Stormpath', '~> 1.2'
 ```
 
 Don't forget to uncomment use_frameworks! as well:
@@ -46,7 +46,7 @@ use_frameworks!
 To use Stormpath with [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
 
 ```ogdl
-github "stormpath/stormpath-sdk-swift" ~> 1.1
+github "stormpath/stormpath-sdk-swift" ~> 1.2
 ```
 
 # Usage
