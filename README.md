@@ -3,13 +3,13 @@
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-ios)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
-[![codebeat badge](https://codebeat.co/badges/0038aa1f-d481-4ad0-a244-3a6d803c3dbe)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-ios)
+[![codebeat badge](https://codebeat.co/badges/6b76c7c6-f924-40f6-8ce0-42d165cf6a17)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-ios)
 
 The iOS Library for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
 
 # Requirements
 
-iOS 8.0+ / Xcode 7.1+
+iOS 8.0+ / Xcode 7.0+
 
 # Set up
 
@@ -132,7 +132,7 @@ Stormpath also supports logging in with Facebook or Google. There are two flows 
 1. Let Stormpath handle the Facebook / Google Login.
 2. Use the Facebook / Google iOS SDK to get an access token, and pass it to Stormpath to log in.
 
-We've made it extremely easy to set up social login without using the Facebook / Google SDK, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to "Advanced ____ Login"). 
+We've made it extremely easy to set up social login without using the Facebook / Google SDK, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to [Using the Facebook or Google SDK](#using-the-google-or-facebook-sdk)). 
 
 ### Setting up your AppDelegate
 
