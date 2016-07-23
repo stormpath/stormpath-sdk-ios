@@ -27,9 +27,9 @@ public class StormpathConfiguration: NSObject {
     public static var defaultConfiguration = StormpathConfiguration()
     
     /// Configuration parameter for the API URL.
-    public var APIURL = NSURL(string: "http://localhost:3000")! {
+    public var APIURL = URL(string: "http://localhost:3000")! {
         didSet {
-            APIURL = APIURL.absoluteString.withoutTrailingSlash.asURL ?? APIURL
+            APIURL = APIURL.absoluteString!.withoutTrailingSlash.asURL ?? APIURL
         }
     }
     
@@ -102,7 +102,7 @@ public class StormpathConfiguration: NSObject {
     }
     
     private func loadStormpathConfigurationFromInfoPlist() {
-        guard let stormpathInfo = NSBundle.mainBundle().infoDictionary?["Stormpath"] as? [String: AnyObject] else {
+        guard let stormpathInfo = Bundle.main.infoDictionary?["Stormpath"] as? [String: AnyObject] else {
             return
         }
         
@@ -123,7 +123,7 @@ public class StormpathConfiguration: NSObject {
     
     private func loadSocialProviderAppIds() {
         
-        guard let urlTypes = NSBundle.mainBundle().infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
+        guard let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
             return
         }
         
@@ -138,19 +138,19 @@ public class StormpathConfiguration: NSObject {
         }
     }
     
-    private func appIdFrom(urlScheme: String, socialProvider: StormpathSocialProvider) -> String? {
+    private func appIdFrom(_ urlScheme: String, socialProvider: StormpathSocialProvider) -> String? {
         switch socialProvider {
-        case .Facebook:
+        case .facebook:
             // Turn fb12345 to 12345
-            if let range = urlScheme.rangeOfString("\\d+", options: .RegularExpressionSearch) {
-                return urlScheme.substringWithRange(range)
+            if let range = urlScheme.range(of: "\\d+", options: .regularExpression) {
+                return urlScheme.substring(with: range)
             }
-        case .Google:
+        case .google:
             // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into 
             // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes 
             // reversing things.
             
-            return urlScheme.componentsSeparatedByString(".").reverse().joinWithSeparator(".")
+            return urlScheme.components(separatedBy: ".").reversed().joined(separator: ".")
         }
         
         // Fallback if all else fails
@@ -170,13 +170,13 @@ private extension String {
     
     var withoutTrailingSlash: String {
         if hasSuffix("/") {
-            return substringToIndex(endIndex.advancedBy(-1))
+            return substring(to: characters.index(endIndex, offsetBy: -1))
         } else {
             return self
         }
     }
     
-    var asURL: NSURL? {
-        return NSURL(string: self)
+    var asURL: URL? {
+        return URL(string: self)
     }
 }
