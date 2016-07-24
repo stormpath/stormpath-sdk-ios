@@ -19,8 +19,8 @@ enum LogLevel {
 
 final class Logger {
 	
-	static let logLevels: [Bool:LogLevel] = [false: .debug, true: .none]
-	static let logLevel = logLevels[_isDebugAssertConfiguration()]!
+    static let logLevels: [Bool:LogLevel] = [false: .debug, true: .none]
+    static let logLevel = logLevels[_isDebugAssertConfiguration()]!
     
     class func log(_ string: String) {
         
