@@ -132,7 +132,7 @@ public class StormpathConfiguration: NSObject {
         
         // If there's a match, add it to the list of App IDs.
         for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
-            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(handler.urlSchemePrefix) ? $0 : nil}).first, appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
+            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(handler.urlSchemePrefix) ? $0 : nil}).first, let appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
                 socialProviders[socialProvider] = StormpathSocialProviderConfiguration(appId: appId, urlScheme: urlScheme)
             }
         }

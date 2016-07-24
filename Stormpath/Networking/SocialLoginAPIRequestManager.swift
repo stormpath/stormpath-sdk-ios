@@ -41,7 +41,7 @@ class SocialLoginAPIRequestManager: APIRequestManager {
         let accessTokenRegex = "(?<=access_token=)[^;]*"
         let refreshTokenRegex = "(?<=refresh_token=)[^;]*"
         
-        guard let setCookieHeaders = response.allHeaderFields["Set-Cookie"] as? String, accessTokenRange = setCookieHeaders.range(of: accessTokenRegex, options: .regularExpression) else {
+        guard let setCookieHeaders = response.allHeaderFields["Set-Cookie"] as? String, let accessTokenRange = setCookieHeaders.range(of: accessTokenRegex, options: .regularExpression) else {
             performCallback(StormpathError.APIResponseError)
             return
         }

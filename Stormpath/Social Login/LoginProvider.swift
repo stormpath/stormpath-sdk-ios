@@ -49,7 +49,7 @@ extension URL {
         for pair in inputPairs {
             let split = pair.components(separatedBy: "=")
             if split.count == 2 {
-                if let key = split[0].removingPercentEncoding, value = split[1].removingPercentEncoding {
+                if let key = split[0].removingPercentEncoding, let value = split[1].removingPercentEncoding {
                     result[key] = value
                 }
             }

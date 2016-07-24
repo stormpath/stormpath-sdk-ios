@@ -59,16 +59,16 @@ public class Account: NSObject {
         
         super.init()
         guard let rootJSON = try? JSONSerialization.jsonObject(with: jsonData, options: []),
-            json = rootJSON["account"] as? [String: AnyObject],
-            hrefString = json["href"] as? String,
-            href = URL(string: hrefString),
-            username = json["username"] as? String,
-            email = json["email"] as? String,
-            givenName = json["givenName"] as? String,
-            surname = json["surname"] as? String,
-            createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
-            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
-            status = json["status"] as? String else {
+            let json = rootJSON["account"] as? [String: AnyObject],
+            let hrefString = json["href"] as? String,
+            let href = URL(string: hrefString),
+            let username = json["username"] as? String,
+            let email = json["email"] as? String,
+            let givenName = json["givenName"] as? String,
+            let surname = json["surname"] as? String,
+            let createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
+            let modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
+            let status = json["status"] as? String else {
                 return nil
         }
         
@@ -93,8 +93,8 @@ public class Account: NSObject {
         }
         
         if let customDataObject = json["customData"] as? [String: AnyObject],
-            customDataData = try? JSONSerialization.data(withJSONObject: customDataObject, options: []),
-            customDataString = String(data: customDataData, encoding: String.Encoding.utf8) {
+            let customDataData = try? JSONSerialization.data(withJSONObject: customDataObject, options: []),
+            let customDataString = String(data: customDataData, encoding: String.Encoding.utf8) {
             self.customData = customDataString
         }
     }

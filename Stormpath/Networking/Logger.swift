@@ -18,14 +18,9 @@ enum LogLevel {
 }
 
 final class Logger {
-    
-    static var logLevel: LogLevel {
-        if _isDebugAssertConfiguration() {
-            return .debug
-        } else {
-            return .none
-        }
-    }
+	
+	static let logLevels: [Bool:LogLevel] = [false: .debug, true: .none]
+	static let logLevel = logLevels[_isDebugAssertConfiguration()]!
     
     class func log(_ string: String) {
         
@@ -45,7 +40,7 @@ final class Logger {
             
             if logLevel == .verbose {
                 print("\(request.allHTTPHeaderFields!)")
-                if let bodyData = request.httpBody, bodyString = String.init(data: bodyData, encoding: String.Encoding.utf8) {
+                if let bodyData = request.httpBody, let bodyString = String.init(data: bodyData, encoding: String.Encoding.utf8) {
                     print("\(bodyString)")
                 }
             }

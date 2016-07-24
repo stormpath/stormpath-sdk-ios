@@ -53,7 +53,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         request.httpBody = "client_id=\(application.appId)&code=\(authorizationCode)&grant_type=authorization_code&redirect_uri=\(application.urlScheme):/oauth2callback&verifier=\(state)".data(using: String.Encoding.utf8)
         
         let task = session.dataTask(with: request) { (data, response, error) -> Void in
-            guard let data = data, json = try? JSONSerialization.jsonObject(with: data, options: []), accessToken = json["access_token"] as? String else {
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []), let accessToken = json["access_token"] as? String else {
                 callback(nil, StormpathError.InternalSDKError) // This request should not fail.
                 return
             }

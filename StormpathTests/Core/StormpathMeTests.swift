@@ -27,7 +27,7 @@ class StormpathMeTests: XCTestCase {
     }
     
     func testThatWeCanRetrieveAccount() {
-        let expectation = expectationWithDescription("We should be able to get an account object from the server.")
+        let expectation = self.expectation(description: "We should be able to get an account object from the server.")
         
         stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should be a success. ")
@@ -36,29 +36,29 @@ class StormpathMeTests: XCTestCase {
                 expectation.fulfill()
             })
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCannotRetrieveAccountWithoutAccessToken() {
-        let expectation = expectationWithDescription("We should not be able to retrieve the account without an access token.")
+        let expectation = self.expectation(description: "We should not be able to retrieve the account without an access token.")
         
         stormpath.me { (account, error) -> Void in
             XCTAssertNil(account, "Account should be nil")
             XCTAssertEqual(error?.code, 401, "Error should be 401 unauthorized, error is: \(error?.localizedDescription)")
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCanResetPasswordWithArbitraryEmail() {
-        let expectation = expectationWithDescription("We can always make a successful request to reset the password")
+        let expectation = self.expectation(description: "We can always make a successful request to reset the password")
         
         stormpath.resetPassword("fakeuser@example.com") { (success, error) -> Void in
             XCTAssertTrue(success, "Success should be true")
             XCTAssertNil(error, "There should be no error unless there's a network issue")
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
 }

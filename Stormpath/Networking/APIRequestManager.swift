@@ -44,7 +44,7 @@ class APIRequestManager: NSObject {
     }
     
     private func requestCompletionHandler(_ data: Data?, response: URLResponse?, error: NSError?) {
-        guard let response = response as? HTTPURLResponse, data = data where error == nil else {
+        guard let response = response as? HTTPURLResponse, let data = data, error == nil else {
             if let error = error {
                 Logger.logError(error)
             }

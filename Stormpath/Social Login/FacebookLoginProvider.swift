@@ -32,7 +32,7 @@ class FacebookLoginProvider: NSObject, LoginProvider {
         }
         
         // Get the access token, and check that the state is the same
-        guard let accessToken = url.fragmentDictionary["access_token"] where url.fragmentDictionary["state"] == "\(state)" else {
+        guard let accessToken = url.fragmentDictionary["access_token"], url.fragmentDictionary["state"] == "\(state)" else {
             callback(nil, StormpathError.InternalSDKError)
             return
         }

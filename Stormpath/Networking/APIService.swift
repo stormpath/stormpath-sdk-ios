@@ -57,7 +57,7 @@ final class APIService: NSObject {
     }
     
     func loginCompletionHandler(_ accessToken: String?, refreshToken: String?, error: NSError?, completionHandler: StormpathSuccessCallback?) {
-        guard let accessToken = accessToken where error == nil else {
+        guard let accessToken = accessToken, error == nil else {
             completionHandler?(false, error)
             return
         }
@@ -88,7 +88,7 @@ final class APIService: NSObject {
         }
         
         let requestManager = OAuthAPIRequestManager(withURL: oauthURL, refreshToken: refreshToken) { (accessToken, refreshToken, error) -> Void in
-            guard let accessToken = accessToken where error == nil else {
+            guard let accessToken = accessToken, error == nil else {
                 completionHandler?(false, error)
                 return
             }

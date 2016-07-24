@@ -110,7 +110,8 @@ class KeychainService {
         
         SecItemUpdate(keychainQueryDictionary, updateDictionary)
     }
-    
+	
+    @discardableResult
     private func deletestringForKey(_ key: String) -> Bool {
         let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         

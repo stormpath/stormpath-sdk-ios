@@ -33,7 +33,7 @@ class StormpathRegistrationTests: XCTestCase {
     // MARK: Tests
     
     func testThatStormpathCanRegisterWithValidData() {
-        let expectation = expectationWithDescription("We can register for an account.")
+        let expectation = self.expectation(description: "We can register for an account.")
     
         stormpath.register(accountInfo) { (account, error) -> Void in
             XCTAssertNotNil(account, "Account should not be nil")
@@ -41,11 +41,11 @@ class StormpathRegistrationTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatRegistrationResultsMatchRegistrationValues() {
-        let expectation = expectationWithDescription("The user data returned should match what we registered.")
+        let expectation = self.expectation(description: "The user data returned should match what we registered.")
         
         stormpath.register(accountInfo) { (account, error) -> Void in
             guard let account = account else {
@@ -57,11 +57,11 @@ class StormpathRegistrationTests: XCTestCase {
             XCTAssertEqual(self.accountInfo.surname, account.surname)
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCannotRegisterWithInvalidEmail() {
-        let expectation = expectationWithDescription("We cannot register for an account with an invalid email.")
+        let expectation = self.expectation(description: "We cannot register for an account with an invalid email.")
         accountInfo.email = "asdf"
         
         stormpath.register(accountInfo) { (account, error) -> Void in
@@ -70,11 +70,11 @@ class StormpathRegistrationTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatRegistrationReturnsErrorWithCorrectFormat() {
-        let expectation = expectationWithDescription("We should have a 400 error with a message")
+        let expectation = self.expectation(description: "We should have a 400 error with a message")
         accountInfo.email = "asdf"
         
         stormpath.register(accountInfo) { (account, error) -> Void in
@@ -86,11 +86,11 @@ class StormpathRegistrationTests: XCTestCase {
 
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatStormpathCannotRegisterWithExtraFields() {
-        let expectation = expectationWithDescription("We cannot pass arbitrary fields to the registration API")
+        let expectation = self.expectation(description: "We cannot pass arbitrary fields to the registration API")
         accountInfo.customFields["notAConfiguredParameter"] = "RandomData"
         
         stormpath.register(accountInfo) { (account, error) -> Void in
@@ -102,6 +102,6 @@ class StormpathRegistrationTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
 }

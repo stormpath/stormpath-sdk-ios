@@ -39,7 +39,7 @@ class OAuthAPIRequestManager: APIRequestManager {
     
     override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
         guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? NSDictionary,
-            accessToken = json["access_token"] as? String else {
+            let accessToken = json["access_token"] as? String else {
             //Callback and return
             performCallback(StormpathError.APIResponseError)
             return

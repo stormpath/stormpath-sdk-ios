@@ -42,7 +42,7 @@ class SocialLoginService: NSObject {
         for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
             if url.scheme!.hasPrefix(handler.urlSchemePrefix) {
                 SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
-                    guard let response = response where error == nil else {
+                    guard let response = response, error == nil else {
                         DispatchQueue.main.async(execute: {self.queuedCompletionHandler?(false, error)}) 
                         return
                     }
