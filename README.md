@@ -6,7 +6,7 @@
 [![codebeat badge](https://codebeat.co/badges/6b76c7c6-f924-40f6-8ce0-42d165cf6a17)](https://codebeat.co/projects/github-com-stormpath-stormpath-sdk-ios)
 [![Slack Status](https://talkstormpath.shipit.xyz/badge.svg)](https://talkstormpath.shipit.xyz)
 
-The iOS Library for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
+The iOS SDK for [Stormpath](https://stormpath.com/), a framework for authentication & authorization. 
 
 # Requirements
 
@@ -16,13 +16,16 @@ iOS 8.0+ / Xcode 7.0+
 
 Stormpath's iOS SDK allows developers utilizing Stormpath to quickly integrate authentication and token management into their app. 
 
-This SDK will not send direct requests to Stormpath, and instead assumes that you'll have a backend that conforms to the [Stormpath Framework Spec](https://github.com/stormpath/stormpath-framework-spec). With one of these backends, you'll be able to configure Stormpath so it fits your needs. 
-
 We're constantly iterating and improving the SDK, so please don't hesitate to send us your feedback! You can reach us via support@stormpath.com, or on the issue tracker for feature requests. 
 
 ## Setting up a Compatible Backend
 
-Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. The two backends that are currently compatible with the iOS SDK are: [express-stormpath](https://github.com/stormpath/express-stormpath) (v3.0) and [stormpath-laravel](https://github.com/stormpath/stormpath-laravel) (v0.3). 
+Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. These web framework integrations are:
+
+* [Express](https://docs.stormpath.com/nodejs/express/latest/)
+* [Laravel](https://docs.stormpath.com/php/laravel/latest/)
+* [.NET Core](https://docs.stormpath.com/dotnet/aspnetcore/latest/)
+* [Ruby on Rails](https://github.com/stormpath/stormpath-rails)
 
 If you're just testing, it's pretty quick to set up a server using the [express sample project](https://github.com/stormpath/express-stormpath-sample-project). 
 
@@ -197,6 +200,10 @@ Stormpath.sharedSession.login(socialProvider: .Google, accessToken: GIDSignIn.sh
 	// Same callback as above
 }
 ```
+
+### GitHub and LinkedIn login
+
+GitHub and LinkedIn login are not officially supported in the iOS SDK, but there is a way to implement it. [See this example project](https://github.com/edjiang/stormpath-mobile-linkedin-example) for more details. 
 
 ## Using the Access Token
 
