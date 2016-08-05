@@ -19,8 +19,8 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func prepareForRequest() {
-        request.HTTPMethod = "POST"
-        request.HTTPBody = account.jsonData
+        request.httpMethod = "POST"
+        request.httpBody = account.jsonData
     }
     
     override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
@@ -92,7 +92,7 @@ public class RegistrationModel: NSObject {
         self.password = password
     }
     
-    var jsonData: NSData? {
+    var jsonData: Data? {
         var registrationDictionary: [String: AnyObject] = customFields
         let accountDictionary = ["username": username, "email": email, "password": password, "givenName": givenName, "surname": surname]
         

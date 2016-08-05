@@ -147,10 +147,10 @@ public class StormpathConfiguration: NSObject {
             }
         case .google:
             // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into 
-            // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes 
+            // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes
             // reversing things.
             
-            return urlScheme.componentsSeparatedByString(".").reverse().joinWithSeparator(".")
+            return urlScheme.components(separatedBy: ".").reversed().joined(separator: ".")
         default:
             return nil
         }
