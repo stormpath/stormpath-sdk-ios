@@ -19,15 +19,8 @@ class RegistrationAPIRequestManager: APIRequestManager {
     }
     
     override func prepareForRequest() {
-        var registrationDictionary: [String: AnyObject] = account.customFields
-        let accountDictionary = ["username": account.username, "email": account.email, "password": account.password, "givenName": account.givenName, "surname": account.surname]
-        
-        for (key, value) in accountDictionary {
-            registrationDictionary[key] = value
-        }
-        
         request.HTTPMethod = "POST"
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
+        request.HTTPBody = account.jsonData
     }
     
     override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
@@ -97,5 +90,18 @@ public class RegistrationModel: NSObject {
     public init(email: String, password: String) {
         self.email = email
         self.password = password
+    }
+    
+    var jsonData: NSData? {
+        var registrationDictionary: [String: AnyObject] = customFields
+        let accountDictionary = ["username": username, "email": email, "password": password, "givenName": givenName, "surname": surname]
+        
+        for (key, value) in accountDictionary {
+            if value != "" {
+                registrationDictionary[key] = value
+            }
+        }
+        
+        return try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
     }
 }
