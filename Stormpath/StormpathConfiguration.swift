@@ -151,6 +151,8 @@ public class StormpathConfiguration: NSObject {
             // reversing things.
             
             return urlScheme.componentsSeparatedByString(".").reverse().joinWithSeparator(".")
+        default:
+            return nil
         }
         
         // Fallback if all else fails

@@ -26,6 +26,9 @@ class SocialLoginService: NSObject {
     }
     
     func beginLoginFlow(socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
+        guard socialProvider == .Facebook || socialProvider == .Google else {
+            preconditionFailure("To use LinkedIn or GitHub login, please use the login with access token method. ")
+        }
         guard let socialAppInfo = stormpath.configuration.socialProviders[socialProvider] else {
             preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
         }
