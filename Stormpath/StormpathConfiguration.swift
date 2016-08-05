@@ -29,7 +29,7 @@ public class StormpathConfiguration: NSObject {
     /// Configuration parameter for the API URL.
     public var APIURL = NSURL(string: "http://localhost:3000")! {
         didSet {
-            APIURL = APIURL.absoluteString.withoutTrailingSlash.asURL ?? APIURL
+            APIURL = APIURL.absoluteString!.withoutTrailingSlash.asURL ?? APIURL
         }
     }
     

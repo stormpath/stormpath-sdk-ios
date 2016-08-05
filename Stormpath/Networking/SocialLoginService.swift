@@ -43,7 +43,7 @@ class SocialLoginService: NSObject {
         
         // Check each prefix, and if there's one that matches, parse the response & login with the appropriate Stormpath social method
         for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
-            if url.scheme.hasPrefix(handler.urlSchemePrefix) {
+            if url.scheme!.hasPrefix(handler.urlSchemePrefix) {
                 SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
                     guard let response = response where error == nil else {
                         dispatch_async(dispatch_get_main_queue(), {self.queuedCompletionHandler?(false, error)}) 
