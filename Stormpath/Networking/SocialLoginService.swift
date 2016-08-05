@@ -25,7 +25,7 @@ class SocialLoginService: NSObject {
         self.stormpath = stormpath
     }
     
-    func beginLoginFlow(socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
+    func beginLoginFlow(_ socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
         guard socialProvider == .facebook || socialProvider == .google else {
             preconditionFailure("To use LinkedIn or GitHub login, please use the login with access token method. ")
         }
