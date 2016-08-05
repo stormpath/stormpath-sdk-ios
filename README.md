@@ -36,13 +36,14 @@ If you're just testing, it's pretty quick to set up a server using the [express 
 Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod 'Stormpath', '~> 1.2'
+pod 'Stormpath', '~> 1.3'
 ```
 
-Don't forget to uncomment use_frameworks! as well:
+v1.3 is written in Swift 2.2. Swift 2.3/3 support is available in a separate branch right now. You can add those via GitHub via:
 
 ```ruby
-use_frameworks!
+pod 'Stormpath', :git => 'https://github.com/Stormpath/stormpath-sdk-ios.git', :branch => 'swift2.3'
+pod 'Stormpath', :git => 'https://github.com/Stormpath/stormpath-sdk-ios.git', :branch => 'swift3'
 ```
 
 ## Carthage
