@@ -55,7 +55,7 @@ class KeychainService {
     
     // MARK: Core methods
     
-    func saveString(value: String?, key keyWithoutPrefix: String) {
+    func saveString(_ value: String?, key keyWithoutPrefix: String) {
         let key = prefix + keyWithoutPrefix
         guard let value = value else {
             deletestringForKey(key)
@@ -64,7 +64,7 @@ class KeychainService {
         
         var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
-        keychainQueryDictionary[SecValueData] = value.dataUsingEncoding(NSUTF8StringEncoding)
+        keychainQueryDictionary[SecValueData] = value.data(using: String.Encoding.utf8)
         keychainQueryDictionary[SecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
         
         let status: OSStatus = SecItemAdd(keychainQueryDictionary, nil)
@@ -77,7 +77,7 @@ class KeychainService {
         }
     }
     
-    func stringForKey(keyWithoutPrefix: String) -> String? {
+    func stringForKey(_ keyWithoutPrefix: String) -> String? {
         let key = prefix + keyWithoutPrefix
         var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         var result: AnyObject?
@@ -91,8 +91,8 @@ class KeychainService {
         
         if status == noErr {
             var stringValue: String?
-            if let data = result as? NSData {
-                stringValue = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+            if let data = result as? Data {
+                stringValue = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
                 return stringValue
             }
         }
@@ -102,16 +102,17 @@ class KeychainService {
     
     // MARK: Keychain access helpers
     
-    private func updateValue(value: String, key: String) {
+    private func updateValue(_ value: String, key: String) {
         let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
-        let valueData = value.dataUsingEncoding(NSUTF8StringEncoding)
+        let valueData = value.data(using: String.Encoding.utf8)
         let updateDictionary: NSDictionary = [SecValueData: valueData!]
         
         SecItemUpdate(keychainQueryDictionary, updateDictionary)
     }
-    
-    private func deletestringForKey(key: String) -> Bool {
+	
+    @discardableResult
+    private func deletestringForKey(_ key: String) -> Bool {
         let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
         
         let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
@@ -121,13 +122,13 @@ class KeychainService {
     
     // MARK: Keychain query dictionary
     
-    private func keychainQueryDictionaryForKey(key: String) -> [String: AnyObject] {
+    private func keychainQueryDictionaryForKey(_ key: String) -> [String: AnyObject] {
         var keychainQueryDictionary: [String: AnyObject] = [String: AnyObject]()
         
         keychainQueryDictionary[SecClass] = kSecClassGenericPassword
         keychainQueryDictionary[SecAttrService] = serviceName
         
-        let identifier: NSData? = key.dataUsingEncoding(NSUTF8StringEncoding)
+        let identifier: Data? = key.data(using: String.Encoding.utf8)
         keychainQueryDictionary[SecAttrGeneric] = identifier
         keychainQueryDictionary[SecAttrAccount] = identifier
         

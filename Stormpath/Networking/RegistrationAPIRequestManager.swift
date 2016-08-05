@@ -12,7 +12,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     var account: RegistrationModel
     var callback: StormpathAccountCallback
     
-    init(withURL url: NSURL, newAccount account: RegistrationModel, callback: StormpathAccountCallback) {
+    init(withURL url: URL, newAccount account: RegistrationModel, callback: StormpathAccountCallback) {
         self.account = account
         self.callback = callback
         super.init(withURL: url)
@@ -23,20 +23,20 @@ class RegistrationAPIRequestManager: APIRequestManager {
         request.HTTPBody = account.jsonData
     }
     
-    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+    override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
         if let user = Account(fromJSON: data) {
             performCallback(user, error: nil)
         } else {
-            performCallback(error: StormpathError.APIResponseError)
+            performCallback(StormpathError.APIResponseError)
         }
     }
     
-    override func performCallback(error error: NSError?) {
+    override func performCallback(_ error: NSError?) {
         performCallback(nil, error: error)
     }
     
-    func performCallback(account: Account?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) {
+    func performCallback(_ account: Account?, error: NSError?) {
+        DispatchQueue.main.async {
             self.callback(account, error)
         }
     }
@@ -102,6 +102,6 @@ public class RegistrationModel: NSObject {
             }
         }
         
-        return try? NSJSONSerialization.dataWithJSONObject(registrationDictionary, options: [])
+        return try? JSONSerialization.data(withJSONObject: registrationDictionary, options: [])
     }
 }

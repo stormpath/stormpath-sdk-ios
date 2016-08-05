@@ -28,7 +28,7 @@ class StormpathLoginTests: XCTestCase {
     }
     
     func testThatWeCanLoginWithAValidUser() {
-        let expectation = expectationWithDescription("We should be able to login with a valid user")
+        let expectation = self.expectation(description: "We should be able to login with a valid user")
         
         stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should be successful.")
@@ -38,11 +38,11 @@ class StormpathLoginTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCannotLoginWithAnInvalidUser() {
-        let expectation = expectationWithDescription("We shouldn't be able to login with invalid credentials")
+        let expectation = self.expectation(description: "We shouldn't be able to login with invalid credentials")
         
         stormpath.login("wefiaojef@awfiowjei.com", password: "awoiejfawoeifjawief") { (success, error) -> Void in
             XCTAssertFalse(success, "Login should not be successful")
@@ -51,11 +51,11 @@ class StormpathLoginTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCanRefreshAValidToken() {
-        let expectation = expectationWithDescription("We should be able to refresh a token. ")
+        let expectation = self.expectation(description: "We should be able to refresh a token. ")
         
         stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should have succeeded. We got error: \(error?.localizedDescription)")
@@ -71,11 +71,11 @@ class StormpathLoginTests: XCTestCase {
                 expectation.fulfill()
             })
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func testThatWeCannotRefreshAInvalidToken() {
-        let expectation = expectationWithDescription("We should not be able to refresh a garbage token")
+        let expectation = self.expectation(description: "We should not be able to refresh a garbage token")
         let garbageToken = "ThisIsInNoWayAValidToken"
         
         stormpath.refreshToken = garbageToken
@@ -88,7 +88,7 @@ class StormpathLoginTests: XCTestCase {
             
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
 //    func testThatWeCanLoginWithFacebook() {
@@ -108,10 +108,10 @@ class StormpathLoginTests: XCTestCase {
 //    }
     
     func testThatWeCannotLoginWithInvalidFacebookToken() {
-        let expectation = expectationWithDescription("We should not be able to login with an invalid Facebook access token")
+        let expectation = self.expectation(description: "We should not be able to login with an invalid Facebook access token")
         let token = "GarbageToken"
         
-        stormpath.login(socialProvider: .Facebook, accessToken: token) { (success, error) -> Void in
+        stormpath.login(socialProvider: .facebook, accessToken: token) { (success, error) -> Void in
             XCTAssertFalse(success, "Login should not be successful")
             XCTAssertNotNil(error, "Error should not be empty")
             XCTAssertEqual(error?.code, 400, "Error should be 400 Bad Request with a json message. Error is \(error?.localizedDescription)")
@@ -119,6 +119,6 @@ class StormpathLoginTests: XCTestCase {
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
 }
