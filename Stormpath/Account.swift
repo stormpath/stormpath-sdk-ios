@@ -119,7 +119,7 @@ public class Account: NSObject {
 private extension String {
     var dateFromISO8601Format: Date? {
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return dateFormatter.date(from: self)
     }

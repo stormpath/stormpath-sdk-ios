@@ -18,7 +18,7 @@ class APIRequestManager: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         if let version = Bundle(for: APIRequestManager.self).infoDictionary?["CFBundleShortVersionString"] as? String {
-            request.setValue("stormpath-sdk-ios/" + version + " iOS/" + UIDevice.current().systemVersion, forHTTPHeaderField: "X-Stormpath-Agent")
+            request.setValue("stormpath-sdk-ios/" + version + " iOS/" + UIDevice.current.systemVersion, forHTTPHeaderField: "X-Stormpath-Agent")
         }
     }
     
@@ -43,7 +43,7 @@ class APIRequestManager: NSObject {
         request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
     }
     
-    private func requestCompletionHandler(_ data: Data?, response: URLResponse?, error: NSError?) {
+    private func requestCompletionHandler(_ data: Data?, response: URLResponse?, error: Error?) {
         guard let response = response as? HTTPURLResponse, let data = data, error == nil else {
             if let error = error {
                 Logger.logError(error)
