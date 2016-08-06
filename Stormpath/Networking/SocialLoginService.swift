@@ -68,9 +68,9 @@ class SocialLoginService: NSObject {
     private func presentOAuthSafariView(_ url: URL) {
         if #available(iOS 9, *) {
             safari = SFSafariViewController(url: url)
-            UIApplication.shared().delegate?.window??.rootViewController?.present(safari!, animated: true, completion: nil)
+            UIApplication.shared.delegate?.window??.rootViewController?.present(safari!, animated: true, completion: nil)
         } else {
-            UIApplication.shared().openURL(url)
+            UIApplication.shared.openURL(url)
         }
     }
 }
