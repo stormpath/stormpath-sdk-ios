@@ -10,7 +10,7 @@ import Foundation
 
 class MeAPIRequestManager: APIRequestManager {
     var callback: StormpathAccountCallback
-    init(withURL url: URL, accessToken: String, callback: StormpathAccountCallback) {
+    init(withURL url: URL, accessToken: String, callback: @escaping StormpathAccountCallback) {
         self.callback = callback
         super.init(withURL: url)
         setAccessToken(accessToken)

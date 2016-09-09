@@ -12,7 +12,7 @@ class RegistrationAPIRequestManager: APIRequestManager {
     var account: RegistrationModel
     var callback: StormpathAccountCallback
     
-    init(withURL url: URL, newAccount account: RegistrationModel, callback: StormpathAccountCallback) {
+    init(withURL url: URL, newAccount account: RegistrationModel, callback: @escaping StormpathAccountCallback) {
         self.account = account
         self.callback = callback
         super.init(withURL: url)
@@ -93,7 +93,7 @@ public class RegistrationModel: NSObject {
     }
     
     var jsonData: Data? {
-        var registrationDictionary: [String: AnyObject] = customFields
+        var registrationDictionary: [String: Any] = customFields
         let accountDictionary = ["username": username, "email": email, "password": password, "givenName": givenName, "surname": surname]
         
         for (key, value) in accountDictionary {

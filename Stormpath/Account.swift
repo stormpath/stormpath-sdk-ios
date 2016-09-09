@@ -58,7 +58,7 @@ public class Account: NSObject {
         self.status = .enabled //will be overridden below; hack to allow obj-c to access property since primitive types can't be optional
         
         super.init()
-        guard let rootJSON = try? JSONSerialization.jsonObject(with: jsonData, options: []),
+        guard let rootJSON = (try? JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any],
             let json = rootJSON["account"] as? [String: AnyObject],
             let hrefString = json["href"] as? String,
             let href = URL(string: hrefString),

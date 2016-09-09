@@ -11,9 +11,9 @@ import Foundation
 class SocialLoginAPIRequestManager: APIRequestManager {
     var socialProvider: StormpathSocialProvider
     var callback: AccessTokenCallback
-    var postDictionary: [String: AnyObject]
+    var postDictionary: [String: Any]
     
-    init(withURL url: URL, accessToken: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
+    init(withURL url: URL, accessToken: String, socialProvider: StormpathSocialProvider, callback: @escaping AccessTokenCallback) {
         self.socialProvider = socialProvider
         self.callback = callback
         postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "accessToken": accessToken]]
@@ -21,7 +21,7 @@ class SocialLoginAPIRequestManager: APIRequestManager {
         super.init(withURL: url)
     }
     
-    init(withURL url: URL, authorizationCode: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
+    init(withURL url: URL, authorizationCode: String, socialProvider: StormpathSocialProvider, callback: @escaping AccessTokenCallback) {
         self.socialProvider = socialProvider
         self.callback = callback
         postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "code": authorizationCode]]
@@ -63,7 +63,7 @@ class SocialLoginAPIRequestManager: APIRequestManager {
     
     func performCallback(_ accessToken: String?, refreshToken: String?, error: NSError?) {
         DispatchQueue.main.async {
-            self.callback(accessToken: accessToken, refreshToken: refreshToken, error: error)
+            self.callback(accessToken, refreshToken, error)
         }
     }
 }

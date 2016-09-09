@@ -23,7 +23,7 @@ class FacebookLoginProvider: NSObject, LoginProvider {
         return URL(string: "https://www.facebook.com/dialog/oauth?\(queryString)")!
     }
     
-    func getResponseFromCallbackURL(_ url: URL, callback: LoginProviderCallback) {
+    func getResponseFromCallbackURL(_ url: URL, callback: @escaping LoginProviderCallback) {
         if(url.queryDictionary["error"] != nil) {
             // We are not even going to callback, because the user never started 
             // the login process in the first place. Error is always because

@@ -62,12 +62,12 @@ class KeychainService {
             return
         }
         
-        var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
+        var keychainQueryDictionary: [String: Any] = keychainQueryDictionaryForKey(key)
         
         keychainQueryDictionary[SecValueData] = value.data(using: String.Encoding.utf8)
         keychainQueryDictionary[SecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
         
-        let status: OSStatus = SecItemAdd(keychainQueryDictionary, nil)
+        let status: OSStatus = SecItemAdd(keychainQueryDictionary as CFDictionary, nil)
         
         // If the value exists, update it instead
         if status == errSecDuplicateItem {
@@ -79,14 +79,14 @@ class KeychainService {
     
     func stringForKey(_ keyWithoutPrefix: String) -> String? {
         let key = prefix + keyWithoutPrefix
-        var keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
+        var keychainQueryDictionary: [String: Any] = keychainQueryDictionaryForKey(key)
         var result: AnyObject?
     
         keychainQueryDictionary[SecMatchLimit] = kSecMatchLimitOne
         keychainQueryDictionary[SecReturnData] = kCFBooleanTrue
         
-        let status = withUnsafeMutablePointer(&result) {
-            SecItemCopyMatching(keychainQueryDictionary, UnsafeMutablePointer($0))
+        let status = withUnsafeMutablePointer(to: &result) {
+            SecItemCopyMatching(keychainQueryDictionary as CFDictionary, UnsafeMutablePointer($0))
         }
         
         if status == noErr {
@@ -103,27 +103,27 @@ class KeychainService {
     // MARK: Keychain access helpers
     
     private func updateValue(_ value: String, key: String) {
-        let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
+        let keychainQueryDictionary: [String: Any] = keychainQueryDictionaryForKey(key)
         
         let valueData = value.data(using: String.Encoding.utf8)
         let updateDictionary: NSDictionary = [SecValueData: valueData!]
         
-        SecItemUpdate(keychainQueryDictionary, updateDictionary)
+        SecItemUpdate(keychainQueryDictionary as CFDictionary, updateDictionary)
     }
 	
     @discardableResult
     private func deletestringForKey(_ key: String) -> Bool {
-        let keychainQueryDictionary: [String: AnyObject] = keychainQueryDictionaryForKey(key)
+        let keychainQueryDictionary: [String: Any] = keychainQueryDictionaryForKey(key)
         
-        let status: OSStatus =  SecItemDelete(keychainQueryDictionary);
+        let status: OSStatus =  SecItemDelete(keychainQueryDictionary as CFDictionary);
         
         return status == errSecSuccess
     }
     
     // MARK: Keychain query dictionary
     
-    private func keychainQueryDictionaryForKey(_ key: String) -> [String: AnyObject] {
-        var keychainQueryDictionary: [String: AnyObject] = [String: AnyObject]()
+    private func keychainQueryDictionaryForKey(_ key: String) -> [String: Any] {
+        var keychainQueryDictionary: [String: Any] = [String: AnyObject]()
         
         keychainQueryDictionary[SecClass] = kSecClassGenericPassword
         keychainQueryDictionary[SecAttrService] = serviceName

@@ -13,7 +13,7 @@ typealias LoginProviderCallback = (LoginProviderResponse?, NSError?) -> Void
 /// Protocol for external OAuth handlers
 protocol LoginProvider {
     var urlSchemePrefix: String { get }
-    func getResponseFromCallbackURL(_ url: URL, callback: LoginProviderCallback)
+    func getResponseFromCallbackURL(_ url: URL, callback: @escaping LoginProviderCallback)
     func authenticationRequestURL(_ application: StormpathSocialProviderConfiguration) -> URL
 }
 

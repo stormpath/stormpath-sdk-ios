@@ -21,7 +21,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         return URL(string: "https://accounts.google.com/o/oauth2/auth?\(queryString)")!
     }
     
-    func getResponseFromCallbackURL(_ callbackUrl: URL, callback: LoginProviderCallback) {
+    func getResponseFromCallbackURL(_ url: URL, callback: @escaping LoginProviderCallback) {
         // If the application is not set, we can't continue because we can't 
         // consume the auth code. This should not happen.
         guard let application = application else {
@@ -29,7 +29,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
             return
         }
         
-        if(callbackUrl.queryDictionary["error"] != nil) {
+        if(url.queryDictionary["error"] != nil) {
             // We are not even going to callback, because the user never started
             // the login process in the first place. Error is always because
             // people cancelled the login. (or a SDK error)
@@ -38,7 +38,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         
         // If we don't have an error or an auth code, something went wrong with 
         // the SDK implementation.
-        guard let authorizationCode = callbackUrl.queryDictionary["code"] else {
+        guard let authorizationCode = url.queryDictionary["code"] else {
             callback(nil, StormpathError.InternalSDKError)
             return
         }
@@ -53,7 +53,7 @@ class GoogleLoginProvider: NSObject, LoginProvider {
         request.httpBody = "client_id=\(application.appId)&code=\(authorizationCode)&grant_type=authorization_code&redirect_uri=\(application.urlScheme):/oauth2callback&verifier=\(state)".data(using: String.Encoding.utf8)
         
         let task = session.dataTask(with: request) { (data, response, error) -> Void in
-            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []), let accessToken = json["access_token"] as? String else {
+            guard let data = data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any], let accessToken = json["access_token"] as? String else {
                 callback(nil, StormpathError.InternalSDKError) // This request should not fail.
                 return
             }

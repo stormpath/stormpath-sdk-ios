@@ -12,20 +12,20 @@ class OAuthAPIRequestManager: APIRequestManager {
     var requestBody: String
     var callback: AccessTokenCallback
     
-    private init(withURL url: URL, requestBody: String, callback: AccessTokenCallback) {
+    private init(withURL url: URL, requestBody: String, callback: @escaping AccessTokenCallback) {
         self.requestBody = requestBody
         self.callback = callback
         
         super.init(withURL: url)
     }
     
-    convenience init(withURL url: URL, username: String, password: String, callback: AccessTokenCallback) {
+    convenience init(withURL url: URL, username: String, password: String, callback: @escaping AccessTokenCallback) {
         let requestBody = "username=\(username.formURLEncoded)&password=\(password.formURLEncoded)&grant_type=password"
         
         self.init(withURL: url, requestBody: requestBody, callback: callback)
     }
     
-    convenience init(withURL url: URL, refreshToken: String, callback: AccessTokenCallback) {
+    convenience init(withURL url: URL, refreshToken: String, callback: @escaping AccessTokenCallback) {
         let requestBody = String(format: "refresh_token=%@&grant_type=refresh_token", refreshToken)
         
         self.init(withURL: url, requestBody: requestBody, callback: callback)
@@ -38,7 +38,7 @@ class OAuthAPIRequestManager: APIRequestManager {
     }
     
     override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
-        guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? NSDictionary,
+        guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
             let accessToken = json["access_token"] as? String else {
             //Callback and return
             performCallback(StormpathError.APIResponseError)
@@ -55,7 +55,7 @@ class OAuthAPIRequestManager: APIRequestManager {
     
     func performCallback(_ accessToken: String?, refreshToken: String?, error: NSError?) {
         DispatchQueue.main.async { 
-            self.callback(accessToken: accessToken, refreshToken: refreshToken, error: error)
+            self.callback(accessToken, refreshToken, error)
         }
     }
 }

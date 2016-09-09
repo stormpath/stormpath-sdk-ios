@@ -14,7 +14,7 @@ class ResetPasswordAPIRequestManager: APIRequestManager {
     var email: String
     var callback: ResetPasswordAPIRequestCallback
     
-    init(withURL url: URL, email: String, callback: ResetPasswordAPIRequestCallback) {
+    init(withURL url: URL, email: String, callback: @escaping ResetPasswordAPIRequestCallback) {
         self.email = email
         self.callback = callback
         super.init(withURL: url)
