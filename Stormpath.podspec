@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'Stormpath'
-  s.version = '1.3'
+  s.version = '2.0'
   s.license = 'Apache 2.0'
   s.summary = 'iOS SDK for Stormpath identity API.'
   s.homepage = 'https://github.com/stormpath/stormpath-sdk-ios'
@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
   s.source_files = 'Stormpath/**/*.swift'
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0' }
 
   s.requires_arc = true
 end

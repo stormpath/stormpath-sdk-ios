@@ -11,9 +11,9 @@ import Foundation
 class SocialLoginAPIRequestManager: APIRequestManager {
     var socialProvider: StormpathSocialProvider
     var callback: AccessTokenCallback
-    var postDictionary: [String: AnyObject]
+    var postDictionary: [String: Any]
     
-    init(withURL url: NSURL, accessToken: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
+    init(withURL url: URL, accessToken: String, socialProvider: StormpathSocialProvider, callback: @escaping AccessTokenCallback) {
         self.socialProvider = socialProvider
         self.callback = callback
         postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "accessToken": accessToken]]
@@ -21,7 +21,7 @@ class SocialLoginAPIRequestManager: APIRequestManager {
         super.init(withURL: url)
     }
     
-    init(withURL url: NSURL, authorizationCode: String, socialProvider: StormpathSocialProvider, callback: AccessTokenCallback) {
+    init(withURL url: URL, authorizationCode: String, socialProvider: StormpathSocialProvider, callback: @escaping AccessTokenCallback) {
         self.socialProvider = socialProvider
         self.callback = callback
         postDictionary = ["providerData": ["providerId": socialProvider.stringValue(), "code": authorizationCode]]
@@ -30,40 +30,40 @@ class SocialLoginAPIRequestManager: APIRequestManager {
     }
     
     override func prepareForRequest() {
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(postDictionary, options: [])
-        request.HTTPMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: postDictionary, options: [])
+        request.httpMethod = "POST"
     }
     
-    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+    override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
         // Grab access token from cookies
         // Callback
         
         let accessTokenRegex = "(?<=access_token=)[^;]*"
         let refreshTokenRegex = "(?<=refresh_token=)[^;]*"
         
-        guard let setCookieHeaders = response.allHeaderFields["Set-Cookie"] as? String, accessTokenRange = setCookieHeaders.rangeOfString(accessTokenRegex, options: .RegularExpressionSearch) else {
-            performCallback(error: StormpathError.APIResponseError)
+        guard let setCookieHeaders = response.allHeaderFields["Set-Cookie"] as? String, let accessTokenRange = setCookieHeaders.range(of: accessTokenRegex, options: .regularExpression) else {
+            performCallback(StormpathError.APIResponseError)
             return
         }
         
-        let accessToken = setCookieHeaders.substringWithRange(accessTokenRange)
+        let accessToken = setCookieHeaders.substring(with: accessTokenRange)
         
         var refreshToken: String?
         
-        if let refreshTokenRange = setCookieHeaders.rangeOfString(refreshTokenRegex, options: .RegularExpressionSearch) {
-            refreshToken = setCookieHeaders.substringWithRange(refreshTokenRange)
+        if let refreshTokenRange = setCookieHeaders.range(of: refreshTokenRegex, options: .regularExpression) {
+            refreshToken = setCookieHeaders.substring(with: refreshTokenRange)
         }
         
         performCallback(accessToken, refreshToken: refreshToken, error: nil)
     }
     
-    override func performCallback(error error: NSError?) {
+    override func performCallback(_ error: NSError?) {
         performCallback(nil, refreshToken: nil, error: error)
     }
     
-    func performCallback(accessToken: String?, refreshToken: String?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.callback(accessToken: accessToken, refreshToken: refreshToken, error: error)
+    func performCallback(_ accessToken: String?, refreshToken: String?, error: NSError?) {
+        DispatchQueue.main.async {
+            self.callback(accessToken, refreshToken, error)
         }
     }
 }

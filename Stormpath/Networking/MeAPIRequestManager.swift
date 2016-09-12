@@ -10,26 +10,26 @@ import Foundation
 
 class MeAPIRequestManager: APIRequestManager {
     var callback: StormpathAccountCallback
-    init(withURL url: NSURL, accessToken: String, callback: StormpathAccountCallback) {
+    init(withURL url: URL, accessToken: String, callback: @escaping StormpathAccountCallback) {
         self.callback = callback
         super.init(withURL: url)
         setAccessToken(accessToken)
     }
     
-    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
+    override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
         guard let account = Account(fromJSON: data) else {
-            performCallback(error: StormpathError.APIResponseError)
+            performCallback(StormpathError.APIResponseError)
             return
         }
         performCallback(account, error: nil)
     }
     
-    override func performCallback(error error: NSError?) {
+    override func performCallback(_ error: NSError?) {
         performCallback(nil, error: error)
     }
     
-    func performCallback(account: Account?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) {
+    func performCallback(_ account: Account?, error: NSError?) {
+        DispatchQueue.main.async {
             self.callback(account, error)
         }
     }

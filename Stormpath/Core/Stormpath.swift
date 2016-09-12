@@ -59,7 +59,7 @@ public final class Stormpath: NSObject {
        - completionHandler: The completion block to be invoked after the API 
          request is finished. It returns an account object.
     */
-    public func register(account: RegistrationModel, completionHandler: StormpathAccountCallback? = nil) {
+    public func register(_ account: RegistrationModel, completionHandler: StormpathAccountCallback? = nil) {
         apiService.register(newAccount: account, completionHandler: completionHandler)
     }
     
@@ -75,7 +75,7 @@ public final class Stormpath: NSObject {
          request is finished. If the method fails, the error will be passed in 
          the completion.
     */
-    public func login(username: String, password: String, completionHandler: StormpathSuccessCallback? = nil) {
+    public func login(_ username: String, password: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.login(username, password: password, completionHandler: completionHandler)
     }
     
@@ -131,7 +131,7 @@ public final class Stormpath: NSObject {
      - parameters:
        - completionHandler: Completion block invoked
      */
-    public func me(completionHandler: StormpathAccountCallback? = nil) {
+    public func me(_ completionHandler: StormpathAccountCallback? = nil) {
         apiService.me(completionHandler)
     }
     
@@ -153,20 +153,20 @@ public final class Stormpath: NSObject {
          request is finished. This will always succeed if the API call is 
          successful.
     */
-    public func resetPassword(email: String, completionHandler: StormpathSuccessCallback? = nil) {
+    public func resetPassword(_ email: String, completionHandler: StormpathSuccessCallback? = nil) {
         apiService.resetPassword(email, completionHandler: completionHandler)
     }
     
     /// Deep link handler (iOS9)
-    public func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+    public func application(_ app: UIApplication, openURL url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
         
         return socialLoginService.handleCallbackURL(url)
     }
     
     
     /// Deep link handler (<iOS9)
-    public func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return self.application(application, openURL: url, options: [String: AnyObject]())
+    public func application(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return self.application(application, openURL: url, options: [UIApplicationOpenURLOptionsKey: Any]())
     }
     
     /**
@@ -205,7 +205,7 @@ public final class Stormpath: NSObject {
          occurred.
      */
     
-    public func refreshAccessToken(completionHandler: StormpathSuccessCallback? = nil) {
+    public func refreshAccessToken(_ completionHandler: StormpathSuccessCallback? = nil) {
         apiService.refreshAccessToken(completionHandler)
     }
 }

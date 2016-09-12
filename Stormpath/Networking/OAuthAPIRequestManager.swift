@@ -12,36 +12,36 @@ class OAuthAPIRequestManager: APIRequestManager {
     var requestBody: String
     var callback: AccessTokenCallback
     
-    private init(withURL url: NSURL, requestBody: String, callback: AccessTokenCallback) {
+    private init(withURL url: URL, requestBody: String, callback: @escaping AccessTokenCallback) {
         self.requestBody = requestBody
         self.callback = callback
         
         super.init(withURL: url)
     }
     
-    convenience init(withURL url: NSURL, username: String, password: String, callback: AccessTokenCallback) {
+    convenience init(withURL url: URL, username: String, password: String, callback: @escaping AccessTokenCallback) {
         let requestBody = "username=\(username.formURLEncoded)&password=\(password.formURLEncoded)&grant_type=password"
         
         self.init(withURL: url, requestBody: requestBody, callback: callback)
     }
     
-    convenience init(withURL url: NSURL, refreshToken: String, callback: AccessTokenCallback) {
+    convenience init(withURL url: URL, refreshToken: String, callback: @escaping AccessTokenCallback) {
         let requestBody = String(format: "refresh_token=%@&grant_type=refresh_token", refreshToken)
         
         self.init(withURL: url, requestBody: requestBody, callback: callback)
     }
     
     override func prepareForRequest() {
-        request.HTTPMethod = "POST"
+        request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
+        request.httpBody = requestBody.data(using: String.Encoding.utf8)
     }
     
-    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        guard let json = (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? NSDictionary,
-            accessToken = json["access_token"] as? String else {
+    override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
+        guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
+            let accessToken = json["access_token"] as? String else {
             //Callback and return
-            performCallback(error: StormpathError.APIResponseError)
+            performCallback(StormpathError.APIResponseError)
             return
         }
         let refreshToken = json["refresh_token"] as? String
@@ -49,13 +49,13 @@ class OAuthAPIRequestManager: APIRequestManager {
         performCallback(accessToken, refreshToken: refreshToken, error: nil)
     }
     
-    override func performCallback(error error: NSError?) {
+    override func performCallback(_ error: NSError?) {
         performCallback(nil, refreshToken: nil, error: error)
     }
     
-    func performCallback(accessToken: String?, refreshToken: String?, error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.callback(accessToken: accessToken, refreshToken: refreshToken, error: error)
+    func performCallback(_ accessToken: String?, refreshToken: String?, error: NSError?) {
+        DispatchQueue.main.async { 
+            self.callback(accessToken, refreshToken, error)
         }
     }
 }
@@ -67,10 +67,10 @@ private extension String {
         let charactersGeneralDelimitersToEncode = ":#[]@"
         let charactersSubDelimitersToEncode     = "!$&'()*+,;="
         
-        let allowedCharacterSet: NSMutableCharacterSet = NSCharacterSet.URLHostAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
-        
-        allowedCharacterSet.removeCharactersInString(charactersGeneralDelimitersToEncode.stringByAppendingString(charactersSubDelimitersToEncode))
-        
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
+        var allowedCharacterSet: CharacterSet = CharacterSet.init(bitmapRepresentation: CharacterSet.urlHostAllowed.bitmapRepresentation)
+		
+        allowedCharacterSet.remove(charactersIn: charactersGeneralDelimitersToEncode + charactersSubDelimitersToEncode)
+		
+        return self.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet as CharacterSet)!
     }
 }

@@ -13,7 +13,7 @@ import SafariServices
  Social Login Service takes care of aspects of handling deep links intended for social login, as well as routing between different social providers.
 */
 class SocialLoginService: NSObject {
-    static let socialProviderHandlers: [StormpathSocialProvider: LoginProvider] = [.Facebook: FacebookLoginProvider(), .Google: GoogleLoginProvider()]
+    static let socialProviderHandlers: [StormpathSocialProvider: LoginProvider] = [.facebook: FacebookLoginProvider(), .google: GoogleLoginProvider()]
     
     weak var stormpath: Stormpath!
     var queuedCompletionHandler: StormpathSuccessCallback?
@@ -25,8 +25,8 @@ class SocialLoginService: NSObject {
         self.stormpath = stormpath
     }
     
-    func beginLoginFlow(socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
-        guard socialProvider == .Facebook || socialProvider == .Google else {
+    func beginLoginFlow(_ socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
+        guard socialProvider == .facebook || socialProvider == .google else {
             preconditionFailure("To use LinkedIn or GitHub login, please use the login with access token method. ")
         }
         guard let socialAppInfo = stormpath.configuration.socialProviders[socialProvider] else {
@@ -37,23 +37,23 @@ class SocialLoginService: NSObject {
         presentOAuthSafariView(authenticationRequestURL)
     }
     
-    func handleCallbackURL(url: NSURL) -> Bool {
-        safari?.dismissViewControllerAnimated(true, completion: nil)
+    func handleCallbackURL(_ url: URL) -> Bool {
+        safari?.dismiss(animated: true, completion: nil)
         safari = nil
         
         // Check each prefix, and if there's one that matches, parse the response & login with the appropriate Stormpath social method
         for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
-            if url.scheme.hasPrefix(handler.urlSchemePrefix) {
+            if url.scheme!.hasPrefix(handler.urlSchemePrefix) {
                 SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
-                    guard let response = response where error == nil else {
-                        dispatch_async(dispatch_get_main_queue(), {self.queuedCompletionHandler?(false, error)}) 
+                    guard let response = response, error == nil else {
+                        DispatchQueue.main.async(execute: {self.queuedCompletionHandler?(false, error)}) 
                         return
                     }
                     
                     switch response.type {
-                    case .AuthorizationCode:
+                    case .authorizationCode:
                         self.stormpath.login(socialProvider: socialProvider, authorizationCode: response.data, completionHandler: self.queuedCompletionHandler)
-                    case .AccessToken:
+                    case .accessToken:
                         self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, completionHandler: self.queuedCompletionHandler)
                     }
                     self.queuedCompletionHandler = nil
@@ -65,12 +65,12 @@ class SocialLoginService: NSObject {
         return false
     }
     
-    private func presentOAuthSafariView(url: NSURL) {
+    private func presentOAuthSafariView(_ url: URL) {
         if #available(iOS 9, *) {
-            safari = SFSafariViewController(URL: url)
-            UIApplication.sharedApplication().delegate?.window??.rootViewController?.presentViewController(safari!, animated: true, completion: nil)
+            safari = SFSafariViewController(url: url)
+            UIApplication.shared.delegate?.window??.rootViewController?.present(safari!, animated: true, completion: nil)
         } else {
-            UIApplication.sharedApplication().openURL(url)
+            UIApplication.shared.openURL(url)
         }
     }
 }

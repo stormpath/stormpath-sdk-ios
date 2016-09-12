@@ -14,23 +14,23 @@ class ResetPasswordAPIRequestManager: APIRequestManager {
     var email: String
     var callback: ResetPasswordAPIRequestCallback
     
-    init(withURL url: NSURL, email: String, callback: ResetPasswordAPIRequestCallback) {
+    init(withURL url: URL, email: String, callback: @escaping ResetPasswordAPIRequestCallback) {
         self.email = email
         self.callback = callback
         super.init(withURL: url)
     }
     
     override func prepareForRequest() {
-        request.HTTPMethod = "POST"
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(["email": email], options: [])
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["email": email], options: [])
     }
     
-    override func requestDidFinish(data: NSData, response: NSHTTPURLResponse) {
-        performCallback(error: nil)
+    override func requestDidFinish(_ data: Data, response: HTTPURLResponse) {
+        performCallback(nil)
     }
     
-    override func performCallback(error error: NSError?) {
-        dispatch_async(dispatch_get_main_queue()) { 
+    override func performCallback(_ error: NSError?) {
+        DispatchQueue.main.async { 
             self.callback(error)
         }
     }

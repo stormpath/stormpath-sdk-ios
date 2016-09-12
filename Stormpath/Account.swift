@@ -13,7 +13,7 @@ import Foundation
 */
 public class Account: NSObject {
     /// Stormpath resource URL for the account
-    internal(set) public var href: NSURL!
+    internal(set) public var href: URL!
     
     /// Username of the user. Separate from the email, but is often set to the email
     /// address.
@@ -42,10 +42,10 @@ public class Account: NSObject {
     }
     
     /// Date the account was created in the Stormpath database.
-    internal(set) public var createdAt: NSDate!
+    internal(set) public var createdAt: Date!
     
     /// Date the account was last modified in the Stormpath database.
-    internal(set) public var modifiedAt: NSDate!
+    internal(set) public var modifiedAt: Date!
     
     /// Status of the account. Useful if email verification is needed.
     internal(set) public var status: AccountStatus
@@ -54,21 +54,21 @@ public class Account: NSObject {
     internal(set) public var customData: String?
     
     /// Initializer for the JSON object for the account. Expected to be wrapped in `{account: accountObject}`
-    init?(fromJSON jsonData: NSData) {
-        self.status = .Enabled //will be overridden below; hack to allow obj-c to access property since primitive types can't be optional
+    init?(fromJSON jsonData: Data) {
+        self.status = .enabled //will be overridden below; hack to allow obj-c to access property since primitive types can't be optional
         
         super.init()
-        guard let rootJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
-            json = rootJSON["account"] as? [String: AnyObject],
-            hrefString = json["href"] as? String,
-            href = NSURL(string: hrefString),
-            username = json["username"] as? String,
-            email = json["email"] as? String,
-            givenName = json["givenName"] as? String,
-            surname = json["surname"] as? String,
-            createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
-            modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
-            status = json["status"] as? String else {
+        guard let rootJSON = (try? JSONSerialization.jsonObject(with: jsonData, options: [])) as? [String: Any],
+            let json = rootJSON["account"] as? [String: AnyObject],
+            let hrefString = json["href"] as? String,
+            let href = URL(string: hrefString),
+            let username = json["username"] as? String,
+            let email = json["email"] as? String,
+            let givenName = json["givenName"] as? String,
+            let surname = json["surname"] as? String,
+            let createdAt = (json["createdAt"] as? String)?.dateFromISO8601Format,
+            let modifiedAt = (json["modifiedAt"] as? String)?.dateFromISO8601Format,
+            let status = json["status"] as? String else {
                 return nil
         }
         
@@ -83,18 +83,18 @@ public class Account: NSObject {
         
         switch status {
         case "ENABLED":
-            self.status = AccountStatus.Enabled
+            self.status = AccountStatus.enabled
         case "UNVERIFIED":
-            self.status = AccountStatus.Unverified
+            self.status = AccountStatus.unverified
         case "DISABLED":
-            self.status = AccountStatus.Disabled
+            self.status = AccountStatus.disabled
         default:
             return nil
         }
         
         if let customDataObject = json["customData"] as? [String: AnyObject],
-            customDataData = try? NSJSONSerialization.dataWithJSONObject(customDataObject, options: []),
-            customDataString = String(data: customDataData, encoding: NSUTF8StringEncoding) {
+            let customDataData = try? JSONSerialization.data(withJSONObject: customDataObject, options: []),
+            let customDataString = String(data: customDataData, encoding: String.Encoding.utf8) {
             self.customData = customDataString
         }
     }
@@ -105,22 +105,22 @@ public class Account: NSObject {
     //It's an int for Obj-C compatibility
     
     /// Enabled means that we can login to this account
-    case Enabled
+    case enabled
     
     /// Unverified is the same as disabled, but a user can enable it by
     /// clicking on the activation email.
-    case Unverified
+    case unverified
     
     /// Disabled means that users cannot log in to the account.
-    case Disabled
+    case disabled
 }
 
 /// Helper extension to make optional chaining easier. 
 private extension String {
-    var dateFromISO8601Format: NSDate? {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    var dateFromISO8601Format: Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return dateFormatter.dateFromString(self)
+        return dateFormatter.date(from: self)
     }
 }
