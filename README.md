@@ -150,13 +150,13 @@ In your Xcode project, add the following methods to your `AppDelegate`:
 
 ```Swift
 // iOS 9+ link handler
-func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    return Stormpath.sharedSession.application(app, openURL: url, options: options)
+func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
+    return Stormpath.sharedSession.application(app, open: url, options: options)
 }
 
 // iOS 8 and below link handler. Needed if you want to support older iOS
-func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-    return Stormpath.sharedSession.application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+    return Stormpath.sharedSession.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
 }
 ```
 

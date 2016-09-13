@@ -158,15 +158,14 @@ public final class Stormpath: NSObject {
     }
     
     /// Deep link handler (iOS9)
-    public func application(_ app: UIApplication, openURL url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
-        
+    public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
         return socialLoginService.handleCallbackURL(url)
     }
     
     
     /// Deep link handler (<iOS9)
-    public func application(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return self.application(application, openURL: url, options: [UIApplicationOpenURLOptionsKey: Any]())
+    public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return self.application(application, open: url, options: [UIApplicationOpenURLOptionsKey: Any]())
     }
     
     /**
