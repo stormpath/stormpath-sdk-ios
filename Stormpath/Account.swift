@@ -38,7 +38,7 @@ public class Account: NSObject {
     
     /// Full name of the user.
     public var fullName: String {
-        return (middleName == nil || middleName == "") ? "\(givenName) \(surname)" : "\(givenName) \(middleName!) \(surname)"
+        return "\(givenName ?? "") \((middleName ?? "") + " ")\(surname ?? "")"
     }
     
     /// Date the account was created in the Stormpath database.
