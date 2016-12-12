@@ -76,7 +76,7 @@ public final class Stormpath: NSObject {
          the completion.
     */
     public func login(_ username: String, password: String, completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.login(username, password: password, completionHandler: completionHandler)
+        apiService.login(username: username, password: password, completionHandler: completionHandler)
     }
     
     /**

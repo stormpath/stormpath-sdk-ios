@@ -14,10 +14,11 @@ struct APIRequest {
     var headers = [String: String]()
     var body: [String: Any]?
     var contentType = ContentType.json
-    var method = APIRequestMethod.get
+    var method: APIRequestMethod
     let url: URL
     
-    init(url: URL) {
+    init(method: APIRequestMethod, url: URL) {
+        self.method = method
         self.url = url
     }
     
@@ -76,7 +77,7 @@ struct APIResponse {
     var contentType: ContentType? {
         let contentTypeHeader = headers.filter {
             $0.key.lowercased() == "content-type"
-        }.first?.value ?? ""
+            }.first?.value.components(separatedBy: ";").first ?? ""
         
         return ContentType(rawValue: contentTypeHeader)
     }
