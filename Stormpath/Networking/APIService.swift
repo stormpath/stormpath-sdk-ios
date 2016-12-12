@@ -164,20 +164,16 @@ final class APIService: NSObject {
     // MARK: Logout
     
     func logout() {
+        let logoutURL = stormpath.configuration.APIURL.appendingPathComponent("/oauth/revoke")
         
-        let logoutURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.logoutEndpoint)
-        var request = URLRequest(url: logoutURL)
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "GET"
-        
-        Logger.logRequest(request)
+        var request = APIRequest(method: .post, url: logoutURL)
+        request.contentType = .urlEncoded
+        request.body = ["token": stormpath.refreshToken]
+        request.send()
         
         // Regardless of how the API calls goes, we can logout the user locally
         stormpath.accessToken = nil
         stormpath.refreshToken = nil
-        
-        // The API response is not defined, so we won't call the API for now.
     }
     
     // MARK: Forgot password

@@ -22,7 +22,7 @@ struct APIRequest {
         self.url = url
     }
     
-    func send(callback: @escaping APIRequestCallback) {
+    func send(callback: APIRequestCallback? = nil) {
         let session = URLSession(configuration: URLSessionConfiguration.ephemeral)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -55,14 +55,14 @@ struct APIRequest {
             guard let data = data,
                 let response = response as? HTTPURLResponse else {
                 // TODO: callback with error
-                    callback(nil, error as? NSError)
+                    callback?(nil, error as? NSError)
                 return
             }
             var apiResponse = APIResponse(status: response.statusCode)
             apiResponse.headers = response.allHeaderFields as NSDictionary as? [String: String] ?? apiResponse.headers
             apiResponse.body = data
             
-            callback(apiResponse, nil)
+            callback?(apiResponse, nil)
         }
         task.resume()
     }
