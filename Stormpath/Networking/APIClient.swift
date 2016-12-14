@@ -54,7 +54,6 @@ struct APIRequest {
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data,
                 let response = response as? HTTPURLResponse else {
-                // TODO: callback with error
                     callback?(nil, error as? NSError)
                 return
             }

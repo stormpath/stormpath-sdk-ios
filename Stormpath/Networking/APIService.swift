@@ -168,7 +168,7 @@ final class APIService: NSObject {
         
         var request = APIRequest(method: .post, url: logoutURL)
         request.contentType = .urlEncoded
-        request.body = ["token": stormpath.refreshToken]
+        request.body = ["token": stormpath.refreshToken as Any]
         request.send()
         
         // Regardless of how the API calls goes, we can logout the user locally
@@ -180,9 +180,15 @@ final class APIService: NSObject {
     
     func resetPassword(_ email: String, completionHandler: StormpathSuccessCallback?) {
         let resetPasswordURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
-        let requestManager = ResetPasswordAPIRequestManager(withURL: resetPasswordURL, email: email, callback: { (error) -> Void in
-                completionHandler?(error == nil, error)
-        })
-        requestManager.begin()
+        
+        var request = APIRequest(method: .post, url: resetPasswordURL)
+        request.body = ["login": email]
+        request.send { (response, error) in
+            if response?.status == 200 {
+                completionHandler?(true, nil)
+            } else {
+                completionHandler?(false, StormpathError.APIResponseError)
+            }
+        }
     }
 }
