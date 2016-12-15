@@ -16,7 +16,7 @@ class SocialLoginService: NSObject {
     static let socialProviderHandlers: [StormpathSocialProvider: LoginProvider] = [.facebook: FacebookLoginProvider(), .google: GoogleLoginProvider()]
     
     weak var stormpath: Stormpath!
-    var queuedCompletionHandler: StormpathSuccessCallback?
+    var queuedcallback: StormpathSuccessCallback?
     
     var safari: UIViewController?
     
@@ -25,14 +25,14 @@ class SocialLoginService: NSObject {
         self.stormpath = stormpath
     }
     
-    func beginLoginFlow(_ socialProvider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback?) {
+    func beginLoginFlow(_ socialProvider: StormpathSocialProvider, callback: StormpathSuccessCallback?) {
         guard socialProvider == .facebook || socialProvider == .google else {
             preconditionFailure("To use LinkedIn or GitHub login, please use the login with access token method. ")
         }
         guard let socialAppInfo = stormpath.configuration.socialProviders[socialProvider] else {
             preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
         }
-        queuedCompletionHandler = completionHandler
+        queuedcallback = callback
         let authenticationRequestURL = SocialLoginService.socialProviderHandlers[socialProvider]!.authenticationRequestURL(socialAppInfo)
         presentOAuthSafariView(authenticationRequestURL)
     }
@@ -46,22 +46,22 @@ class SocialLoginService: NSObject {
             if url.scheme!.hasPrefix(handler.urlSchemePrefix) {
                 SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
                     guard let response = response, error == nil else {
-                        DispatchQueue.main.async(execute: {self.queuedCompletionHandler?(false, error)}) 
+                        DispatchQueue.main.async(execute: {self.queuedcallback?(false, error)}) 
                         return
                     }
                     
                     switch response.type {
                     case .authorizationCode:
-                        self.stormpath.login(socialProvider: socialProvider, authorizationCode: response.data, completionHandler: self.queuedCompletionHandler)
+                        self.stormpath.login(socialProvider: socialProvider, authorizationCode: response.data, callback: self.queuedcallback)
                     case .accessToken:
-                        self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, completionHandler: self.queuedCompletionHandler)
+                        self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, callback: self.queuedcallback)
                     }
-                    self.queuedCompletionHandler = nil
+                    self.queuedcallback = nil
                 }
                 return true
             }
         }
-        queuedCompletionHandler = nil
+        queuedcallback = nil
         return false
     }
     

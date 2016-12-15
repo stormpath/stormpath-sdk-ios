@@ -60,11 +60,11 @@ public final class Stormpath: NSObject {
      - parameters:
        - account: A Registration Model object with the account data you want to
          register.
-       - completionHandler: The completion block to be invoked after the API 
+       - callback: The completion block to be invoked after the API
          request is finished. It returns an account object.
     */
-    public func register(_ account: RegistrationForm, completionHandler: StormpathAccountCallback? = nil) {
-        apiService.register(newAccount: account, completionHandler: completionHandler)
+    public func register(account: RegistrationForm, callback: StormpathAccountCallback? = nil) {
+        apiService.register(newAccount: account, callback: callback)
     }
     
     /**
@@ -75,12 +75,12 @@ public final class Stormpath: NSObject {
      - parameters:
        - username: Account's email or username.
        - password: Account password.
-       - completionHandler: The completion block to be invoked after the API 
+       - callback: The completion block to be invoked after the API
          request is finished. If the method fails, the error will be passed in 
          the completion.
     */
-    public func login(_ username: String, password: String, completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.login(username: username, password: password, completionHandler: completionHandler)
+    public func login(username: String, password: String, callback: StormpathSuccessCallback? = nil) {
+        apiService.login(username: username, password: password, callback: callback)
     }
     
     /**
@@ -92,10 +92,10 @@ public final class Stormpath: NSObject {
      - parameters:
        - socialProvider: the provider (Facebook, Google, etc) from which you 
          have an access token
-       - completionHandler: Callback on success or failure
+       - callback: Callback on success or failure
      */
-    public func login(socialProvider provider: StormpathSocialProvider, completionHandler: StormpathSuccessCallback? = nil) {
-        socialLoginService.beginLoginFlow(provider, completionHandler: completionHandler)
+    public func login(socialProvider provider: StormpathSocialProvider, callback: StormpathSuccessCallback? = nil) {
+        socialLoginService.beginLoginFlow(provider, callback: callback)
     }
     
     
@@ -106,11 +106,11 @@ public final class Stormpath: NSObject {
        - socialProvider: the provider (Facebook, Google, etc) from which you
          have an access token
        - accessToken: String containing the access token
-       - completionHandler: A block of code that is called back on success or 
+       - callback: A block of code that is called back on success or
          failure.
      */
-    public func login(socialProvider provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.login(socialProvider: provider, accessToken: accessToken, completionHandler: completionHandler)
+    public func login(socialProvider provider: StormpathSocialProvider, accessToken: String, callback: StormpathSuccessCallback? = nil) {
+        apiService.login(socialProvider: provider, accessToken: accessToken, callback: callback)
     }
     
     /**
@@ -120,23 +120,23 @@ public final class Stormpath: NSObject {
       - socialProvider: the provider (Facebook, Google, etc) from which you have 
         an access token
       - authorizationCode: String containing the authorization code
-      - completionHandler: A block of code that is called back on success or 
+      - callback: A block of code that is called back on success or 
         failure.
      */
     // Making this internal for now, since we don't support auth codes for FB / 
     // Google
-    func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.login(socialProvider: provider, authorizationCode: authorizationCode, completionHandler: completionHandler)
+    func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, callback: StormpathSuccessCallback? = nil) {
+        apiService.login(socialProvider: provider, authorizationCode: authorizationCode, callback: callback)
     }
     
     /**
      Fetches the account data, and returns it in the form of a dictionary.
      
      - parameters:
-       - completionHandler: Completion block invoked
+       - callback: Completion block invoked
      */
-    public func me(_ completionHandler: StormpathAccountCallback? = nil) {
-        apiService.me(completionHandler)
+    public func me(callback: StormpathAccountCallback? = nil) {
+        apiService.me(callback)
     }
     
     /**
@@ -153,12 +153,12 @@ public final class Stormpath: NSObject {
      if such email exists.
     - parameters:
        - email: Account email. Usually from an input.
-       - completionHandler: The completion block to be invoked after the API
+       - callback: The completion block to be invoked after the API
          request is finished. This will always succeed if the API call is 
          successful.
     */
-    public func resetPassword(_ email: String, completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.resetPassword(email, completionHandler: completionHandler)
+    public func resetPassword(email: String, callback: StormpathSuccessCallback? = nil) {
+        apiService.resetPassword(email, callback: callback)
     }
     
     /// Deep link handler (iOS9)
@@ -203,12 +203,12 @@ public final class Stormpath: NSObject {
      var. Call this function if your token expires.
      
      - parameters:
-       - completionHandler: Block invoked on function completion. It will have 
+       - callback: Block invoked on function completion. It will have 
          either a new access token passed as a string, or an error if one 
          occurred.
      */
     
-    public func refreshAccessToken(_ completionHandler: StormpathSuccessCallback? = nil) {
-        apiService.refreshAccessToken(completionHandler)
+    public func refreshAccessToken(callback: StormpathSuccessCallback? = nil) {
+        apiService.refreshAccessToken(callback)
     }
 }
