@@ -37,6 +37,9 @@ public final class Stormpath: NSObject {
     /// Reference to the Keychain Service.
     var keychain: KeychainService!
     
+    /// API Client
+    var apiClient: APIClient!
+    
     /**
      Initializes the Stormpath object with a default configuration. The 
      identifier is used to namespace the current state of the object, so that on 
@@ -48,6 +51,7 @@ public final class Stormpath: NSObject {
         apiService = APIService(withStormpath: self)
         keychain = KeychainService(withIdentifier: identifier)
         socialLoginService = SocialLoginService(withStormpath: self)
+        apiClient = APIClient(stormpath: self)
     }
     
     /**

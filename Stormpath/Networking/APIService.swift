@@ -131,7 +131,7 @@ final class APIService: NSObject {
     func me(_ completionHandler: StormpathAccountCallback?) {
         let meURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.meEndpoint)
         
-        guard let accessToken = stormpath.accessToken else {
+        guard stormpath.accessToken != nil else {
             let error = NSError(domain: meURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
             
             Logger.logError(error)
@@ -141,24 +141,16 @@ final class APIService: NSObject {
             })
             return
         }
-        let requestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken) { (account, error) -> Void in
-            if error?.code == 401 {
-                //Refresh access token & retry
-                self.stormpath.refreshAccessToken({ (success, error) -> Void in
-                    guard error == nil else {
-                        completionHandler?(nil, error)
-                        return
-                    }
-                    let retryRequestManager = MeAPIRequestManager(withURL: meURL, accessToken: accessToken, callback: { (account, error) -> Void in
-                        completionHandler?(account, error)
-                    })
-                    retryRequestManager.begin()
-                })
+        
+        let request = APIRequest(method: .get, url: meURL)
+        stormpath.apiClient.execute(request: request) { (response, error) in
+            if let data = response?.body,
+               let account = Account(fromJSON: data) {
+                completionHandler?(account, nil)
             } else {
-                completionHandler?(account, error)
+                completionHandler?(nil, error ?? StormpathError.APIResponseError)
             }
         }
-        requestManager.begin()
     }
     
     // MARK: Logout

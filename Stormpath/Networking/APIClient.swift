@@ -10,12 +10,71 @@ import UIKit
 
 typealias APIRequestCallback = (APIResponse?, NSError?) -> Void
 
+class APIClient {
+    weak var stormpath: Stormpath?
+    let session = URLSession(configuration: URLSessionConfiguration.ephemeral)
+    
+    init(stormpath: Stormpath? = nil) {
+        self.stormpath = stormpath
+    }
+    
+    func execute(request: APIRequest, callback: APIRequestCallback? = nil) {
+        var request = request
+        var authenticated = false
+        
+        // If authenticated, add header
+        if let accessToken = stormpath?.accessToken {
+            request.headers["Authorization"] = "Bearer \(accessToken)"
+            authenticated = true
+        }
+        
+        execute(request: request.asURLRequest()) { (response, error) in
+            // Refresh token & retry request if 401
+            if response?.status == 401 && authenticated {
+                self.stormpath?.refreshAccessToken { (success, refreshError) in
+                    if success {
+                        if let accessToken = self.stormpath?.accessToken {
+                            request.headers["Authorization"] = "Bearer \(accessToken)"
+                            self.execute(request: request.asURLRequest(), callback: callback)
+                        } else {
+                            callback?(response, error)
+                        }
+                    } else {
+                        callback?(nil, error)
+                    }
+                }
+            } else {
+                callback?(response, error)
+            }
+        }
+    }
+    
+    private func execute(request: URLRequest, callback: APIRequestCallback? = nil) {
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data,
+                let response = response as? HTTPURLResponse else {
+                    callback?(nil, error as? NSError)
+                    return
+            }
+            var apiResponse = APIResponse(status: response.statusCode)
+            apiResponse.headers = response.allHeaderFields as NSDictionary as? [String: String] ?? apiResponse.headers
+            apiResponse.body = data
+            
+            DispatchQueue.main.async {
+                callback?(apiResponse, nil)
+            }
+        }
+        task.resume()
+    }
+}
+
 struct APIRequest {
+    let url: URL
+    var method: APIRequestMethod
+    
     var headers = [String: String]()
     var body: [String: Any]?
     var contentType = ContentType.json
-    var method: APIRequestMethod
-    let url: URL
     
     init(method: APIRequestMethod, url: URL) {
         self.method = method
@@ -23,7 +82,10 @@ struct APIRequest {
     }
     
     func send(callback: APIRequestCallback? = nil) {
-        let session = URLSession(configuration: URLSessionConfiguration.ephemeral)
+        APIClient().execute(request: self, callback: callback)
+    }
+    
+    func asURLRequest() -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
@@ -51,19 +113,7 @@ struct APIRequest {
             }
         }
         
-        let task = session.dataTask(with: request) { (data, response, error) in
-            guard let data = data,
-                let response = response as? HTTPURLResponse else {
-                    callback?(nil, error as? NSError)
-                return
-            }
-            var apiResponse = APIResponse(status: response.statusCode)
-            apiResponse.headers = response.allHeaderFields as NSDictionary as? [String: String] ?? apiResponse.headers
-            apiResponse.body = data
-            
-            callback?(apiResponse, nil)
-        }
-        task.resume()
+        return request
     }
 }
 
