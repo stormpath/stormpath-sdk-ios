@@ -28,14 +28,14 @@ class APIClient {
             authenticated = true
         }
         
-        execute(request: request.asURLRequest()) { (response, error) in
+        execute(request: request.asURLRequest) { (response, error) in
             // Refresh token & retry request if 401
             if response?.status == 401 && authenticated {
                 self.stormpath?.refreshAccessToken { (success, refreshError) in
                     if success {
                         if let accessToken = self.stormpath?.accessToken {
                             request.headers["Authorization"] = "Bearer \(accessToken)"
-                            self.execute(request: request.asURLRequest(), callback: callback)
+                            self.execute(request: request.asURLRequest, callback: callback)
                         } else {
                             callback?(response, error)
                         }
@@ -85,7 +85,7 @@ struct APIRequest {
         APIClient().execute(request: self, callback: callback)
     }
     
-    func asURLRequest() -> URLRequest {
+    var asURLRequest: URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         

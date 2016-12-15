@@ -22,11 +22,17 @@ final class APIService: NSObject {
     func register(newAccount account: RegistrationModel, completionHandler: StormpathAccountCallback?) {
         let registerURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.registerEndpoint)
         
-        let requestManager = RegistrationAPIRequestManager(withURL: registerURL, newAccount: account) { (account, error) -> Void in
-            completionHandler?(account, error)
-        }
-        requestManager.begin()
+        var apiRequest = APIRequest(method: .post, url: registerURL)
+        apiRequest.body = account.asDictionary
         
+        apiRequest.send { (response, error) in
+            if let data = response?.body,
+                let account = Account(fromJSON: data) {
+                completionHandler?(account, nil)
+            } else {
+                completionHandler?(nil, error ?? StormpathError.APIResponseError)
+            }
+        }
     }
     
     // MARK: Login

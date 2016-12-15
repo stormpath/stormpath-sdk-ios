@@ -15,10 +15,7 @@
 		49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C45C1BFA41BD00016534 /* Stormpath.swift */; };
 		DF0544161C652B4F00FF555F /* StormpathRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0B1C00DF9700054799 /* StormpathRegistrationTests.swift */; };
 		DF05441A1C653F7500FF555F /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544191C653F7500FF555F /* APIRequestManager.swift */; };
-		DF05441C1C6545B300FF555F /* RegistrationAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05441B1C6545B300FF555F /* RegistrationAPIRequestManager.swift */; };
-		DF0544341C6560FC00FF555F /* OAuthAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544331C6560FC00FF555F /* OAuthAPIRequestManager.swift */; };
-		DF0544361C65796300FF555F /* MeAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544351C65796300FF555F /* MeAPIRequestManager.swift */; };
-		DF0544B41C69178F00FF555F /* ResetPasswordAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544B31C69178E00FF555F /* ResetPasswordAPIRequestManager.swift */; };
+		DF05441C1C6545B300FF555F /* RegistrationForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05441B1C6545B300FF555F /* RegistrationForm.swift */; };
 		DF0544B91C6A7BDE00FF555F /* StormpathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544B81C6A7BDE00FF555F /* StormpathError.swift */; };
 		DF0544BB1C6CFA4500FF555F /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544BA1C6CFA4500FF555F /* Account.swift */; };
 		DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */; };
@@ -30,6 +27,7 @@
 		DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */; };
 		DF904C7F1C7690FA00BE53E5 /* StormpathLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */; };
 		DF904C811C76A56100BE53E5 /* StormpathTestsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */; };
+		DF99FC501DF231A900EC2EB8 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF99FC4F1DF231A900EC2EB8 /* APIClient.swift */; };
 		DFC84D631C77AADA00481F57 /* StormpathMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */; };
 		DFD122A01C5C233E0038B95E /* StormpathConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1229F1C5C233E0038B95E /* StormpathConfiguration.swift */; };
 /* End PBXBuildFile section */
@@ -58,10 +56,7 @@
 		49A34D0B1C00DF9700054799 /* StormpathRegistrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathRegistrationTests.swift; sourceTree = "<group>"; };
 		49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServiceTests.swift; sourceTree = "<group>"; };
 		DF0544191C653F7500FF555F /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
-		DF05441B1C6545B300FF555F /* RegistrationAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationAPIRequestManager.swift; sourceTree = "<group>"; };
-		DF0544331C6560FC00FF555F /* OAuthAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthAPIRequestManager.swift; sourceTree = "<group>"; };
-		DF0544351C65796300FF555F /* MeAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeAPIRequestManager.swift; sourceTree = "<group>"; };
-		DF0544B31C69178E00FF555F /* ResetPasswordAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordAPIRequestManager.swift; sourceTree = "<group>"; };
+		DF05441B1C6545B300FF555F /* RegistrationForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationForm.swift; sourceTree = "<group>"; };
 		DF0544B81C6A7BDE00FF555F /* StormpathError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathError.swift; sourceTree = "<group>"; };
 		DF0544BA1C6CFA4500FF555F /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialLoginAPIRequestManager.swift; sourceTree = "<group>"; };
@@ -73,6 +68,7 @@
 		DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathSocialProviderConfiguration.swift; sourceTree = "<group>"; };
 		DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathLoginTests.swift; sourceTree = "<group>"; };
 		DF904C801C76A56100BE53E5 /* StormpathTestsConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathTestsConfiguration.swift; sourceTree = "<group>"; };
+		DF99FC4F1DF231A900EC2EB8 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		DFC84D621C77AADA00481F57 /* StormpathMeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathMeTests.swift; sourceTree = "<group>"; };
 		DFD1229F1C5C233E0038B95E /* StormpathConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,9 +104,11 @@
 			isa = PBXGroup;
 			children = (
 				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
+				DF05441B1C6545B300FF555F /* RegistrationForm.swift */,
 				4992A5D71C086FED00676E85 /* Logger.swift */,
 				DF0544B51C691C4000FF555F /* APIRequestManagers */,
 				DF0544B81C6A7BDE00FF555F /* StormpathError.swift */,
+				DF99FC4F1DF231A900EC2EB8 /* APIClient.swift */,
 			);
 			name = API;
 			path = Networking;
@@ -198,10 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				DF0544191C653F7500FF555F /* APIRequestManager.swift */,
-				DF05441B1C6545B300FF555F /* RegistrationAPIRequestManager.swift */,
-				DF0544331C6560FC00FF555F /* OAuthAPIRequestManager.swift */,
-				DF0544351C65796300FF555F /* MeAPIRequestManager.swift */,
-				DF0544B31C69178E00FF555F /* ResetPasswordAPIRequestManager.swift */,
 				DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */,
 			);
 			name = APIRequestManagers;
@@ -342,19 +336,17 @@
 				DF064AE41C8902EB00E8AB42 /* StormpathSocialProvider.swift in Sources */,
 				DF064AE61C8A518900E8AB42 /* SocialLoginService.swift in Sources */,
 				DF064AF41C8E26C000E8AB42 /* LoginProvider.swift in Sources */,
+				DF99FC501DF231A900EC2EB8 /* APIClient.swift in Sources */,
 				DF1E20D71C8F47970092232E /* GoogleLoginProvider.swift in Sources */,
 				4992A5D81C086FED00676E85 /* Logger.swift in Sources */,
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
-				DF0544361C65796300FF555F /* MeAPIRequestManager.swift in Sources */,
 				DF0544BB1C6CFA4500FF555F /* Account.swift in Sources */,
 				DF05441A1C653F7500FF555F /* APIRequestManager.swift in Sources */,
 				DFD122A01C5C233E0038B95E /* StormpathConfiguration.swift in Sources */,
-				DF05441C1C6545B300FF555F /* RegistrationAPIRequestManager.swift in Sources */,
+				DF05441C1C6545B300FF555F /* RegistrationForm.swift in Sources */,
 				DF0544B91C6A7BDE00FF555F /* StormpathError.swift in Sources */,
 				DF064AF61C8E2A8600E8AB42 /* FacebookLoginProvider.swift in Sources */,
 				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
-				DF0544B41C69178F00FF555F /* ResetPasswordAPIRequestManager.swift in Sources */,
-				DF0544341C6560FC00FF555F /* OAuthAPIRequestManager.swift in Sources */,
 				DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */,
 				DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */,
 				4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */,
