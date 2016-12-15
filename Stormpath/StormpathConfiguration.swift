@@ -33,59 +33,6 @@ public class StormpathConfiguration: NSObject {
         }
     }
     
-    /// Endpoint for the current user context
-    public var meEndpoint = "/me" {
-        didSet {
-            meEndpoint = meEndpoint.withLeadingSlash
-        }
-    }
-    
-    /// Endpoint to request email verification
-    public var verifyEmailEndpoint = "/verify" {
-        didSet {
-            verifyEmailEndpoint = verifyEmailEndpoint.withLeadingSlash
-        }
-    }
-    
-    /// Endpoint to request a password reset email
-    public var forgotPasswordEndpoint = "/forgot" {
-        didSet {
-            forgotPasswordEndpoint = forgotPasswordEndpoint.withLeadingSlash
-        }
-    }
-    
-    /// Endpoint to create an OAuth token
-    public var oauthEndpoint = "/oauth/token" {
-        didSet {
-            oauthEndpoint = oauthEndpoint.withLeadingSlash
-        }
-    }
-    
-    /**
-     Endpoint to login
-     */
-    public var loginEndpoint = "/login" {
-        didSet {
-            loginEndpoint = loginEndpoint.withLeadingSlash
-        }
-    }
-    
-    /**
-     Endpoint to logout
-     */
-    public var logoutEndpoint = "/logout" {
-        didSet {
-            logoutEndpoint = logoutEndpoint.withLeadingSlash
-        }
-    }
-    
-    /// Endpoint to register a new account
-    public var registerEndpoint = "/register" {
-        didSet {
-            registerEndpoint = registerEndpoint.withLeadingSlash
-        }
-    }
-    
     /// App IDs for social providers
     public var socialProviders = [StormpathSocialProvider: StormpathSocialProviderConfiguration]()
     
@@ -107,18 +54,6 @@ public class StormpathConfiguration: NSObject {
         }
         
         APIURL = (stormpathInfo["APIURL"] as? String)?.asURL ?? APIURL
-        
-        guard let customEndpoints = stormpathInfo["customEndpoints"] as? [String: AnyObject] else {
-            return
-        }
-        
-        meEndpoint = (customEndpoints["me"] as? String) ?? meEndpoint
-        verifyEmailEndpoint = (customEndpoints["verifyEmail"] as? String) ?? verifyEmailEndpoint
-        forgotPasswordEndpoint = (customEndpoints["forgotPassword"] as? String) ?? forgotPasswordEndpoint
-        oauthEndpoint = (customEndpoints["oauth"] as? String) ?? oauthEndpoint
-        loginEndpoint = (customEndpoints["login"] as? String) ?? loginEndpoint
-        logoutEndpoint = (customEndpoints["logout"] as? String) ?? logoutEndpoint
-        registerEndpoint = (customEndpoints["register"] as? String) ?? registerEndpoint
     }
     
     private func loadSocialProviderAppIds() {
@@ -181,4 +116,13 @@ private extension String {
     var asURL: URL? {
         return URL(string: self)
     }
+}
+
+enum Endpoints: String {
+    case me = "/me",
+    register = "/register",
+    login = "/login",
+    oauthToken = "/oauth/token",
+    oauthRevoke = "/oauth/revoke",
+    forgot = "/forgot"
 }

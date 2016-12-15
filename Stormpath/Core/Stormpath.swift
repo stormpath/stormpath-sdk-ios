@@ -63,7 +63,7 @@ public final class Stormpath: NSObject {
        - completionHandler: The completion block to be invoked after the API 
          request is finished. It returns an account object.
     */
-    public func register(_ account: RegistrationModel, completionHandler: StormpathAccountCallback? = nil) {
+    public func register(_ account: RegistrationForm, completionHandler: StormpathAccountCallback? = nil) {
         apiService.register(newAccount: account, completionHandler: completionHandler)
     }
     

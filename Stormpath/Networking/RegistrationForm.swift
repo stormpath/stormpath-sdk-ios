@@ -12,7 +12,7 @@ import Foundation
  Model for the account registration form. The fields requested in the initializer 
  are required.
  */
-public class RegistrationModel: NSObject {
+public class RegistrationForm: NSObject {
     
     /**
      Given (first) name of the user. Required by default, but can be turned off 

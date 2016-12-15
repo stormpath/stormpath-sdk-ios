@@ -19,8 +19,8 @@ final class APIService: NSObject {
     
     // MARK: Registration
     
-    func register(newAccount account: RegistrationModel, completionHandler: StormpathAccountCallback?) {
-        let registerURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.registerEndpoint)
+    func register(newAccount account: RegistrationForm, completionHandler: StormpathAccountCallback?) {
+        let registerURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.register.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: registerURL)
         apiRequest.body = account.asDictionary
@@ -38,7 +38,7 @@ final class APIService: NSObject {
     // MARK: Login
     
     func login(username: String, password: String, completionHandler: StormpathSuccessCallback?) {
-        let oauthURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let oauthURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: oauthURL)
         apiRequest.contentType = .urlEncoded
@@ -55,7 +55,7 @@ final class APIService: NSObject {
     }
     
     func login(socialProvider provider: StormpathSocialProvider, accessToken: String, completionHandler: StormpathSuccessCallback?) {
-        let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: socialLoginURL)
         apiRequest.contentType = .urlEncoded
@@ -72,7 +72,7 @@ final class APIService: NSObject {
     }
     
     func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, completionHandler: StormpathSuccessCallback?) {
-        let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: socialLoginURL)
         apiRequest.contentType = .urlEncoded
@@ -102,7 +102,7 @@ final class APIService: NSObject {
     // MARK: Access token refresh
     
     func refreshAccessToken(_ completionHandler: StormpathSuccessCallback?) {
-        let oauthURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.oauthEndpoint)
+        let oauthURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         guard let refreshToken = stormpath.refreshToken else {
             let error = NSError(domain: oauthURL.absoluteString, code: 400, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
@@ -131,7 +131,7 @@ final class APIService: NSObject {
     // MARK: Account data
     
     func me(_ completionHandler: StormpathAccountCallback?) {
-        let meURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.meEndpoint)
+        let meURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.me.rawValue)
         
         guard stormpath.accessToken != nil else {
             let error = NSError(domain: meURL.absoluteString, code: 401, userInfo: [NSLocalizedDescriptionKey: "Refresh token not found. Have you logged in yet?"])
@@ -158,7 +158,7 @@ final class APIService: NSObject {
     // MARK: Logout
     
     func logout() {
-        let logoutURL = stormpath.configuration.APIURL.appendingPathComponent("/oauth/revoke")
+        let logoutURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthRevoke.rawValue)
         
         var request = APIRequest(method: .post, url: logoutURL)
         request.contentType = .urlEncoded
@@ -173,7 +173,7 @@ final class APIService: NSObject {
     // MARK: Forgot password
     
     func resetPassword(_ email: String, completionHandler: StormpathSuccessCallback?) {
-        let resetPasswordURL = stormpath.configuration.APIURL.appendingPathComponent(stormpath.configuration.forgotPasswordEndpoint)
+        let resetPasswordURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.forgot.rawValue)
         
         var request = APIRequest(method: .post, url: resetPasswordURL)
         request.body = ["login": email]
