@@ -88,12 +88,8 @@ final class APIService: NSObject {
             return
         }
         stormpath.accessToken = accessToken
+        stormpath.refreshToken = refreshToken
         
-        if refreshToken != nil {
-            stormpath.refreshToken = refreshToken
-        } else {
-            stormpath.refreshToken = nil
-        }
         completionHandler?(true, nil)
     }
     
