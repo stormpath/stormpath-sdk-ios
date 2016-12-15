@@ -14,11 +14,9 @@
 		49A0C44C1BFA360A00016534 /* Stormpath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A0C4411BFA360A00016534 /* Stormpath.framework */; };
 		49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0C45C1BFA41BD00016534 /* Stormpath.swift */; };
 		DF0544161C652B4F00FF555F /* StormpathRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A34D0B1C00DF9700054799 /* StormpathRegistrationTests.swift */; };
-		DF05441A1C653F7500FF555F /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544191C653F7500FF555F /* APIRequestManager.swift */; };
 		DF05441C1C6545B300FF555F /* RegistrationForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05441B1C6545B300FF555F /* RegistrationForm.swift */; };
 		DF0544B91C6A7BDE00FF555F /* StormpathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544B81C6A7BDE00FF555F /* StormpathError.swift */; };
 		DF0544BB1C6CFA4500FF555F /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0544BA1C6CFA4500FF555F /* Account.swift */; };
-		DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */; };
 		DF064AE41C8902EB00E8AB42 /* StormpathSocialProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */; };
 		DF064AE61C8A518900E8AB42 /* SocialLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */; };
 		DF064AF41C8E26C000E8AB42 /* LoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */; };
@@ -55,11 +53,9 @@
 		49A34D081BFF9BCB00054799 /* APIServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIServiceTests.swift; sourceTree = "<group>"; };
 		49A34D0B1C00DF9700054799 /* StormpathRegistrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathRegistrationTests.swift; sourceTree = "<group>"; };
 		49A34D0E1C0336AC00054799 /* KeychainServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServiceTests.swift; sourceTree = "<group>"; };
-		DF0544191C653F7500FF555F /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
-		DF05441B1C6545B300FF555F /* RegistrationForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationForm.swift; sourceTree = "<group>"; };
+		DF05441B1C6545B300FF555F /* RegistrationForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegistrationForm.swift; path = Networking/RegistrationForm.swift; sourceTree = "<group>"; };
 		DF0544B81C6A7BDE00FF555F /* StormpathError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathError.swift; sourceTree = "<group>"; };
 		DF0544BA1C6CFA4500FF555F /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialLoginAPIRequestManager.swift; sourceTree = "<group>"; };
 		DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathSocialProvider.swift; sourceTree = "<group>"; };
 		DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocialLoginService.swift; path = Networking/SocialLoginService.swift; sourceTree = "<group>"; };
 		DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginProvider.swift; path = "Social Login/LoginProvider.swift"; sourceTree = "<group>"; };
@@ -104,9 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				4996C0BB1BFCAABD00FA6CD4 /* APIService.swift */,
-				DF05441B1C6545B300FF555F /* RegistrationForm.swift */,
 				4992A5D71C086FED00676E85 /* Logger.swift */,
-				DF0544B51C691C4000FF555F /* APIRequestManagers */,
 				DF0544B81C6A7BDE00FF555F /* StormpathError.swift */,
 				DF99FC4F1DF231A900EC2EB8 /* APIClient.swift */,
 			);
@@ -192,19 +186,11 @@
 			path = Keychain;
 			sourceTree = "<group>";
 		};
-		DF0544B51C691C4000FF555F /* APIRequestManagers */ = {
-			isa = PBXGroup;
-			children = (
-				DF0544191C653F7500FF555F /* APIRequestManager.swift */,
-				DF064AE11C89021600E8AB42 /* SocialLoginAPIRequestManager.swift */,
-			);
-			name = APIRequestManagers;
-			sourceTree = "<group>";
-		};
 		DF055E121C59791D0085ACA2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				DFD1229F1C5C233E0038B95E /* StormpathConfiguration.swift */,
+				DF05441B1C6545B300FF555F /* RegistrationForm.swift */,
 				DF0544BA1C6CFA4500FF555F /* Account.swift */,
 				DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */,
 				DF064AE31C8902EB00E8AB42 /* StormpathSocialProvider.swift */,
@@ -341,13 +327,11 @@
 				4992A5D81C086FED00676E85 /* Logger.swift in Sources */,
 				49A0C45D1BFA41BD00016534 /* Stormpath.swift in Sources */,
 				DF0544BB1C6CFA4500FF555F /* Account.swift in Sources */,
-				DF05441A1C653F7500FF555F /* APIRequestManager.swift in Sources */,
 				DFD122A01C5C233E0038B95E /* StormpathConfiguration.swift in Sources */,
 				DF05441C1C6545B300FF555F /* RegistrationForm.swift in Sources */,
 				DF0544B91C6A7BDE00FF555F /* StormpathError.swift in Sources */,
 				DF064AF61C8E2A8600E8AB42 /* FacebookLoginProvider.swift in Sources */,
 				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
-				DF064AE21C89021600E8AB42 /* SocialLoginAPIRequestManager.swift in Sources */,
 				DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */,
 				4996C0B91BFBBDE600FA6CD4 /* KeychainService.swift in Sources */,
 			);
