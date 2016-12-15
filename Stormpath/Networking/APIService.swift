@@ -46,12 +46,7 @@ final class APIService: NSObject {
                             "username": username,
                             "password": password]
         
-        apiRequest.send { (response, error) in
-            let accessToken = response?.json?["access_token"] as? String
-            let refreshToken = response?.json?["refresh_token"] as? String
-            
-            self.logincallback(accessToken, refreshToken: refreshToken, error: error, callback: callback)
-        }
+        login(request: apiRequest, callback: callback)
     }
     
     func login(socialProvider provider: StormpathSocialProvider, accessToken: String, callback: StormpathSuccessCallback?) {
@@ -63,12 +58,7 @@ final class APIService: NSObject {
                             "providerId": provider.stringValue(),
                             "accessToken": accessToken]
         
-        apiRequest.send { (response, error) in
-            let accessToken = response?.json?["access_token"] as? String
-            let refreshToken = response?.json?["refresh_token"] as? String
-            
-            self.logincallback(accessToken, refreshToken: refreshToken, error: error, callback: callback)
-        }
+        login(request: apiRequest, callback: callback)
     }
     
     func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, callback: StormpathSuccessCallback?) {
@@ -80,23 +70,25 @@ final class APIService: NSObject {
                             "providerId": provider.stringValue(),
                             "code": authorizationCode]
         
-        apiRequest.send { (response, error) in
-            let accessToken = response?.json?["access_token"] as? String
-            let refreshToken = response?.json?["refresh_token"] as? String
-            
-            self.logincallback(accessToken, refreshToken: refreshToken, error: error, callback: callback)
-        }
+        login(request: apiRequest, callback: callback)
     }
     
-    func logincallback(_ accessToken: String?, refreshToken: String?, error: NSError?, callback: StormpathSuccessCallback?) {
-        guard let accessToken = accessToken, error == nil else {
-            callback?(false, error)
-            return
+    private func login(request: APIRequest, callback: StormpathSuccessCallback?) {
+        request.send { (response, error) in
+            let accessToken = response?.json["access_token"].string
+            let refreshToken = response?.json["refreshToken"].string
+            
+            if let accessToken = accessToken, error == nil {
+                self.stormpath.accessToken = accessToken
+                self.stormpath.refreshToken = refreshToken
+                
+                callback?(true, nil)
+            }
+            else {
+                callback?(false, error)
+                return
+            }
         }
-        stormpath.accessToken = accessToken
-        stormpath.refreshToken = refreshToken
-        
-        callback?(true, nil)
     }
     
     // MARK: Access token refresh
@@ -120,12 +112,7 @@ final class APIService: NSObject {
         apiRequest.body = ["grant_type": "refresh_token",
                            "refresh_token": refreshToken]
         
-        apiRequest.send { (response, error) in
-            let accessToken = response?.json?["access_token"] as? String
-            let refreshToken = response?.json?["refresh_token"] as? String
-            
-            self.logincallback(accessToken, refreshToken: refreshToken, error: error, callback: callback)
-        }
+        login(request: apiRequest, callback: callback)
     }
     
     // MARK: Account data

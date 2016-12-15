@@ -21,6 +21,7 @@
 		DF064AE61C8A518900E8AB42 /* SocialLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */; };
 		DF064AF41C8E26C000E8AB42 /* LoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */; };
 		DF064AF61C8E2A8600E8AB42 /* FacebookLoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF064AF51C8E2A8600E8AB42 /* FacebookLoginProvider.swift */; };
+		DF13258F1E0352D30016925A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF13258E1E0352D30016925A /* SwiftyJSON.swift */; };
 		DF1E20D71C8F47970092232E /* GoogleLoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D61C8F47970092232E /* GoogleLoginProvider.swift */; };
 		DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */; };
 		DF904C7F1C7690FA00BE53E5 /* StormpathLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */; };
@@ -60,6 +61,7 @@
 		DF064AE51C8A518900E8AB42 /* SocialLoginService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocialLoginService.swift; path = Networking/SocialLoginService.swift; sourceTree = "<group>"; };
 		DF064AF31C8E26C000E8AB42 /* LoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginProvider.swift; path = "Social Login/LoginProvider.swift"; sourceTree = "<group>"; };
 		DF064AF51C8E2A8600E8AB42 /* FacebookLoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FacebookLoginProvider.swift; path = "Social Login/FacebookLoginProvider.swift"; sourceTree = "<group>"; };
+		DF13258E1E0352D30016925A /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = Dependencies/SwiftyJSON.swift; sourceTree = "<group>"; };
 		DF1E20D61C8F47970092232E /* GoogleLoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GoogleLoginProvider.swift; path = "Social Login/GoogleLoginProvider.swift"; sourceTree = "<group>"; };
 		DF1E20D81C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathSocialProviderConfiguration.swift; sourceTree = "<group>"; };
 		DF904C7E1C7690FA00BE53E5 /* StormpathLoginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StormpathLoginTests.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 		49A0C4431BFA360A00016534 /* Stormpath */ = {
 			isa = PBXGroup;
 			children = (
+				DF13258D1E0352B90016925A /* Dependencies */,
 				DF055E121C59791D0085ACA2 /* Models */,
 				49A0C45B1BFA40BE00016534 /* Core */,
 				4996C0BA1BFC962600FA6CD4 /* API */,
@@ -207,6 +210,14 @@
 				DF1E20D61C8F47970092232E /* GoogleLoginProvider.swift */,
 			);
 			name = "Social Login";
+			sourceTree = "<group>";
+		};
+		DF13258D1E0352B90016925A /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				DF13258E1E0352D30016925A /* SwiftyJSON.swift */,
+			);
+			name = Dependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -330,6 +341,7 @@
 				DFD122A01C5C233E0038B95E /* StormpathConfiguration.swift in Sources */,
 				DF05441C1C6545B300FF555F /* RegistrationForm.swift in Sources */,
 				DF0544B91C6A7BDE00FF555F /* StormpathError.swift in Sources */,
+				DF13258F1E0352D30016925A /* SwiftyJSON.swift in Sources */,
 				DF064AF61C8E2A8600E8AB42 /* FacebookLoginProvider.swift in Sources */,
 				4996C0BC1BFCAABD00FA6CD4 /* APIService.swift in Sources */,
 				DF1E20D91C8F4B1F0092232E /* StormpathSocialProviderConfiguration.swift in Sources */,

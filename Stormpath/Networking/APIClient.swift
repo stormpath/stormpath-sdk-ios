@@ -130,13 +130,13 @@ struct APIResponse {
         
         return ContentType(rawValue: contentTypeHeader)
     }
-    var json: [String: Any]? {
+    var json: JSON {
         guard contentType == ContentType.json,
         let body = body else {
-            return nil
+            return JSON.null
         }
         
-        return (try? JSONSerialization.jsonObject(with: body, options: [])) as? [String: Any]
+        return JSON(data: body)
     }
     
     var formUrlencoded: [String: String]? {
