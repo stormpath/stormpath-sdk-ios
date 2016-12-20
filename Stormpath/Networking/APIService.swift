@@ -73,10 +73,12 @@ final class APIService: NSObject {
         login(request: apiRequest, callback: callback)
     }
     
-    private func login(request: APIRequest, callback: StormpathSuccessCallback?) {
+    func login(request: APIRequest, callback: StormpathSuccessCallback?) {
         request.send { (response, error) in
             let accessToken = response?.json["access_token"].string
             let refreshToken = response?.json["refreshToken"].string
+            
+            // TODO: add oauth error handling
             
             if let accessToken = accessToken, error == nil {
                 self.stormpath.accessToken = accessToken
@@ -169,6 +171,21 @@ final class APIService: NSObject {
                 callback?(true, nil)
             } else {
                 callback?(false, StormpathError.APIResponseError)
+            }
+        }
+    }
+    
+    typealias LoginModelCallback = (LoginModel?, NSError?) -> Void
+    private var _loginModel: LoginModel?
+    
+    func loginModel(callback: LoginModelCallback? = nil) {
+        let request = APIRequest(method: .get, url: stormpath.configuration.APIURL.appendingPathComponent(Endpoints.login.rawValue))
+        request.send { (response, error) in
+            if let response = response,
+                let loginModel = LoginModel(json: response.json) {
+                callback?(loginModel, nil)
+            } else {
+                callback?(nil, error ?? StormpathError.APIResponseError)
             }
         }
     }

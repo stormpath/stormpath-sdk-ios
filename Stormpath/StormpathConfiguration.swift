@@ -33,6 +33,10 @@ public class StormpathConfiguration: NSObject {
         }
     }
     
+    var urlScheme: String {
+        return APIURL.host?.components(separatedBy: ".").reversed().joined(separator: ".") ?? ""
+    }
+    
     /// App IDs for social providers
     public var socialProviders = [StormpathSocialProvider: StormpathSocialProviderConfiguration]()
     
@@ -44,7 +48,6 @@ public class StormpathConfiguration: NSObject {
     public override init() {
         super.init()
         
-        loadSocialProviderAppIds()
         loadStormpathConfigurationFromInfoPlist()
     }
     
@@ -54,44 +57,6 @@ public class StormpathConfiguration: NSObject {
         }
         
         APIURL = (stormpathInfo["APIURL"] as? String)?.asURL ?? APIURL
-    }
-    
-    private func loadSocialProviderAppIds() {
-        
-        guard let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
-            return
-        }
-        
-        // Convert the complex dictionary into an array of URL schemes
-        let urlSchemes = urlTypes.flatMap({ ($0["CFBundleURLSchemes"] as? [String])?.first })
-        
-        // If there's a match, add it to the list of App IDs.
-        for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
-            if let urlScheme = urlSchemes.flatMap({$0.hasPrefix(handler.urlSchemePrefix) ? $0 : nil}).first, let appId = appIdFrom(urlScheme, socialProvider: socialProvider) {
-                socialProviders[socialProvider] = StormpathSocialProviderConfiguration(appId: appId, urlScheme: urlScheme)
-            }
-        }
-    }
-    
-    private func appIdFrom(_ urlScheme: String, socialProvider: StormpathSocialProvider) -> String? {
-        switch socialProvider {
-        case .facebook:
-            // Turn fb12345 to 12345
-            if let range = urlScheme.range(of: "\\d+", options: .regularExpression) {
-                return urlScheme.substring(with: range)
-            }
-        case .google:
-            // Turn com.googleusercontent.apps.[ID]-[SUFFIX] into 
-            // [ID]-[SUFFIX]-.apps.googleusercontent.com, since Google likes
-            // reversing things.
-            
-            return urlScheme.components(separatedBy: ".").reversed().joined(separator: ".")
-        default:
-            return nil
-        }
-        
-        // Fallback if all else fails
-        return nil
     }
 }
 

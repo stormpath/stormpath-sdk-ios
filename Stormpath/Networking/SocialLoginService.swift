@@ -13,8 +13,6 @@ import SafariServices
  Social Login Service takes care of aspects of handling deep links intended for social login, as well as routing between different social providers.
 */
 class SocialLoginService: NSObject {
-    static let socialProviderHandlers: [StormpathSocialProvider: LoginProvider] = [.facebook: FacebookLoginProvider(), .google: GoogleLoginProvider()]
-    
     weak var stormpath: Stormpath!
     var queuedcallback: StormpathSuccessCallback?
     
@@ -25,44 +23,55 @@ class SocialLoginService: NSObject {
         self.stormpath = stormpath
     }
     
-    func beginLoginFlow(_ socialProvider: StormpathSocialProvider, callback: StormpathSuccessCallback?) {
-        guard socialProvider == .facebook || socialProvider == .google else {
-            preconditionFailure("To use LinkedIn or GitHub login, please use the login with access token method. ")
-        }
-        guard let socialAppInfo = stormpath.configuration.socialProviders[socialProvider] else {
+    func login(provider: Provider, callback: StormpathSuccessCallback? = nil) {
+        guard urlSchemeIsRegistered() else {
             preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
         }
+        
         queuedcallback = callback
-        let authenticationRequestURL = SocialLoginService.socialProviderHandlers[socialProvider]!.authenticationRequestURL(socialAppInfo)
-        presentOAuthSafariView(authenticationRequestURL)
+        
+        stormpath.apiService.loginModel { (loginModel, error) in
+            if let loginModel = loginModel {
+                if let resolvedProvider = loginModel.accountStores.filter({$0.providerId == provider.asString}).first {
+                    self.login(accountStoreHref: resolvedProvider.href, callback: callback)
+                } else {
+                    callback?(false, StormpathError(code: 400, description: "Could not find a \(provider.rawValue) directory in the Application's account stores"))
+                }
+            } else {
+                callback?(false, error ?? StormpathError.APIResponseError)
+            }
+        }
+    }
+    
+    func login(accountStoreHref: URL, callback: StormpathSuccessCallback? = nil) {
+        var authorizeURL = URLComponents(url: stormpath.configuration.APIURL.appendingPathComponent("/authorize"), resolvingAgainstBaseURL: false)!
+        authorizeURL.queryItems = [URLQueryItem(name: "response_type", value: "stormpath_token"),
+                                        URLQueryItem(name: "account_store_href", value: accountStoreHref.absoluteString),
+                                        URLQueryItem(name: "callback_uri", value: "\(stormpath.configuration.urlScheme)://stormpathCallback")]
+        presentOAuthSafariView(authorizeURL.url!)
     }
     
     func handleCallbackURL(_ url: URL) -> Bool {
         safari?.dismiss(animated: true, completion: nil)
         safari = nil
         
-        // Check each prefix, and if there's one that matches, parse the response & login with the appropriate Stormpath social method
-        for (socialProvider, handler) in SocialLoginService.socialProviderHandlers {
-            if url.scheme!.hasPrefix(handler.urlSchemePrefix) {
-                SocialLoginService.socialProviderHandlers[socialProvider]?.getResponseFromCallbackURL(url) { (response, error) -> Void in
-                    guard let response = response, error == nil else {
-                        DispatchQueue.main.async(execute: {self.queuedcallback?(false, error)}) 
-                        return
-                    }
-                    
-                    switch response.type {
-                    case .authorizationCode:
-                        self.stormpath.login(socialProvider: socialProvider, authorizationCode: response.data, callback: self.queuedcallback)
-                    case .accessToken:
-                        self.stormpath.login(socialProvider: socialProvider, accessToken: response.data, callback: self.queuedcallback)
-                    }
-                    self.queuedcallback = nil
-                }
-                return true
-            }
+        guard url.scheme == stormpath.configuration.urlScheme else {
+            return false
         }
-        queuedcallback = nil
-        return false
+        
+        guard let stormpathAssertion = url.queryDictionary["jwtResponse"] else {
+            queuedcallback = nil
+            return false
+        }
+        
+        var request = APIRequest(method: .post, url: stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue))
+        request.contentType = .urlEncoded
+        request.body = ["grant_type": "stormpath_token",
+                        "token": stormpathAssertion]
+        
+        stormpath.apiService.login(request: request, callback: queuedcallback)
+        
+        return true
     }
     
     private func presentOAuthSafariView(_ url: URL) {
@@ -72,5 +81,72 @@ class SocialLoginService: NSObject {
         } else {
             UIApplication.shared.openURL(url)
         }
+    }
+    
+    private func urlSchemes() -> [String] {
+        guard let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
+            return [String]()
+        }
+        
+        // Convert the complex dictionary into an array of URL schemes
+        return urlTypes.flatMap({($0["CFBundleURLSchemes"] as? [String])?.first })
+    }
+    
+    private func urlSchemeIsRegistered() -> Bool {
+        return urlSchemes().contains(stormpath.configuration.urlScheme)
+    }
+}
+
+public enum Provider: Int {
+    case facebook,
+    google,
+    linkedin,
+    github,
+    twitter
+    
+    var asString: String {
+        switch self {
+        case .facebook:
+            return "facebook"
+        case .google:
+            return "google"
+        case .linkedin:
+            return "linkedin"
+        case .github:
+            return "github"
+        case .twitter:
+            return "twitter"
+        }
+    }
+}
+
+extension URL {
+    /// Dictionary with key/value pairs from the URL fragment
+    var fragmentDictionary: [String: String] {
+        return dictionaryFromFormEncodedString(fragment)
+    }
+    
+    /// Dictionary with key/value pairs from the URL query string
+    var queryDictionary: [String: String] {
+        return dictionaryFromFormEncodedString(query)
+    }
+    
+    private func dictionaryFromFormEncodedString(_ input: String?) -> [String: String] {
+        var result = [String: String]()
+        
+        guard let input = input else {
+            return result
+        }
+        let inputPairs = input.components(separatedBy: "&")
+        
+        for pair in inputPairs {
+            let split = pair.components(separatedBy: "=")
+            if split.count == 2 {
+                if let key = split[0].removingPercentEncoding, let value = split[1].removingPercentEncoding {
+                    result[key] = value
+                }
+            }
+        }
+        return result
     }
 }

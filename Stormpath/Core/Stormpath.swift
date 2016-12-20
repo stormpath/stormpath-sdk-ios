@@ -94,8 +94,8 @@ public final class Stormpath: NSObject {
          have an access token
        - callback: Callback on success or failure
      */
-    public func login(socialProvider provider: StormpathSocialProvider, callback: StormpathSuccessCallback? = nil) {
-        socialLoginService.beginLoginFlow(provider, callback: callback)
+    public func login(provider: Provider, callback: StormpathSuccessCallback? = nil) {
+        socialLoginService.login(provider: provider, callback: callback)
     }
     
     
