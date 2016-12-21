@@ -97,13 +97,23 @@ class SocialLoginService: NSObject {
     }
 }
 
+/// Social Login Providers
 @objc(SPHProvider)
 public enum Provider: Int {
-    case facebook,
-    google,
-    linkedin,
-    github,
-    twitter
+    /// Facebook
+    case facebook
+    
+    /// Google
+    case google
+    
+    /// Linkedin
+    case linkedin
+    
+    /// GitHub
+    case github
+    
+    /// Twitter
+    case twitter
     
     var asString: String {
         switch self {

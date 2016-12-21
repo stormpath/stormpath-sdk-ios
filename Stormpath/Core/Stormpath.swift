@@ -110,7 +110,7 @@ public final class Stormpath: NSObject {
        - callback: A block of code that is called back on success or
          failure.
      */
-    public func login(socialProvider provider: Provider, accessToken: String, callback: StormpathSuccessCallback? = nil) {
+    public func login(provider: Provider, accessToken: String, callback: StormpathSuccessCallback? = nil) {
         apiService.login(socialProvider: provider, accessToken: accessToken, callback: callback)
     }
     
@@ -126,7 +126,7 @@ public final class Stormpath: NSObject {
      */
     // Making this internal for now, since we don't support auth codes for FB / 
     // Google
-    func login(socialProvider provider: Provider, authorizationCode: String, callback: StormpathSuccessCallback? = nil) {
+    func login(provider: Provider, authorizationCode: String, callback: StormpathSuccessCallback? = nil) {
         apiService.login(socialProvider: provider, authorizationCode: authorizationCode, callback: callback)
     }
     

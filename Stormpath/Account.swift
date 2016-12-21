@@ -102,7 +102,8 @@ public class Account: NSObject {
 }
 
 /// Stormpath Account Status
-@objc public enum AccountStatus: Int {
+@objc(SPHAccountStatus)
+public enum AccountStatus: Int {
     //It's an int for Obj-C compatibility
     
     /// Enabled means that we can login to this account
