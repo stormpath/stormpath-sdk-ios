@@ -25,7 +25,7 @@ class SocialLoginService: NSObject {
     
     func login(provider: Provider, callback: StormpathSuccessCallback? = nil) {
         guard urlSchemeIsRegistered() else {
-            preconditionFailure("Social Provider info could not be read from configuration. Did you add the URL scheme to Info.plist?")
+            preconditionFailure("Social Provider info could not be read from configuration. Did you add your URL scheme (\(stormpath.configuration.urlScheme)) to Info.plist?")
         }
         
         queuedcallback = callback
@@ -35,7 +35,7 @@ class SocialLoginService: NSObject {
                 if let resolvedProvider = loginModel.accountStores.filter({$0.providerId == provider.asString}).first {
                     self.login(accountStoreHref: resolvedProvider.href, callback: callback)
                 } else {
-                    callback?(false, StormpathError(code: 400, description: "Could not find a \(provider.rawValue) directory in the Application's account stores"))
+                    callback?(false, StormpathError(code: 400, description: "Could not find a \(provider.asString) directory in the Application's account stores"))
                 }
             } else {
                 callback?(false, error ?? StormpathError.APIResponseError)
@@ -47,7 +47,7 @@ class SocialLoginService: NSObject {
         var authorizeURL = URLComponents(url: stormpath.configuration.APIURL.appendingPathComponent("/authorize"), resolvingAgainstBaseURL: false)!
         authorizeURL.queryItems = [URLQueryItem(name: "response_type", value: "stormpath_token"),
                                         URLQueryItem(name: "account_store_href", value: accountStoreHref.absoluteString),
-                                        URLQueryItem(name: "callback_uri", value: "\(stormpath.configuration.urlScheme)://stormpathCallback")]
+                                        URLQueryItem(name: "redirect_uri", value: "\(stormpath.configuration.urlScheme)://stormpathCallback")]
         presentOAuthSafariView(authorizeURL.url!)
     }
     
