@@ -53,15 +53,22 @@ class APIClient {
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data,
                 let response = response as? HTTPURLResponse else {
-                    callback?(nil, error as? NSError)
+                    DispatchQueue.main.async {
+                        callback?(nil, error as? NSError)
+                    }
                     return
             }
             var apiResponse = APIResponse(status: response.statusCode)
             apiResponse.headers = response.allHeaderFields as NSDictionary as? [String: String] ?? apiResponse.headers
             apiResponse.body = data
             
+            
             DispatchQueue.main.async {
-                callback?(apiResponse, nil)
+                if response.statusCode / 100 != 2 {
+                    callback?(nil, StormpathError.error(from: apiResponse))
+                } else {
+                    callback?(apiResponse, nil)
+                }
             }
         }
         task.resume()

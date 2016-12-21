@@ -29,12 +29,12 @@ class StormpathMeTests: XCTestCase {
     func testThatWeCanRetrieveAccount() {
         let expectation = self.expectation(description: "We should be able to get an account object from the server.")
         
-        stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
+        stormpath.login(username: testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should be a success. ")
-            self.stormpath.me({ (account, error) -> Void in
+            self.stormpath.me { (account, error) -> Void in
                 XCTAssertNotNil(account, "Account should not be nil; error is \(error?.localizedDescription)")
                 expectation.fulfill()
-            })
+            }
         }
         waitForExpectations(timeout: timeout, handler: nil)
     }
@@ -53,7 +53,7 @@ class StormpathMeTests: XCTestCase {
     func testThatWeCanResetPasswordWithArbitraryEmail() {
         let expectation = self.expectation(description: "We can always make a successful request to reset the password")
         
-        stormpath.resetPassword("fakeuser@example.com") { (success, error) -> Void in
+        stormpath.resetPassword(email: "fakeuser@example.com") { (success, error) -> Void in
             XCTAssertTrue(success, "Success should be true")
             XCTAssertNil(error, "There should be no error unless there's a network issue")
             expectation.fulfill()

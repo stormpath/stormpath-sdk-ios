@@ -30,7 +30,7 @@ class StormpathLoginTests: XCTestCase {
     func testThatWeCanLoginWithAValidUser() {
         let expectation = self.expectation(description: "We should be able to login with a valid user")
         
-        stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
+        stormpath.login(username: testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should be successful.")
             XCTAssertNil(error, "Error should be nil, not \(error?.localizedDescription)")
             XCTAssertNotNil(self.stormpath.accessToken, "Access token should not be nil")
@@ -44,7 +44,7 @@ class StormpathLoginTests: XCTestCase {
     func testThatWeCannotLoginWithAnInvalidUser() {
         let expectation = self.expectation(description: "We shouldn't be able to login with invalid credentials")
         
-        stormpath.login("wefiaojef@awfiowjei.com", password: "awoiejfawoeifjawief") { (success, error) -> Void in
+        stormpath.login(username: "wefiaojef@awfiowjei.com", password: "awoiejfawoeifjawief") { (success, error) -> Void in
             XCTAssertFalse(success, "Login should not be successful")
             XCTAssertNotNil(error, "Error should not be empty")
             XCTAssertEqual(error?.code, 400, "Error should be 400 Bad Request with a json message. Error is \(error?.localizedDescription)")
@@ -57,19 +57,19 @@ class StormpathLoginTests: XCTestCase {
     func testThatWeCanRefreshAValidToken() {
         let expectation = self.expectation(description: "We should be able to refresh a token. ")
         
-        stormpath.login(testUsername, password: testPassword) { (success, error) -> Void in
+        stormpath.login(username: testUsername, password: testPassword) { (success, error) -> Void in
             XCTAssertTrue(success, "Login should have succeeded. We got error: \(error?.localizedDescription)")
             XCTAssertNil(error, "Error should be nil, not \(error?.localizedDescription)")
             XCTAssertNotNil(self.stormpath.accessToken, "Access token should not be nil")
             XCTAssertNotNil(self.stormpath.refreshToken, "Refresh token should not be nil")
             
             let oldAccessToken = self.stormpath.accessToken
-            self.stormpath.refreshAccessToken({ (success, error) -> Void in
+            self.stormpath.refreshAccessToken { (success, error) -> Void in
                 XCTAssertTrue(success,"We got an error while refreshing token: \(error?.localizedDescription)")
                 XCTAssertNotEqual(oldAccessToken, self.stormpath.accessToken, "The new access token should not equal the old access token")
                 
                 expectation.fulfill()
-            })
+            }
         }
         waitForExpectations(timeout: timeout, handler: nil)
     }

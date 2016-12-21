@@ -76,9 +76,7 @@ final class APIService: NSObject {
     func login(request: APIRequest, callback: StormpathSuccessCallback?) {
         request.send { (response, error) in
             let accessToken = response?.json["access_token"].string
-            let refreshToken = response?.json["refreshToken"].string
-            
-            // TODO: add oauth error handling
+            let refreshToken = response?.json["refresh_token"].string
             
             if let accessToken = accessToken, error == nil {
                 self.stormpath.accessToken = accessToken

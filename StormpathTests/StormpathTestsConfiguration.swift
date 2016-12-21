@@ -8,8 +8,8 @@
 
 import Foundation
 
-private let env_APIURL = ProcessInfo.processInfo.environment["APIURL"] ?? "http://localhost:3000"
+private let env_APIURL = ProcessInfo.processInfo.environment["APIURL"] ?? "https://edjiang.apps.stormpath.io"
 let APIURL = URL(string: env_APIURL)!
-let timeout = 5.0
+let timeout = 10.0
 let testUsername = "edward@stormpath.com"
 let testPassword = "TestTest1"

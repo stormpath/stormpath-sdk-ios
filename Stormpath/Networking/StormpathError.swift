@@ -40,16 +40,16 @@ public class StormpathError: NSError {
      Converts a Framework Integration error response into a StormpathError 
      object.
      */
-    class func errorForResponse(_ response: HTTPURLResponse, data: Data) -> StormpathError {
+    class func error(from response: APIResponse) -> StormpathError {
         var description = ""
-        if let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any], let errorDescription = json["message"] as? String {
+        if let errorDescription = response.json["message"].string {
             description = errorDescription
-        } else if response.statusCode == 401 {
+        } else if response.status == 401 {
             description = "Unauthorized"
         } else {
             return StormpathError.APIResponseError
         }
-        return StormpathError(code: response.statusCode, description: description)
+        return StormpathError(code: response.status, description: description)
     }
     
     /**
