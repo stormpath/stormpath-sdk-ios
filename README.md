@@ -14,21 +14,9 @@ iOS 8.0+ / Xcode 8.0+ (Swift 3)
 
 # Set up
 
-Stormpath's iOS SDK allows developers utilizing Stormpath to quickly integrate authentication and token management into their app. 
+Stormpath's iOS SDK allows developers utilizing Stormpath to quickly integrate authentication and token management into their apps. 
 
 We're constantly iterating and improving the SDK, so please don't hesitate to send us your feedback! You can reach us via support@stormpath.com, or on the issue tracker for feature requests. 
-
-## Setting up a Compatible Backend
-
-Stormpath's framework integrations plug into popular web frameworks and expose pre-built API endpoints that you can customize. These web framework integrations are:
-
-* [Express](https://docs.stormpath.com/nodejs/express/latest/)
-* [Laravel](https://docs.stormpath.com/php/laravel/latest/)
-* [.NET Core](https://docs.stormpath.com/dotnet/aspnetcore/latest/)
-* [Spring / Java Servlet](https://docs.stormpath.com/java/)
-* [Ruby on Rails](https://github.com/stormpath/stormpath-rails)
-
-If you're just testing, it's pretty quick to set up a server using the [express sample project](https://github.com/stormpath/express-stormpath-sample-project). 
 
 # Installation
 
@@ -37,17 +25,7 @@ If you're just testing, it's pretty quick to set up a server using the [express 
 Stormpath is available through [CocoaPods](https://cocoapods.org/). Add this line to your `Podfile` to begin:
 
 ```ruby
-pod 'Stormpath', '~> 2.0'
-```
-
-For older versions of Swift:
-
-```ruby
-# Swift 2.3; Xcode 8
-pod 'Stormpath', :git => 'https://github.com/Stormpath/stormpath-sdk-ios.git', :branch => 'swift2.3'
-
-# Swift 2.2; Xcode 7
-pod 'Stormpath', '~> 1.3'
+pod 'Stormpath', '~> 3.0'
 ```
 
 ## Carthage
@@ -55,7 +33,7 @@ pod 'Stormpath', '~> 1.3'
 To use Stormpath with [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
 
 ```ogdl
-github "stormpath/stormpath-sdk-ios" ~> 2.0
+github "stormpath/stormpath-sdk-ios" ~> 3.0
 ```
 
 # Usage
@@ -76,38 +54,34 @@ For Objective-C projects:
 #import "Stormpath-Swift.h"
 ```
 
-## Setting up the API Endpoints
+## Configuring Stormpath
 
-Stormpath's default configuration will attempt to connect to `http://localhost:3000/`. This is the default configuration for the `express-stormpath` integration and is useful when you're testing in the iOS simulator. However, you'll need to modify this for any other setups. 
+The iOS SDK (v3) leverages the [Stormpath Client API](https://docs.stormpath.com/client-api/product-guide/latest/index.html) for its authentication needs. You'll need to sign into the [Stormpath Admin Console](https://api.stormpath.com/) to get your Client API details. Go into your Application > Policies > Client API, and ensure that it's enabled. Copy your DNS Label, and set it in your Xcode project: 
 
 Swift:
 
 ```Swift
-StormpathConfiguration.defaultConfiguration.APIURL = URL(string: "http://localhost:3000")!
+Stormpath.sharedSession.configuration.APIURL = URL(string: "https://edjiang.apps.stormpath.io")!
 ```
 
 Objective-C:
 
 ```Objective-C
-[StormpathConfiguration defaultConfiguration].APIURL = [[URL alloc] initWithString:@"http://localhost:3000"];
+[[SPHStormpath sharedSession] configuration].APIURL = [[NSURL alloc] initWithString:@"https://edjiang.apps.stormpath.io"];
 ```
-
-*Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should always be using `https` for your API endpoints.*
 
 ## User registration
 
-In order to register a user, instantiate a `RegistrationModel` object. By default, Stormpath framework integrations require an `email`, `password`, `givenName`, and `surname`. 
+In order to register a user, instantiate a `RegistrationForm` object. Stormpath requires an `email` and `password` to register.
 
 ```Swift
-let account = RegistrationModel(email: "user@example.com", password: "ExamplePassword")
-account.givenName = "Example"
-account.surname = "McExample"
+let newUser = RegistrationForm(email: "user@example.com", password: "ExamplePassword")
 ```
 
 Then, just invoke the register method on `Stormpath` class:
 
 ```Swift
-Stormpath.sharedSession.register(account) { (account, error) -> Void in
+Stormpath.sharedSession.register(account: newUser) { (account, error) -> Void in
     guard let account = account where error == nil else {
         //The account registration failed
         return
@@ -124,7 +98,7 @@ Stormpath.sharedSession.register(account) { (account, error) -> Void in
 To log in, collect the email (or username) and password from the user, and then pass them to the login method:
 
 ```Swift
-Stormpath.sharedSession.login("user@example.com", password: "ExamplePassword") { (success, error) -> Void in
+Stormpath.sharedSession.login(username: "user@example.com", password: "ExamplePassword") { success, error in
     guard error == nil else {
         // We could not authenticate the user with the given credentials. Handle the error. 
         return
@@ -133,20 +107,26 @@ Stormpath.sharedSession.login("user@example.com", password: "ExamplePassword") {
 }
 ```
 
-**Note: Logging in does not work in the iOS 10 simulator because of a simulator bug. However, logging in works on actual devices, or older simulators, like the iOS 9 simulator. To test your app, use the iOS 9 simulator, or run the code on a physical device. See this [Stack Overflow](http://stackoverflow.com/questions/38456471/secitemadd-always-returns-error-34018-in-xcode-8-beta-gm-in-ios-10-simulator) thread for more information on the simulator bug.**
+## Logging in with Social Providers
 
-## Logging in with Facebook or Google
+Stormpath also supports logging in with a variety of social providers Facebook, Google, LinkedIn, GitHub, and more. There are two flows for enabling this:
 
-Stormpath also supports logging in with Facebook or Google. There are two flows for enabling this:
+1. Let Stormpath handle the social login.
+2. Use the social provider's iOS SDK to get an access token, and pass it to Stormpath to log in.
 
-1. Let Stormpath handle the Facebook / Google Login.
-2. Use the Facebook / Google iOS SDK to get an access token, and pass it to Stormpath to log in.
+We've made it extremely easy to set up social login without using the social provider SDKs, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to [Using a social provider SDK](#using-a-social-provider-sdk)). 
 
-We've made it extremely easy to set up social login without using the Facebook / Google SDK, but if you need to use their SDKs for more features besides logging in, you should use flow #2 (and skip directly to [Using the Facebook or Google SDK](#using-the-google-or-facebook-sdk)). 
+### Configure Your Social Directory in Stormpath
 
-### Setting up your AppDelegate
+If you haven't yet set up your social providers in Stormpath as an account store for your Stormpath Application, read about [social login in the Stormpath Product Guide](https://docs.stormpath.com/rest/product-guide/latest/auth_n.html#how-social-authentication-works).
 
-In your Xcode project, add the following methods to your `AppDelegate`:
+### Setting up your Xcode project
+
+In your Xcode project, you'll need to create a URL Scheme so that the login process can call back to your app. Go to the project's info tab. Under "URL Types", add a new entry, and in the URL schemes form field, type in your Client API's DNS label, but reversed. For instance, if your Client API DNS Label is `edjiang.apps.stormpath.io`, type in `io.stormpath.apps.edjiang`. 
+
+In the [Stormpath Admin Console](https://api.stormpath.com)'s Application settings, add that URL as an "authorized callback URL", appending `://stormpathCallback`. Following my earlier example, I would use `io.stormpath.apps.edjiang`. 
+
+Also, add the following methods to your `AppDelegate` in your Xcode project:
 
 ```Swift
 // iOS 9+ link handler
@@ -160,15 +140,9 @@ func application(_ application: UIApplication, open url: URL, sourceApplication:
 }
 ```
 
-### Setting up Facebook Login
+### Initiating Social Login
 
-To get started, you first need to [register an application](https://developers.facebook.com/?advanced_app_create=true) with Facebook. After registering your app, go into your app dashboard's settings page. Click "Add Platform", and fill in your Bundle ID, and turn "Single Sign On" on. 
-
-Then, [sign into Stormpath](https://api.stormpath.com/login) and add a Facebook directory to your account. Fill the App ID and Secret with the values given to you in the Facebook app dashboard. Then, add the directory to your Stormpath application. 
-
-Finally, open up your App's Xcode project and go to the project's info tab. Under "URL Types", add a new entry, and in the URL schemes form field, type in `fb[APP_ID_HERE]`, replacing `[APP_ID_HERE]` with your Facebook App ID. 
-
-Then, you can initiate the login screen by calling: 
+Now, you can initiate the login screen by calling: 
 
 ```Swift
 Stormpath.sharedSession.login(socialProvider: .facebook) { (success, error) -> Void in
@@ -178,23 +152,7 @@ Stormpath.sharedSession.login(socialProvider: .facebook) { (success, error) -> V
 }
 ```
 
-### Setting up Google Login
-
-To get started, you first need to [register an application](https://console.developers.google.com/project) with Google. Click "Enable and Manage APIs", and then the credentials tab. Create two sets of OAuth Client IDs, one as "Web Application", and one as "iOS". 
-
-Then, [sign into Stormpath](https://api.stormpath.com/login) and add a Google directory to your account. Fill in the Client ID and Secret with the values given to you for the web client. (You can fill in "Google Authorized Redirect URI" with `http://YOURSERVER/callbacks/google`. Then, add the directory to your Stormpath application. 
-
-Finally, open up your App's Xcode project and go to the project's info tab. Under "URL Types", add a new entry, and in the URL schemes form field, type in your Google iOS Client's `iOS URL scheme` from the Google Developer Console. 
-
-Then, you can initiate the login screen by calling: 
-
-```Swift
-Stormpath.sharedSession.login(socialProvider: .google) { (success, error) -> Void in
-	// Same callback as above
-}
-```
-
-### Using the Google or Facebook SDK
+### Using a Social Provider SDK
 
 If you're using the [Facebook SDK](https://developers.facebook.com/docs/facebook-login/ios) or [Google SDK](https://developers.google.com/identity/sign-in/ios/) for your app, follow their setup instructions instead. Once you successfully sign in with their SDK, utilize the following methods to send your access token to Stormpath, and log in your user: 
 
@@ -208,10 +166,6 @@ Stormpath.sharedSession.login(socialProvider: .google, accessToken: GIDSignIn.sh
 }
 ```
 
-### GitHub and LinkedIn login
-
-GitHub and LinkedIn login are not officially supported in the iOS SDK, but there is a way to implement it. [See this example project](https://github.com/edjiang/stormpath-mobile-linkedin-example) for more details. 
-
 ## Using the Access Token
 
 You can utilize the access token to access any of your API endpoints that require authentication. It's stored as a property on the Stormpath object as `Stormpath.sharedSession.accessToken`. If you need to refresh it, use `Stormpath.sharedSession.refreshAccessToken()`. Depending on the networking library you're using, here's how you'd use the access token:
@@ -220,22 +174,24 @@ You can utilize the access token to access any of your API endpoints that requir
 
 ```Swift
 var request = URLRequest(URL: url)
-request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+request.setValue("Bearer " + accessToken ?? "", forHTTPHeaderField: "Authorization")
 ```
 
 ### Alamofire
 
 ```Swift
-let headers = ["Authorization": "Bearer " + accessToken]
+let headers = ["Authorization": "Bearer " + accessToken ?? ""]
 Alamofire.request(url, method: .get, headers: headers)
 ```
+
+*Note: As of the iOS 9 SDK, Apple has enabled App Transport Security by default. If you're developing against an `http` endpoint, you'll need to disable it. For production, you should always be using `https` for your API endpoints.*
 
 ## Account data
 
 Stormpath's framework integrations provide a default endpoint for retrieving profile information. Fetch the account data by using me:
 
 ```Swift
-Stormpath.sharedSession.me { (account, error) -> Void in
+Stormpath.sharedSession.me { account, error in
 	guard let account = account where error == nil else {
 	    // We might not be logged in, the API is misconfigured, the API is down, etc
 	    return
@@ -257,7 +213,7 @@ Stormpath.sharedSession.logout()
 To reset a user's password, you'll need to collect their email first. Then simply pass that email to the `resetPassword` function like so:
 
 ```Swift
-Stormpath.sharedSession.resetPassword("user@example.com") { (success, error) -> Void in
+Stormpath.sharedSession.resetPassword(email: "user@example.com") { success, error in
     guard error == nil else {
     	// A network or API problem occurred. 
         return
@@ -280,30 +236,15 @@ For user errors, `StormpathError` will have the HTTP error code of the API respo
 
 In special cases, StormpathError will have code 0 or 1. These are developer errors that should not be displayed to the user. 0 stands for "Stormpath SDK Error", and most likely indicates a bug with the Stormpath SDK that should be reported to us. 1 stands for "API Response Error", and means that the API responded with something unexpected. This most likely means that you have your backend integration misconfigured. 
 
-## Custom configuration
+## Configuring Stormpath with Info.plist
 
-`StormpathConfiguration` can be used to point Stormpath to a specific API URL, as well as custom endpoints. While you can modify the object directly, you can also put your configuration in Info.plist. To add the Stormpath configuration, right click on Info.plist, and click "open as source code". Before the last `</plist>` tag, paste: 
+`StormpathConfiguration` can be used to point Stormpath to a specific API URL. While you can modify the object directly, you can also put your configuration in Info.plist. To add the Stormpath configuration, right click on Info.plist, and click "open as source code". Before the last `</plist>` tag, paste: 
 
 ```xml
 <key>Stormpath</key>
 <dict>
 	<key>APIURL</key>
 	<string>http://localhost:3000</string>
-	<key>customEndpoints</key>
-	<dict>
-		<key>me</key>
-		<string>/me</string>
-		<key>verifyEmail</key>
-		<string>/verify</string>
-		<key>forgotPassword</key>
-		<string>/forgot</string>
-		<key>oauth</key>
-		<string>/oauth/token</string>
-		<key>logout</key>
-		<string>/logout</string>
-		<key>register</key>
-		<string>/register</string>
-	</dict>
 </dict>
 ```
 
