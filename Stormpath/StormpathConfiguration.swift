@@ -18,6 +18,7 @@ import Foundation
  - note: The endpoints refer to the endpoints in the Stormpath Framework Spec. 
    Use leading slashes to specify the endpoints.
  */
+@objc(SPHStormpathConfiguration)
 public class StormpathConfiguration: NSObject {
     /**
      Singleton object representing the default configuration loaded from the 

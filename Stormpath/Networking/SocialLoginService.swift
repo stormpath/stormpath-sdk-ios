@@ -97,7 +97,8 @@ class SocialLoginService: NSObject {
     }
 }
 
-@objc public enum Provider: Int {
+@objc(SPHProvider)
+public enum Provider: Int {
     case facebook,
     google,
     linkedin,

@@ -21,6 +21,7 @@ public typealias StormpathAccountCallback = (Account?, NSError?) -> Void
  refresh tokens securely. All callbacks to the application are handled on the 
  main thread.
  */
+@objc(SPHStormpath)
 public final class Stormpath: NSObject {
     /// Singleton representing the primary Stormpath instance using the default configuration.
     public static let sharedSession = Stormpath(identifier: "default")

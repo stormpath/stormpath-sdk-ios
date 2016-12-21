@@ -12,6 +12,7 @@ import Foundation
  Model for the account registration form. The fields requested in the initializer 
  are required.
  */
+@objc(SPHRegistrationForm)
 public class RegistrationForm: NSObject {
     
     /**

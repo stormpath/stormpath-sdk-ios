@@ -21,6 +21,7 @@ let StormpathErrorDomain = "StormpathErrorDomain"
  support this version of Stormpath)
 */
 
+@objc(SPHStormpathError)
 public class StormpathError: NSError {
     /**
      Internal SDK Error represents errors that should not have occurred and are

@@ -10,7 +10,8 @@ import Foundation
 
 /**
  Account represents an account object from the Stormpath database.
-*/
+ */
+@objc(SPHAccount)
 public class Account: NSObject {
     /// Stormpath resource URL for the account
     internal(set) public var href: URL!
