@@ -177,10 +177,17 @@ final class APIService: NSObject {
     private var _loginModel: LoginModel?
     
     func loginModel(callback: LoginModelCallback? = nil) {
+        guard _loginModel == nil else {
+            DispatchQueue.main.async {
+                callback?(self._loginModel, nil)
+            }
+            return
+        }
         let request = APIRequest(method: .get, url: stormpath.configuration.APIURL.appendingPathComponent(Endpoints.login.rawValue))
         request.send { (response, error) in
             if let response = response,
                 let loginModel = LoginModel(json: response.json) {
+                self._loginModel = loginModel
                 callback?(loginModel, nil)
             } else {
                 callback?(nil, error ?? StormpathError.APIResponseError)
