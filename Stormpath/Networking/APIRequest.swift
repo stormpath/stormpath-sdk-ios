@@ -44,8 +44,11 @@ struct APIRequest {
                 request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
             case .urlEncoded:
                 request.httpBody = body.map { (key, value) -> String in
-                    let key = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-                    let value = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    var formUrlEncodedCharacters = CharacterSet.urlQueryAllowed
+                    formUrlEncodedCharacters.insert(charactersIn: "+&")
+                    
+                    let key = key.addingPercentEncoding(withAllowedCharacters: formUrlEncodedCharacters) ?? ""
+                    let value = "\(value)".addingPercentEncoding(withAllowedCharacters: formUrlEncodedCharacters) ?? ""
                     return "\(key)=\(value)"
                     }
                     .joined(separator: "&")
