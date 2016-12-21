@@ -49,25 +49,25 @@ final class APIService: NSObject {
         login(request: apiRequest, callback: callback)
     }
     
-    func login(socialProvider provider: StormpathSocialProvider, accessToken: String, callback: StormpathSuccessCallback?) {
+    func login(socialProvider provider: Provider, accessToken: String, callback: StormpathSuccessCallback?) {
         let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: socialLoginURL)
         apiRequest.contentType = .urlEncoded
         apiRequest.body = [ "grant_type": "stormpath_social",
-                            "providerId": provider.stringValue(),
+                            "providerId": provider.asString,
                             "accessToken": accessToken]
         
         login(request: apiRequest, callback: callback)
     }
     
-    func login(socialProvider provider: StormpathSocialProvider, authorizationCode: String, callback: StormpathSuccessCallback?) {
+    func login(socialProvider provider: Provider, authorizationCode: String, callback: StormpathSuccessCallback?) {
         let socialLoginURL = stormpath.configuration.APIURL.appendingPathComponent(Endpoints.oauthToken.rawValue)
         
         var apiRequest = APIRequest(method: .post, url: socialLoginURL)
         apiRequest.contentType = .urlEncoded
         apiRequest.body = [ "grant_type": "stormpath_social",
-                            "providerId": provider.stringValue(),
+                            "providerId": provider.asString,
                             "code": authorizationCode]
         
         login(request: apiRequest, callback: callback)

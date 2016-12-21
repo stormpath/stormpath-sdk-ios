@@ -37,9 +37,6 @@ public class StormpathConfiguration: NSObject {
         return APIURL.host?.components(separatedBy: ".").reversed().joined(separator: ".") ?? ""
     }
     
-    /// App IDs for social providers
-    public var socialProviders = [StormpathSocialProvider: StormpathSocialProviderConfiguration]()
-    
     /**
      Initializer for StormpathConfiguration. The initializer pulls defaults from 
      the Info.plist file, and falls back to default SDK values. Modify the 
