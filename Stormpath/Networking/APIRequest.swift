@@ -45,7 +45,7 @@ struct APIRequest {
             case .urlEncoded:
                 request.httpBody = body.map { (key, value) -> String in
                     var formUrlEncodedCharacters = CharacterSet.urlQueryAllowed
-                    formUrlEncodedCharacters.insert(charactersIn: "+&")
+                    formUrlEncodedCharacters.remove(charactersIn: "+&")
                     
                     let key = key.addingPercentEncoding(withAllowedCharacters: formUrlEncodedCharacters) ?? ""
                     let value = "\(value)".addingPercentEncoding(withAllowedCharacters: formUrlEncodedCharacters) ?? ""
