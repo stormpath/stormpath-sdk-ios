@@ -24,8 +24,7 @@ public class Account: NSObject {
     internal(set) public var email: String!
     
     /**
-     Given (first) name of the user. Will appear as "UNKNOWN" on platforms
-     that do not require `givenName`
+     Given (first) name of the user.
      */
     internal(set) public var givenName: String!
     
@@ -33,7 +32,7 @@ public class Account: NSObject {
     internal(set) public var middleName: String?
     
     /**
-    Sur (last) name of the user. Will appear as "UNKNOWN" on platforms that do not require `surname`
+    Sur (last) name of the user.
     */
     internal(set) public var surname: String!
     
@@ -51,7 +50,7 @@ public class Account: NSObject {
     /// Status of the account. Useful if email verification is needed.
     internal(set) public var status: AccountStatus
     
-    /// A string of JSON representing the custom data for the account. Cannot be updated in the current version of the SDK.
+    /// A string of JSON representing the custom data for the account. Read-only.
     internal(set) public var customData: String?
     
     /// Initializer for the JSON object for the account. Expected to be wrapped in `{account: accountObject}`

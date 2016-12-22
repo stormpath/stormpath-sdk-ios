@@ -32,13 +32,12 @@ public class StormpathError: NSError {
     /**
      API Response Error represents errors that occurred because the API didn't 
      respond in a recognized way. Check that the SDK is configured to hit a 
-     correct endpoint, or that the Framework integration is a compatible 
-     version.
+     correct endpoint.
      */
     static let APIResponseError = StormpathError(code: 1, description: "Unrecognized API Response")
      
     /**
-     Converts a Framework Integration error response into a StormpathError 
+     Converts a Stormpath error response into a StormpathError 
      object.
      */
     class func error(from response: APIResponse) -> StormpathError {

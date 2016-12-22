@@ -16,8 +16,8 @@ public typealias StormpathAccountCallback = (Account?, NSError?) -> Void
 
 /**
  Stormpath represents the state of the application's connection to the Stormpath 
- Framework server. It allows you to connect to the Stormpath Framework 
- Integration API, register, login, and stores the current account's access and
+ Client API. It allows you to connect to the Stormpath Client API, 
+ register, login, and stores the current account's access and
  refresh tokens securely. All callbacks to the application are handled on the 
  main thread.
  */
@@ -59,7 +59,7 @@ public final class Stormpath: NSObject {
      This method registers an account from the data provided.
      
      - parameters:
-       - account: A Registration Model object with the account data you want to
+       - account: A RegistrationForm object with the account data you want to
          register.
        - callback: The completion block to be invoked after the API
          request is finished. It returns an account object.
@@ -69,8 +69,7 @@ public final class Stormpath: NSObject {
     }
     
     /**
-     Logs in an account and assumes that the login path is behind the /login
-     relative path. This method also stores the account session tokens for later
+     Logs in an account. This method also stores the account access tokens for later
      use.
      
      - parameters:
@@ -155,8 +154,7 @@ public final class Stormpath: NSObject {
     - parameters:
        - email: Account email. Usually from an input.
        - callback: The completion block to be invoked after the API
-         request is finished. This will always succeed if the API call is 
-         successful.
+         request is finished. This will always succeed if there are no network problems.
     */
     public func resetPassword(email: String, callback: StormpathSuccessCallback? = nil) {
         apiService.resetPassword(email, callback: callback)
@@ -175,8 +173,7 @@ public final class Stormpath: NSObject {
     
     /**
      Provides the last access token fetched by either login or 
-     refreshAccessToken functions. The validity of the token is not verified 
-     upon fetching!
+     refreshAccessToken functions.
      
      - returns: Access token for your API calls.
     */

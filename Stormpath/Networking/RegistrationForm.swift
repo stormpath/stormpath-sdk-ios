@@ -16,21 +16,19 @@ import Foundation
 public class RegistrationForm: NSObject {
     
     /**
-     Given (first) name of the user. Required by default, but can be turned off 
-     in the Framework configuration.
+     Given (first) name of the user.
      */
     public var givenName = ""
     
     /**
-     Sur (last) name of the user. Required by default, but can be turned off in 
-     the Framework configuration.
+     Sur (last) name of the user.
      */
     public var surname = ""
     
-    /// Email address of the user. Only validated server-side at the moment.
+    /// Email address of the user.
     public var email: String
     
-    /// Password for the user. Only validated server-side at the moment.
+    /// Password for the user.
     public var password: String
     
     /**
@@ -45,7 +43,7 @@ public class RegistrationForm: NSObject {
     public var customFields = [String: String]()
     
     /**
-     Initializer for Registration Model. After initialization, all fields can be 
+     Initializer for Registration Form. After initialization, all fields can be 
      modified. 
      
      - parameters:
