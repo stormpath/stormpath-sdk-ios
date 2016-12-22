@@ -145,7 +145,7 @@ func application(_ application: UIApplication, open url: URL, sourceApplication:
 Now, you can initiate the login screen by calling: 
 
 ```Swift
-Stormpath.sharedSession.login(socialProvider: .facebook) { (success, error) -> Void in
+Stormpath.sharedSession.login(provider: .facebook) { (success, error) -> Void in
     // This callback is the same as the regular Stormpath.login callback. 
     // If the user cancels the login, the login was never started, and
     // this callback will not be called.
@@ -157,11 +157,11 @@ Stormpath.sharedSession.login(socialProvider: .facebook) { (success, error) -> V
 If you're using the [Facebook SDK](https://developers.facebook.com/docs/facebook-login/ios) or [Google SDK](https://developers.google.com/identity/sign-in/ios/) for your app, follow their setup instructions instead. Once you successfully sign in with their SDK, utilize the following methods to send your access token to Stormpath, and log in your user: 
 
 ```Swift
-Stormpath.sharedSession.login(socialProvider: .facebook, accessToken: FBSDKAccessToken.currentAccessToken().tokenString) { (success, error) -> Void in
+Stormpath.sharedSession.login(provider: .facebook, accessToken: FBSDKAccessToken.currentAccessToken().tokenString) { (success, error) -> Void in
 	// Same callback as above
 }
 
-Stormpath.sharedSession.login(socialProvider: .google, accessToken: GIDSignIn.sharedInstance().currentUser.authentication.accessToken) { (success, error) -> Void in
+Stormpath.sharedSession.login(provider: .google, accessToken: GIDSignIn.sharedInstance().currentUser.authentication.accessToken) { (success, error) -> Void in
 	// Same callback as above
 }
 ```
