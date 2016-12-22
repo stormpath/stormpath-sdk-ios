@@ -56,7 +56,7 @@ For Objective-C projects:
 
 ## Configuring Stormpath
 
-The iOS SDK (v3) leverages the [Stormpath Client API](https://docs.stormpath.com/client-api/product-guide/latest/index.html) for its authentication needs. You'll need to sign into the [Stormpath Admin Console](https://api.stormpath.com/) to get your Client API details. Go into your Application > Policies > Client API, and ensure that it's enabled. Copy your DNS Label, and set it in your Xcode project: 
+The iOS SDK (v3) leverages the [Stormpath Client API](https://docs.stormpath.com/client-api/product-guide/latest/index.html) for its authentication needs. You'll need to sign into the [Stormpath Admin Console](https://api.stormpath.com/) to get your Client API details. Go into your Application > Policies > Client API, and ensure that it's enabled. Copy your Client API URL, and set it in your Xcode project: 
 
 Swift:
 
