@@ -118,7 +118,7 @@ We've made it extremely easy to set up social login without using the social pro
 
 ### Configure Your Social Directory in Stormpath
 
-If you haven't yet set up your social providers in Stormpath as an account store for your Stormpath Application, read about [social login in the Stormpath Product Guide](https://docs.stormpath.com/rest/product-guide/latest/auth_n.html#how-social-authentication-works).
+To set up your social directory, read more about [social login in the Stormpath Client API Guide](https://docs.stormpath.com/client-api/product-guide/latest/social_login.html#before-you-start).
 
 ### Setting up your Xcode project
 
