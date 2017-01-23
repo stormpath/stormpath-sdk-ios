@@ -1,5 +1,7 @@
 # Stormpath iOS SDK
 
+[![Join the chat at https://gitter.im/stormpath/stormpath-sdk-ios](https://badges.gitter.im/stormpath/stormpath-sdk-ios.svg)](https://gitter.im/stormpath/stormpath-sdk-ios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/stormpath/stormpath-sdk-ios)
 [![License](https://img.shields.io/cocoapods/l/Stormpath.svg?style=flat)](http://cocoapods.org/pods/Stormpath)
