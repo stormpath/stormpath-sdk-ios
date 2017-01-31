@@ -24,12 +24,6 @@ class SocialLoginService: NSObject {
     }
     
     func login(provider: Provider, callback: StormpathSuccessCallback? = nil) {
-        guard urlSchemeIsRegistered() else {
-            preconditionFailure("Social Provider info could not be read from configuration. Did you add your URL scheme (\(stormpath.configuration.urlScheme)) to Info.plist?")
-        }
-        
-        queuedcallback = callback
-        
         stormpath.apiService.loginModel { (loginModel, error) in
             if let loginModel = loginModel {
                 if let resolvedProvider = loginModel.accountStores.filter({$0.providerId == provider.asString}).first {
@@ -44,6 +38,12 @@ class SocialLoginService: NSObject {
     }
     
     func login(accountStoreHref: URL, callback: StormpathSuccessCallback? = nil) {
+        guard urlSchemeIsRegistered() else {
+            preconditionFailure("You need to configure your app's Info.plist with your URL scheme (\(stormpath.configuration.urlScheme)) for social login. See https://github.com/stormpath/stormpath-sdk-ios#setting-up-your-xcode-project")
+        }
+        
+        queuedcallback = callback
+        
         var authorizeURL = URLComponents(url: stormpath.configuration.APIURL.appendingPathComponent("/authorize"), resolvingAgainstBaseURL: false)!
         authorizeURL.queryItems = [URLQueryItem(name: "response_type", value: "stormpath_token"),
                                         URLQueryItem(name: "account_store_href", value: accountStoreHref.absoluteString),
