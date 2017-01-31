@@ -31,6 +31,11 @@ struct APIRequest {
         
         // Set headers
         request.setValue(ContentType.json.rawValue, forHTTPHeaderField: "Accept") // Default to accept json
+        
+        if let version = Bundle(for: Stormpath.self).infoDictionary?["CFBundleShortVersionString"] as? String {
+            request.setValue("stormpath-sdk-ios/" + version + " iOS/" + UIDevice.current.systemVersion, forHTTPHeaderField: "X-Stormpath-Agent")
+        }
+        
         headers.forEach { (name, value) in
             request.setValue(value, forHTTPHeaderField: name)
         }
